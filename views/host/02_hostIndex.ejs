@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home AirBnB</title>
+    <!-- Tailwind Output Link -->
+    <link rel="stylesheet" href="/output.css">
+</head>
+<body class="bg-gray-50 font-sans antialiased text-gray-900 min-h-screen flex flex-col">
+
+    <!-- 1. AIRBNB STYLED NAVIGATION HEADER -->
+    <%- include("../partials/01_header.ejs") %>
+
+    <!-- 2. MAIN HUB LANDING DASHBOARD CONTENT -->
+    <main class="flex-1 flex flex-col justify-center items-center p-6 my-12">
+        
+        <!-- Card Container -->
+        <div class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100 max-w-md w-full text-center space-y-6">
+            
+            <!-- Host Badge -->
+            <span class="inline-block px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-xs font-semibold uppercase tracking-wider">
+                Host Dashboard
+            </span>
+
+            <!-- Main Welcome Heading -->
+            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">
+                Welcome to AirBnB,<br><span class="text-rose-500 font-black">Lalit Baghel</span>
+            </h1>
+            
+            <!-- Description Text -->
+            <p class="text-gray-500 text-sm md:text-base leading-relaxed">
+                Ready to start hosting? List your property details today and start sharing your beautiful space with worldwide travelers.
+            </p>
+
+            <!-- Divider Line -->
+            <div class="h-px bg-gray-100 my-4"></div>
+
+            <!-- Primary Call to Action Button Links -->
+             <div class="flex flex-row space-x-4">
+
+                 <div class="pt-2">
+                     <a href="/host/add-home" class="inline-block w-full text-center px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition-all duration-200 shadow-md shadow-rose-500/10 hover:shadow-lg hover:shadow-rose-500/20 transform hover:-translate-y-0.5">
+                         Add New Home
+                    </a>
+                </div>
+                 <div class="pt-2">
+                     <a href="/host/view-home" class="inline-block w-full text-center px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition-all duration-200 shadow-md shadow-rose-500/10 hover:shadow-lg hover:shadow-rose-500/20 transform hover:-translate-y-0.5">
+                         View  Homes
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+</body>
+</html>

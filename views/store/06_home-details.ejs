@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= home.houseName %> | Details</title>
+    <link rel="stylesheet" href="/output.css" />
+    <style>
+        body {
+            background-color: #fcfcfc;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #222222;
+        }
+
+        .details-container {
+            max-width: 960px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        .property-image-hero {
+            width: 100%;
+            height: 420px;
+            border-radius: 20px;
+            object-fit: cover;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .booking-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 100px;
+        }
+
+        .btn-reserve {
+            background: linear-gradient(135deg, #ff385c, #e00b41);
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reserve:hover {
+            opacity: 0.92;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <%- include("../partials/01_header") %>
+
+    <main class="details-container">
+        <!-- Back Navigation Button -->
+        <a href="/" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #666; font-size: 14px; font-weight: 600; margin-bottom: 16px;">
+            ← Back to All Stays
+        </a>
+
+        <!-- Title & Location -->
+        <h1 style="font-size: 32px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px;">
+            <%= home.houseName %>
+        </h1>
+        <p style="font-size: 15px; color: #666; margin: 0 0 24px 0;">
+            📍 <%= home.houseAddress %>
+        </p>
+
+        <!-- Main Banner Image -->
+        <div style="margin-bottom: 32px;">
+            <img 
+                src="<%= home.housePhoto %>" 
+                alt="<%= home.houseName %>" 
+                class="property-image-hero"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1000';"
+            />
+        </div>
+
+        <!-- Details Grid (Left Details, Right Reserve Box) -->
+        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 48px; align-items: start;">
+            
+            <!-- Left Info Area -->
+            <div>
+                <div style="padding-bottom: 24px; border-bottom: 1px solid #eee;">
+                    <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 8px 0;">Entire villa hosted by Admin</h3>
+                    <p style="color: #717171; font-size: 14px; margin: 0;">4 guests · 2 bedrooms · 2 beds · 2 baths</p>
+                </div>
+
+                <div style="padding: 24px 0; border-bottom: 1px solid #eee;">
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">About this property</h4>
+                    <p style="color: #484848; line-height: 1.6; font-size: 15px; margin: 0;">
+                        Experience luxury and peace at <%= home.houseName %>. Located right in <%= home.houseAddress %>, this beautiful space offers top-tier amenities, comfortable bedding, and quick access to local attractions. Perfect for families, friends, or solo travelers.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Side Reserve Widget -->
+            <div class="booking-card">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px;">
+                    <div>
+                        <span style="font-size: 26px; font-weight: 800; color: #222;">₹<%= home.housePrice %></span>
+                        <span style="font-size: 14px; color: #717171;"> / night</span>
+                    </div>
+                    <span style="font-size: 12px; font-weight: 600; color: #ff385c;">★ New</span>
+                </div>
+
+                <button class="btn-reserve">Reserve Now</button>
+                <div style="margin-top: 10px;">
+                    <%-include("../partials/02_favourite", {home : home}) %> 
+                </div>
+                <p style="text-align: center; color: #717171; font-size: 12px; margin-top: 12px;">You won't be charged yet</p>
+            </div>
+
+        </div>
+    </main>
+</body>
+
+</html>

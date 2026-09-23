@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Airbnb Home</title>
+    <link rel="stylesheet" href="/output.css" />
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            padding: 30px 0;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+        }
+
+        .card-item {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eaeaea;
+            width: 290px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .card-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .image-box {
+            width: 100%;
+            height: 150px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            margin-bottom: 10px;
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .title-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222222;
+            margin: 0 0 4px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .location-text {
+            font-size: 12px;
+            color: #717171;
+            margin: 0 0 12px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 10px;
+            margin-bottom: 10px;
+        }
+        .btn-reserve {
+            background: linear-gradient(135deg, #ff385c, #e00b41);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .price-tag {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ff385c;
+        }
+
+        .night-tag {
+            font-size: 11px;
+            color: #717171;
+            font-weight: normal;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-details {
+            flex: 1;
+            background: rgb(235, 116, 116);
+            color: #222;
+            border: none;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-book {
+            flex: 1;
+            background: #ff385c;
+            color: #ffffff;
+            border: none;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .banner-box {
+            background: linear-gradient(135deg, #ff385c, #e00b41);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            max-width: 1100px;
+            margin: 20px auto 0 auto;
+            box-shadow: 0 4px 12px rgba(224, 11, 65, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <%- include("../partials/01_header.ejs") %>
+    <!-- Banner Section -->
+    <div class="banner-box">
+        <h2 style="margin: 0; font-size: 28px; font-weight: 800;">Here Are Your Favurite Homes</h2>
+        <p style="margin: 6px 0 0 0; font-size: 14px; opacity: 0.9;">Explore handpicked stays for your next trip</p>
+    </div>
+    <!-- Listings Section -->
+    <div style="max-width: 1300px; margin: 0 auto; padding: 0 16px;">
+        <ul class="cards-grid">
+            <% favWithDetails.forEach((homes) => { %>
+                <li class="card-item">
+                    <div>
+                        <!-- Image Box -->
+                        <div class="image-box">
+                            <img 
+                                src="<%= homes.housePhoto %>" 
+                                alt="<%= homes.houseName %>"
+                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500';" 
+                            />
+                        </div>
+                        <!-- Details -->
+                        <div class="title-text"><%= homes.houseName %></div>
+                        <div class="location-text">📍 <%= homes.houseAddress %></div>
+                    </div>
+                    <!-- Bottom Area -->
+                    <div>
+                        <div class="price-row">
+                            <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600;">Price</span>
+                            <div class="price-tag">
+                                ₹<%= homes.housePrice %> <span class="night-tag">/ night</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+</body>
+</html>
