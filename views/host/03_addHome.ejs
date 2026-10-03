@@ -3,87 +3,3986 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Home</title>
-    <link rel="stylesheet" href="/output.css">
-    
-</head>
-<!-- black ko baad mai grey-50 krna h  -->
-<body class="bg-black font-sans antialiased text-gray-900 min-h-screen flex flex-col">
+    <title>Set up your StayNest listing &bull; Become a Host</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
 
-    <%- include("../partials/01_header.ejs") %>
-    <main class="flex-1 flex flex-col justify-center items-center px-4 py-12">
-        <div class="bg-rose-300 p-8 md:p-10 rounded-2xl shadow-md border border-rose-500 max-w-md w-full space-y-6">
-            <div class="text-center">
-                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-black">
-                    Add Your Home
-                </h1>
-                <p class="text-gray-900 text-sm mt-2">
-                    Earn income by sharing your property with travelers.
-                </p>
+        <!-- Leaflet Map CSS for Live Interactive Pin Step -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0B1C14;
+            --emerald-mid: #143528;
+            --emerald-accent: #1D4333;
+            --gold-accent: #D4AF6A;
+            --text-dark: #121A16;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+            --border-subtle: #E2DBD0;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-beige);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ── Top Header Navigation ── */
+        .wizard-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(250, 247, 240, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--emerald-dark);
+        }
+
+        .brand-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text span {
+            color: var(--gold-accent);
+        }
+
+        .btn-exit-save {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            border: 1px solid var(--border-light);
+            background: #FFFFFF;
+            transition: all 0.2s ease;
+        }
+
+        .btn-exit-save:hover {
+            color: var(--emerald-dark);
+            border-color: var(--gold-accent);
+            box-shadow: 0 2px 8px rgba(18, 43, 32, 0.08);
+        }
+
+        /* ── Wizard Main Stage ── */
+        .wizard-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px 120px 24px;
+            max-width: 1240px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .step-container {
+            display: none;
+            width: 100%;
+            animation: fadeInStep 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .step-container.active {
+            display: block;
+        }
+
+        @keyframes fadeInStep {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typography */
+        .step-tag {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold-accent);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .step-tag::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold-accent);
+            display: inline-block;
+        }
+
+        .step-headline {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 56px;
+            font-weight: 800;
+            color: #111111;
+            line-height: 1.08;
+            letter-spacing: -1.8px;
+            margin-bottom: 16px;
+        }
+
+        .step-sub {
+            font-size: 17px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            max-width: 500px;
+            margin-bottom: 36px;
+        }
+
+        /* ── Split Layout (Airbnb Style) ── */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 68px;
+            align-items: center;
+        }
+
+        /* ── Rotating Photo Hero Card (Right Column) ── */
+        .split-hero-card {
+            width: 100%;
+            height: 540px;
+            border-radius: 52px;
+            overflow: hidden;
+            background: #E8E2D5;
+            box-shadow: 0 24px 60px -15px rgba(18, 43, 32, 0.18);
+            position: relative;
+        }
+
+        .slide-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transform: scale(1.05);
+            transition: opacity 1.2s ease-in-out, transform 4.5s ease-out;
+            pointer-events: none;
+        }
+
+        .slide-img.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        .slideshow-dots {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+            background: rgba(18, 43, 32, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .slideshow-dots .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .slideshow-dots .dot.active {
+            background: var(--gold-accent);
+            width: 18px;
+            border-radius: 9999px;
+        }
+
+        
+        /* ── Step 1 Intro: Tell Us About Your Place (with Assembling House Animation) ── */
+        .intro-hero-split {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            align-items: center;
+            gap: 56px;
+            max-width: 1240px;
+            min-height: calc(100vh - 220px);
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        .intro-left-content {
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .intro-step-pill {
+            font-size: 16px;
+            font-weight: 700;
+            color: #222222;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .intro-headline-airbnb {
+            font-size: 48px;
+            font-weight: 700;
+            color: #111111;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+        }
+
+        .intro-headline-airbnb em {
+            font-style: italic;
+            font-family: 'Playfair Display', Georgia, serif;
+            color: var(--emerald-deep);
+        }
+
+        .intro-desc-airbnb {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #717171;
+            margin-bottom: 32px;
+        }
+
+        .intro-checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .intro-check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #143528;
+        }
+
+        .intro-check-item svg {
+            color: #D4AF6A;
+            flex-shrink: 0;
+        }
+
+        /* ── Right: 3D House Construction / Assembly Arena ── */
+        .house-construction-arena {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1200px;
+            user-select: none;
+        }
+
+        /* Blueprint Grid Backdrop */
+        .construction-grid-bg {
+            position: absolute;
+            inset: 20px;
+            border-radius: 32px;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(212, 175, 106, 0.08) 0%, transparent 70%),
+                linear-gradient(rgba(20, 53, 40, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(20, 53, 40, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
+            pointer-events: none;
+            border: 1px dashed rgba(20, 53, 40, 0.12);
+        }
+
+        /* 3D Isometric Card Container with Tilt */
+        .house-3d-stage {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            height: 480px;
+            transform-style: preserve-3d;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* The Building House Visual */
+        .house-build-visual {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 24px 45px rgba(20, 53, 40, 0.18));
+            transform-origin: bottom center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Laser Scanner Beam (Scanning during build) */
+        .house-scanner-beam {
+            position: absolute;
+            left: 5%;
+            right: 5%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #D4AF6A, #143528, #D4AF6A, transparent);
+            box-shadow: 0 0 16px 3px rgba(212, 175, 106, 0.7);
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            top: 10%;
+        }
+
+        /* Active Construction State (Triggered on load or click) */
+        .house-3d-stage.constructing .house-build-visual {
+            animation: assembleHouseStructure 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .house-3d-stage.constructing .house-scanner-beam {
+            animation: scanLaserBeam 3.2s ease-in-out forwards;
+        }
+
+        @keyframes scanLaserBeam {
+            0% { top: 92%; opacity: 1; }
+            45% { top: 15%; opacity: 1; }
+            75% { top: 60%; opacity: 0.8; }
+            100% { top: 92%; opacity: 0; }
+        }
+
+        @keyframes assembleHouseStructure {
+            0% {
+                opacity: 0;
+                transform: translateY(60px) scale(0.85);
+                clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+                filter: brightness(1.6) contrast(1.2) drop-shadow(0 0 0 transparent);
+            }
+            30% {
+                opacity: 0.75;
+                transform: translateY(30px) scale(0.93);
+                clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+                filter: brightness(1.3) contrast(1.1) drop-shadow(0 10px 20px rgba(20,53,40,0.1));
+            }
+            70% {
+                opacity: 0.95;
+                transform: translateY(-8px) scale(1.02);
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+                filter: brightness(1.08) drop-shadow(0 20px 35px rgba(20,53,40,0.15));
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+                filter: drop-shadow(0 24px 45px rgba(20, 53, 40, 0.18));
+            }
+        }
+
+        /* Floating Architectural Room Markers */
+        .architect-marker {
+            position: absolute;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            border-radius: 9999px;
+            padding: 7px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #143528;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(212, 175, 106, 0.4);
+            transform: translateZ(40px) scale(1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: floatMarker 4s ease-in-out infinite;
+        }
+
+        .architect-marker:hover {
+            transform: translateZ(60px) scale(1.08);
+            background: #143528;
+            color: #FAF7F0;
+            border-color: #D4AF6A;
+        }
+
+        .marker-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #D4AF6A;
+            box-shadow: 0 0 8px #D4AF6A;
+            flex-shrink: 0;
+        }
+
+        .marker-mezzanine {
+            top: 22%;
+            right: 8%;
+            animation-delay: 0.2s;
+        }
+
+        .marker-living {
+            bottom: 24%;
+            left: 6%;
+            animation-delay: 1.1s;
+        }
+
+        .marker-kitchen {
+            bottom: 28%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatMarker {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Building Progress Status Badge (Top-Right) */
+        .building-status-pill {
+            position: absolute;
+            top: 8px;
+            right: 16px;
+            z-index: 30;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 9999px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #143528;
+            border: 1px solid rgba(20, 53, 40, 0.1);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .building-status-pill:hover {
+            background: #143528;
+            color: #FAF7F0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(20, 53, 40, 0.18);
+        }
+
+        .status-dot-live {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 10px #10B981;
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ── Step 1 Address Pill & Trigger ── */
+        .address-box {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 480px;
+        }
+
+        .pill-search-trigger {
+            width: 100%;
+            height: 60px;
+            border: 1.5px solid #222222;
+            border-radius: 9999px;
+            padding: 0 24px 0 54px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-dark);
+            background: #FFFFFF;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            align-items: center;
+            position: relative;
+            text-align: left;
+        }
+
+        .pill-search-trigger:hover {
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.1);
+            border-color: #000000;
+        }
+
+        .pill-search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #222222;
+        }
+
+        .pill-placeholder {
+            color: #717171;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pill-placeholder.has-val {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .location-detected-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            background: #EBF2ED;
+            border: 1px solid rgba(20, 53, 40, 0.2);
+            border-radius: 9999px;
+            color: var(--emerald-mid);
+            font-size: 12.5px;
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        .host-note-link {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        .host-note-link a {
+            color: var(--text-dark);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        /* ── Address Popup Modal (Airbnb Screenshot 2) ── */
+        /* ── Address Popup Modal (Matching Screenshot 2 Exactly) ── */
+        .address-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.48);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: modalFadeIn 0.2s ease forwards;
+        }
+
+        .address-modal-overlay.open {
+            display: flex;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .address-modal-card {
+            background: #FFFFFF;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 620px;
+            padding: 44px 38px 38px 38px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+            position: relative;
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .btn-modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #222222;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .btn-modal-close:hover {
+            background: #F2F2F2;
+            transform: scale(1.05);
+        }
+
+        .address-modal-title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
+            color: #222222;
+            margin-bottom: 26px;
+            letter-spacing: -0.4px;
+        }
+
+        .modal-search-bar-wrap {
+            position: relative;
+            width: 100%;
+            margin-bottom: 18px;
+        }
+
+        .modal-search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #222222;
+            pointer-events: none;
+        }
+
+        .modal-search-input {
+            width: 100%;
+            height: 58px;
+            border: 1.5px solid #222222;
+            border-radius: 9999px;
+            padding: 0 20px 0 54px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #222222;
+            background: #FFFFFF;
+            outline: none;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .modal-search-input::placeholder {
+            color: #717171;
+            font-weight: 400;
+        }
+
+        .modal-search-input:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Use My Current Location Button (Matching Screenshot 2) */
+        .btn-current-location {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 8px;
+            background: transparent;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.15s ease;
+            font-family: inherit;
+        }
+
+        .btn-current-location:hover {
+            background: #F7F7F7;
+        }
+
+        .loc-icon-bubble {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #F7F7F7;
+            color: #222222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s ease, transform 0.2s ease;
+        }
+
+        .btn-current-location:hover .loc-icon-bubble {
+            background: #EEEEEE;
+            transform: scale(1.04);
+        }
+
+        .loc-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222222;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .loc-sub {
+            display: block;
+            font-size: 12.5px;
+            color: #717171;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        /* Spinner for loading state */
+        .loc-spinner {
+            width: 15px;
+            height: 15px;
+            border: 2px solid #222222;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Suggestions List (Always visible matching user screenshot) */
+        .modal-suggestions-box {
+            margin-top: 16px;
+            border-top: 1px solid #EEEEEE;
+            padding-top: 14px;
+            max-height: 250px;
+            overflow-y: auto;
+            display: block;
+        }
+
+        .modal-suggestions-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-suggestions-box::-webkit-scrollbar-track {
+            background: #F7F7F7;
+            border-radius: 9999px;
+        }
+
+        .modal-suggestions-box::-webkit-scrollbar-thumb {
+            background: #D1D1D1;
+            border-radius: 9999px;
+        }
+
+        .modal-suggestions-box::-webkit-scrollbar-thumb:hover {
+            background: #999999;
+        }
+
+        .suggestions-header-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #717171;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+            padding-left: 12px;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            font-size: 14px;
+            color: #222222;
+        }
+
+        .suggestion-item:hover {
+            background: #F7F7F7;
+        }
+
+        .suggestion-item svg {
+            color: #222222;
+            flex-shrink: 0;
+        }
+
+        .suggestion-item strong {
+            font-weight: 700;
+            color: #111111;
+        }
+
+        /* ── Step 2: Category Grid (Spacious Cards with Badges & Descriptions) ── */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1040px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            background: #FFFFFF;
+            border: 1.5px solid #E8E2D5;
+            border-radius: 20px;
+            padding: 24px 22px;
+            cursor: pointer;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            min-height: 160px;
+            box-sizing: border-box;
+            user-select: none;
+            box-shadow: 0 2px 6px rgba(18, 43, 32, 0.03);
+        }
+
+        .category-card:hover {
+            border-color: var(--emerald-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(20, 53, 40, 0.08);
+        }
+
+        .category-card.selected {
+            border: 2px solid var(--emerald-mid);
+            background: #FAF9F5;
+            box-shadow: 0 0 0 1px var(--emerald-mid), 0 8px 24px rgba(20, 53, 40, 0.09);
+        }
+
+        .category-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #EBF3EE;
+            color: var(--emerald-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .category-card.selected .category-card-icon {
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+        }
+
+        .category-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #121A16;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+
+        .category-desc {
+            font-size: 13.5px;
+            font-weight: 400;
+            color: #6B7770;
+            line-height: 1.45;
+            margin: 0;
+        }
+
+        @media (max-width: 900px) {
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 580px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Step 3: Place Type (What type of place will guests have?) ── */
+        .place-type-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 640px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .place-type-card {
+            background: #FFFFFF;
+            border: 1.5px solid #DDDDDD;
+            border-radius: 16px;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        .place-type-card:hover {
+            border-color: #143528;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(20, 53, 40, 0.06);
+        }
+
+        .place-type-card.selected {
+            border: 2px solid #143528;
+            background: #FAF9F5;
+            box-shadow: 0 0 0 1px #143528;
+        }
+
+        .place-type-info {
+            flex: 1;
+            padding-right: 24px;
+        }
+
+        .place-type-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #121A16;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .place-type-sub {
+            font-size: 14px;
+            font-weight: 400;
+            color: #6B7770;
+            line-height: 1.45;
+        }
+
+        .place-type-icon {
+            color: #222222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .place-type-card.selected .place-type-icon {
+            color: #143528;
+        }
+
+        
+        /* ── Step 4: Map Pin Confirmation (Is the pin in the right spot?) ── */
+        .map-step-wrap {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .map-outer-container {
+            position: relative;
+            width: 100%;
+            height: 480px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1.5px solid #E2DBD0;
+            box-shadow: 0 8px 30px rgba(20, 53, 40, 0.08);
+            background: #e5e3df;
+        }
+
+        #live-pin-map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .leaflet-control-attribution {
+            display: none !important;
+        }
+
+        /* Search Pill Container & Input */
+        .map-search-pill-wrap {
+            position: absolute;
+            top: 18px;
+            left: 20px;
+            right: 20px;
+            z-index: 500;
+        }
+
+        .map-address-pill {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(14px);
+            border-radius: 9999px;
+            padding: 8px 14px 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+            border: 1.5px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .map-address-pill:focus-within {
+            border-color: #143528;
+            box-shadow: 0 6px 24px rgba(20, 53, 40, 0.2);
+            background: #FFFFFF;
+        }
+
+        .map-pin-icon {
+            color: #143528;
+            flex-shrink: 0;
+        }
+
+        .map-search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14.5px;
+            font-weight: 500;
+            color: #121A16;
+            font-family: inherit;
+        }
+
+        .map-search-input::placeholder {
+            color: #8C9690;
+        }
+
+        .map-search-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #143528;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .map-search-action-btn:hover {
+            background: #1D4333;
+            transform: scale(1.05);
+        }
+
+        /* Search Suggestions Dropdown */
+        .map-suggestions-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 600;
+        }
+
+        .map-suggestion-item {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #F0ECE1;
+            font-size: 13.5px;
+            color: #121A16;
+            transition: background 0.15s ease;
+        }
+
+        .map-suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .map-suggestion-item:hover {
+            background: #FAF7F0;
+            color: #143528;
+        }
+
+        .map-suggestion-icon {
+            color: #6B7770;
+            flex-shrink: 0;
+        }
+
+        /* GPS Locate Me Button */
+        .btn-map-locate-me {
+            position: absolute;
+            bottom: 24px;
+            right: 20px;
+            z-index: 500;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1.5px solid rgba(0, 0, 0, 0.1);
+            color: #143528;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-map-locate-me:hover {
+            background: #FAF9F5;
+            color: #0B1C14;
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+        }
+
+        .btn-map-locate-me.locating {
+            animation: pulseLocate 1.2s infinite;
+        }
+
+        @keyframes pulseLocate {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(20, 53, 40, 0.4); }
+            70% { transform: scale(1.08); box-shadow: 0 0 0 12px rgba(20, 53, 40, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(20, 53, 40, 0); }
+        }
+
+        /* Center Pin Marker (Fixed to center of viewport while map drags underneath) */
+        .map-center-pin-wrap {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -100%);
+            z-index: 500;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .map-center-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #143528;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            border: 2px solid #FFFFFF;
+            transition: transform 0.15s ease;
+        }
+
+        .map-pin-stem {
+            width: 3px;
+            height: 10px;
+            background: #143528;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .map-pin-pulse {
+            width: 10px;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 50%;
+            margin-top: 2px;
+        }
+
+        /* Tooltip underneath the center pin */
+        .map-reposition-tooltip {
+            position: absolute;
+            top: calc(50% + 14px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 500;
+            background: rgba(18, 26, 22, 0.92);
+            backdrop-filter: blur(8px);
+            color: #FFFFFF;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            white-space: nowrap;
+            pointer-events: none;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ── Step 5: Choose How Guests See Your Location (Exact vs Approximate) ── */
+        .privacy-step-wrap {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .privacy-map-container {
+            position: relative;
+            width: 100%;
+            height: 480px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1.5px solid #E2DBD0;
+            box-shadow: 0 8px 30px rgba(20, 53, 40, 0.08);
+            background: #e5e3df;
+        }
+
+        #privacy-leaflet-map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .privacy-address-pill {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 500;
+            background: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #222222;
+            max-width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            pointer-events: none;
+        }
+
+        .privacy-address-pill svg {
+            flex-shrink: 0;
+            color: #222222;
+        }
+
+        .privacy-address-pill span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .privacy-floating-card {
+            position: absolute;
+            bottom: 18px;
+            left: 18px;
+            right: 18px;
+            z-index: 500;
+            background: #FFFFFF;
+            border-radius: 18px;
+            padding: 16px 22px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .privacy-card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            max-width: 82%;
+        }
+
+        .privacy-card-title {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #222222;
+            line-height: 1.25;
+        }
+
+        .privacy-card-desc {
+            font-size: 13.5px;
+            color: #717171;
+            line-height: 1.35;
+        }
+
+        .privacy-card-link {
+            font-size: 13.5px;
+            color: #222222;
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 2px;
+            width: fit-content;
+        }
+
+        .privacy-card-link:hover {
+            color: #000000;
+        }
+
+        /* Sleek Airbnb Toggle Switch */
+        .staynest-toggle-switch {
+            width: 52px;
+            height: 32px;
+            border-radius: 9999px;
+            background: #B0B0B0;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+            outline: none;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+        }
+
+        .staynest-toggle-switch.active {
+            background: #222222;
+        }
+
+        .staynest-toggle-knob {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateX(0);
+        }
+
+        .staynest-toggle-switch.active .staynest-toggle-knob {
+            transform: translateX(20px);
+        }
+
+        .staynest-toggle-icon {
+            width: 14px;
+            height: 14px;
+            color: #222222;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .staynest-toggle-switch.active .staynest-toggle-icon {
+            opacity: 1;
+        }
+
+        /* ── Step 6: Counter Steppers ── */
+        .stepper-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .stepper-row {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(18, 43, 32, 0.03);
+        }
+
+        .stepper-label-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .stepper-label-sub {
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        .stepper-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-stepper {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border-light);
+            background: #FAF7F0;
+            color: var(--emerald-dark);
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-stepper:hover {
+            border-color: var(--gold-accent);
+            background: #FFFFFF;
+            transform: scale(1.06);
+        }
+
+        .stepper-val {
+            font-size: 18px;
+            font-weight: 700;
+            min-width: 24px;
+            text-align: center;
+            color: var(--emerald-dark);
+        }
+
+        /* ── Step 4: Amenities Grid ── */
+        .amenities-wizard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .amenity-pick-card {
+            background: #FFFFFF;
+            border: 2px solid var(--border-light);
+            border-radius: 18px;
+            padding: 20px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .amenity-pick-card:hover {
+            border-color: rgba(212, 175, 106, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .amenity-pick-card.selected {
+            border-color: var(--emerald-mid);
+            background: #FAF9F5;
+            box-shadow: 0 0 0 3px rgba(20, 53, 40, 0.12);
+        }
+
+        .amenity-icon-bubble {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #EBF2ED;
+            color: var(--emerald-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .amenity-pick-card.selected .amenity-icon-bubble {
+            background: var(--emerald-mid);
+            color: #FAF7F0;
+        }
+
+        .amenity-pick-text {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* ── Step 5: Photo Preset & Preview ── */
+        .photo-step-wrap {
+            max-width: 700px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .preset-photo-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            margin-bottom: 24px;
+        }
+
+        .preset-btn {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-light);
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--emerald-mid);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--gold-accent);
+            background: #FAF7F0;
+            transform: translateY(-1px);
+        }
+
+        .photo-preview-card {
+            width: 100%;
+            height: 340px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #E8E2D5;
+            box-shadow: 0 16px 40px -10px rgba(18, 43, 32, 0.12);
+            border: 2px solid var(--border-light);
+        }
+
+        .photo-preview-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ── Step 6: Title & Story ── */
+        .story-step-wrap {
+            max-width: 660px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .standard-field-wrap label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .standard-input {
+            width: 100%;
+            height: 48px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 14px;
+            padding: 0 16px;
+            font-family: inherit;
+            font-size: 14.5px;
+            color: var(--text-dark);
+            background: #FFFFFF;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .standard-input:focus {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(212, 175, 106, 0.2);
+        }
+
+        .story-textarea {
+            width: 100%;
+            min-height: 140px;
+            border: 2px solid var(--border-light);
+            border-radius: 18px;
+            padding: 16px;
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text-dark);
+            background: #FFFFFF;
+            outline: none;
+            resize: vertical;
+            transition: all 0.25s ease;
+        }
+
+        .story-textarea:focus {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3.5px rgba(212, 175, 106, 0.2);
+        }
+
+        /* ── Step 7: Pricing & Review ── */
+        .price-center-box {
+            text-align: center;
+            max-width: 580px;
+            margin: 0 auto 36px auto;
+        }
+
+        .price-giant-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .currency-symbol {
+            font-family: 'Playfair Display', serif;
+            font-size: 52px;
+            font-weight: 700;
+            color: var(--emerald-dark);
+        }
+
+        .price-giant-input {
+            width: 240px;
+            height: 84px;
+            font-family: 'Playfair Display', serif;
+            font-size: 58px;
+            font-weight: 700;
+            color: var(--emerald-dark);
+            border: none;
+            border-bottom: 3px solid var(--gold-accent);
+            background: transparent;
+            text-align: center;
+            outline: none;
+        }
+
+        .price-breakdown-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-muted);
+            box-shadow: 0 4px 16px rgba(18, 43, 32, 0.04);
+        }
+
+        .price-breakdown-card strong {
+            color: var(--emerald-dark);
+        }
+
+        /* Review Summary Box */
+        .review-summary-card {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-light);
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 580px;
+            margin: 0 auto;
+            box-shadow: 0 12px 30px rgba(18, 43, 32, 0.06);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .review-thumb {
+            width: 110px;
+            height: 110px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: #E8E2D5;
+            flex-shrink: 0;
+        }
+
+        .review-info-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .review-info-location {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .review-info-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--emerald-dark);
+        }
+
+        /* ── Bottom Floating Bar ── */
+        .wizard-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #FAF7F0;
+            border-top: 1px solid var(--border-light);
+            padding: 16px 36px;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 4px;
+            background: var(--border-subtle);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--emerald-mid);
+            width: 14%;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .footer-nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1240px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .btn-wizard-back {
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 8px 12px;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-wizard-back:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .btn-wizard-next {
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 9999px;
+            padding: 14px 34px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(20, 53, 40, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .btn-wizard-next:hover {
+            background: var(--emerald-dark);
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 20px rgba(20, 53, 40, 0.35);
+        }
+
+        @media (max-width: 860px) {
+            .split-layout {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .split-hero-card {
+                height: 280px;
+            }
+            .step-headline {
+                font-size: 38px;
+            }
+            .wizard-header, .wizard-footer {
+                padding: 14px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Top Header ── -->
+    <header class="wizard-header">
+        <a href="/" class="brand-logo-link">
+            <svg width="30" height="30" viewBox="0 0 34 34" fill="none">
+                <rect width="34" height="34" rx="10" fill="#122B20"/>
+                <path d="M17 7L8 14.5V25C8 25.5523 8.44772 26 9 26H14V19H20V26H25C25.5523 26 26 25.5523 26 25V14.5L17 7Z" fill="#FAF7F0"/>
+                <circle cx="17" cy="14" r="2.2" fill="#D4AF6A"/>
+            </svg>
+            <span class="brand-text">Stay<span>Nest</span></span>
+        </a>
+
+        <a href="/host" class="btn-exit-save">Exit &amp; Return to Dashboard</a>
+    </header>
+
+    <!-- ── Hidden Submission Form ── -->
+    <form id="airbnb-listing-form" action="/host/add-home" method="POST">
+        <input type="hidden" name="propertyType" id="f-propertyType" value="House" />
+        <input type="hidden" name="placeType" id="f-placeType" value="An entire place" />
+        <input type="hidden" name="latitude" id="f-latitude" value="28.6139" />
+        <input type="hidden" name="longitude" id="f-longitude" value="77.2090" />
+        <input type="hidden" name="showPreciseLocation" id="f-showPreciseLocation" value="true" />
+        <input type="hidden" name="homeAddress" id="f-homeAddress" value="" />
+        <input type="hidden" name="city" id="f-city" value="" />
+        <input type="hidden" name="state" id="f-state" value="" />
+        <input type="hidden" name="maxGuests" id="f-maxGuests" value="4" />
+        <input type="hidden" name="bedrooms" id="f-bedrooms" value="2" />
+        <input type="hidden" name="beds" id="f-beds" value="2" />
+        <input type="hidden" name="bathrooms" id="f-bathrooms" value="2" />
+        <input type="hidden" name="amenities" id="f-amenities" value="wifi,ac,parking" />
+        <input type="hidden" name="housePhoto" id="f-housePhoto" value="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" />
+        <input type="hidden" name="homeName" id="f-homeName" value="" />
+        <input type="hidden" name="description" id="f-description" value="" />
+        <input type="hidden" name="homePrice" id="f-homePrice" value="12500" />
+    </form>
+
+    <!-- ── Main Multi-step Wizard Container ── -->
+    <main class="wizard-stage">
+        <!-- ══ STEP 1: TELL US ABOUT YOUR PLACE (INTRO & ASSEMBLING HOUSE ANIMATION) ══ -->
+        <div class="step-container active" id="step-1">
+            <div class="intro-hero-split">
+                <!-- Left: Headline & Context matching Airbnb screenshot -->
+                <div class="intro-left-content">
+                    <span class="intro-step-pill">Step 1</span>
+                    <h1 class="intro-headline-airbnb">Tell us about your <em>place</em></h1>
+                    <p class="intro-desc-airbnb">
+                        In this step, we’ll ask you which type of property you have and if guests will book the entire place or just a room. Then let us know the location and how many guests can stay.
+                    </p>
+
+                    <div class="intro-checklist">
+                        <div class="intro-check-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Architectural Category &amp; Space Privacy</span>
+                        </div>
+                        <div class="intro-check-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Exact GPS Pin &amp; Neighborhood Radius Map</span>
+                        </div>
+                        <div class="intro-check-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Guest Capacity &amp; Sleeping Arrangements</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: 3D Assembling House Arena ("banta hua ghr ka animation") -->
+                <div class="house-construction-arena" id="house-arena" onmousemove="handleHouseArenaMouseMove(event)" onmouseleave="resetHouseArenaTilt()">
+                    <!-- Blueprint Grid Background -->
+                    <div class="construction-grid-bg"></div>
+
+                    <!-- Building Progress Controller Pill -->
+                    <div class="building-status-pill" onclick="triggerHouseRebuildAnimation()" title="Click to replay building animation">
+                        <span class="status-dot-live"></span>
+                        <span id="building-phase-text">Architectural Blueprint • Stage Complete</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                    </div>
+
+                    <!-- 3D Isometric Card with Tilt -->
+                    <div class="house-3d-stage constructing" id="house-stage" onclick="triggerHouseRebuildAnimation()">
+                        <!-- Glowing Laser Scanner Beam -->
+                        <div class="house-scanner-beam" id="house-scanner"></div>
+
+                        <!-- 3D Isometric Assembling House Image -->
+                        <img 
+                            src="/images/isometric-house.jpg" 
+                            alt="Modern Isometric House Cutaway" 
+                            class="house-build-visual" 
+                            id="house-visual-img"
+                        />
+
+                        <!-- Floating Architectural Room Markers -->
+                        <div class="architect-marker marker-mezzanine" id="marker-loft">
+                            <span class="marker-dot"></span>
+                            <span>Mezzanine Loft Suite</span>
+                        </div>
+                        <div class="architect-marker marker-living" id="marker-lounge">
+                            <span class="marker-dot"></span>
+                            <span>Double-Height Lounge</span>
+                        </div>
+                        <div class="architect-marker marker-kitchen" id="marker-dine">
+                            <span class="marker-dot"></span>
+                            <span>Gourmet Kitchen &amp; Terrace</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!-- ══ STEP 2: CATEGORY SELECTION ══ -->
+        <div class="step-container" id="step-2">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
+                <span class="step-tag">Step 1.1 &bull; Architectural Structure</span>
+                <h2 class="step-headline" style="font-size: 42px;">Which of these best describes your <em>place?</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">Select an architectural category that captures the spirit and style of your accommodation.</p>
             </div>
 
-            <form action="/host/add-home" method="POST" class="space-y-4">
-                <div class="space-y-1">
-                    <label for="homeName" class="text-xs font-semibold uppercase tracking-wider text-gray-900 block">
-                        Property Name
-                    </label>
-                    <input 
-                        type="text" 
-                        id="homeName"
-                        name="homeName" 
-                        placeholder="e.g., Cozy Beachfront Apartment" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl border border-rose-500 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition duration-200 text-sm placeholder-gray-900 bg-gray-50/50"
-                    >
-                </div>
-                <div class="space-y-1">
-                    <label for="homeAddress" class="text-xs font-semibold uppercase tracking-wider text-gray-900 block">
-                        Property Address 
-                    </label>
-                    <input 
-                        type="text" 
-                        id="homeAddress"
-                        name="homeAddress" 
-                        placeholder="e.g., 123 Main St, Anytown, USA" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl border border-rose-500 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition duration-200 text-sm placeholder-gray-900 bg-gray-50/50"
-                    >
-                </div>
-                <div class="space-y-1">
-                    <label for="homePrice" class="text-xs font-semibold uppercase tracking-wider text-gray-900 block">
-                        Property Price Per Night
-                    </label>
-                    <input 
-                        type="text" 
-                        id="homePrice"
-                        name="homePrice" 
-                        placeholder="$100" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl border border-rose-500 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition duration-200 text-sm placeholder-gray-900 bg-gray-50/50"
-                    >
-                </div>
-                <div class="space-y-1">
-                    <label for="homePhoto" class="text-xs font-semibold uppercase tracking-wider text-gray-900 block">
-                        Property Pictures
-                    </label>
-                    <input 
-                        type="text" 
-                        id="homePhoto"
-                        name="homePhoto" 
-                        placeholder="https://property-image-url.com" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl border border-rose-500 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition duration-200 text-sm placeholder-gray-900 bg-gray-50/50"
-                    >
+                        <div class="category-grid">
+                <!-- 1. House -->
+                <div class="category-card selected" onclick="selectCategory('House', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+                    </div>
+                    <div class="category-title">House</div>
+                    <p class="category-desc">A standalone residential home, often with private yard and living spaces.</p>
                 </div>
 
-                <button 
-                    type="submit"
-                    class="w-full text-center px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition duration-200 shadow-md shadow-rose-500/10 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
-                >
-                    Add Home
-                </button>
-            </form>
+                <!-- 2. Flat/apartment -->
+                <div class="category-card" onclick="selectCategory('Flat/apartment', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+            <line x1="9" y1="6" x2="11" y2="6"></line>
+            <line x1="13" y1="6" x2="15" y2="6"></line>
+            <line x1="9" y1="10" x2="11" y2="10"></line>
+            <line x1="13" y1="10" x2="15" y2="10"></line>
+            <line x1="9" y1="14" x2="11" y2="14"></line>
+            <line x1="13" y1="14" x2="15" y2="14"></line>
+            <line x1="11" y1="22" x2="13" y2="22"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Flat/apartment</div>
+                    <p class="category-desc">An upscale urban condo, penthouse, or residential apartment.</p>
+                </div>
+
+                <!-- 3. Barn -->
+                <div class="category-card" onclick="selectCategory('Barn', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3L3 8v13h18V8L12 3z"></path>
+            <path d="M8 21V12h8v9"></path>
+            <line x1="8" y1="12" x2="16" y2="21"></line>
+            <line x1="16" y1="12" x2="8" y2="21"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Barn</div>
+                    <p class="category-desc">Converted agricultural barn with rustic open timber beams and charm.</p>
+                </div>
+
+                <!-- 4. Bed & breakfast -->
+                <div class="category-card" onclick="selectCategory('Bed & breakfast', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 11h14v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-6z"></path>
+            <path d="M18 13h2a2 2 0 0 1 0 4h-2"></path>
+            <line x1="7" y1="4" x2="7" y2="8"></line>
+            <line x1="11" y1="3" x2="11" y2="8"></line>
+            <line x1="15" y1="4" x2="15" y2="8"></line>
+            <line x1="2" y1="23" x2="22" y2="23"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Bed & breakfast</div>
+                    <p class="category-desc">A welcoming hospitality stay offering cozy rooms and morning breakfast.</p>
+                </div>
+
+                <!-- 5. Boat -->
+                <div class="category-card" onclick="selectCategory('Boat', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 3v14"></path>
+            <path d="M11 4l8 9H11"></path>
+            <path d="M4 19l2 3h12l2-3"></path>
+            <path d="M2 22c2.5 1 5.5 1 8 0s5.5-1 8 0 3 .7 4 0"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Boat</div>
+                    <p class="category-desc">Floating vessel, yacht, or moored watercraft with nautical charm.</p>
+                </div>
+
+                <!-- 6. Cabin -->
+                <div class="category-card" onclick="selectCategory('Cabin', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3L2 10v11h20V10L12 3z"></path>
+            <line x1="2" y1="13" x2="22" y2="13"></line>
+            <line x1="2" y1="17" x2="22" y2="17"></line>
+            <path d="M10 21v-7h4v7"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Cabin</div>
+                    <p class="category-desc">A rustic timber or stone retreat set in nature or mountain valleys.</p>
+                </div>
+
+                <!-- 7. Campervan/motorhome -->
+                <div class="category-card" onclick="selectCategory('Campervan/motorhome', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8a2 2 0 0 1 2-2h10a3 3 0 0 1 3 3v2h3a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1"></path>
+            <path d="M3 8v9a2 2 0 0 0 2 2h1"></path>
+            <circle cx="8" cy="19" r="2"></circle>
+            <circle cx="18" cy="19" r="2"></circle>
+            <rect x="5" y="9" width="4" height="4" rx="1"></rect>
+            <rect x="11" y="9" width="4" height="4" rx="1"></rect>
+        </svg>
+                    </div>
+                    <div class="category-title">Campervan/motorhome</div>
+                    <p class="category-desc">Mobile RV, camper, or converted van equipped for road adventures.</p>
+                </div>
+
+                <!-- 8. Casa particular -->
+                <div class="category-card" onclick="selectCategory('Casa particular', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <path d="M6 12V9a1 1 0 0 1 2 0v3"></path>
+            <path d="M11 12V9a1 1 0 0 1 2 0v3"></path>
+            <path d="M16 12V9a1 1 0 0 1 2 0v3"></path>
+            <path d="M9 21v-6a3 3 0 0 1 6 0v6"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Casa particular</div>
+                    <p class="category-desc">Private family homestay with authentic regional character and warmth.</p>
+                </div>
+
+                <!-- 9. Castle -->
+                <div class="category-card" onclick="selectCategory('Castle', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 8V5h3v2h4V5h4v2h3V5h2v3l-1.5 2V21H4.5V10L4 8z"></path>
+            <path d="M10 21v-5a2 2 0 0 1 4 0v5"></path>
+            <line x1="8" y1="11" x2="8" y2="13"></line>
+            <line x1="16" y1="11" x2="16" y2="13"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Castle</div>
+                    <p class="category-desc">Historic fortress, palace, or citadel featuring royal heritage.</p>
+                </div>
+
+                <!-- 10. Cave -->
+                <div class="category-card" onclick="selectCategory('Cave', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21c0-8 5-14 13-14 5 0 7 3 7 7 0 5-2 7-4 7"></path>
+            <path d="M8 21c0-5 3-8 6-8s6 3 6 8"></path>
+            <line x1="2" y1="21" x2="22" y2="21"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Cave</div>
+                    <p class="category-desc">Subterranean dwelling carved directly into natural rock or cliffside.</p>
+                </div>
+
+                <!-- 11. Container -->
+                <div class="category-card" onclick="selectCategory('Container', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="7" width="18" height="11" rx="2"></rect>
+            <line x1="6" y1="7" x2="6" y2="18"></line>
+            <line x1="9" y1="7" x2="9" y2="18"></line>
+            <line x1="12" y1="7" x2="12" y2="18"></line>
+            <line x1="15" y1="7" x2="15" y2="18"></line>
+            <line x1="18" y1="7" x2="18" y2="18"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Container</div>
+                    <p class="category-desc">Modern eco-friendly architectural home built from shipping containers.</p>
+                </div>
+
+                <!-- 12. Cycladic home -->
+                <div class="category-card" onclick="selectCategory('Cycladic home', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 21V11a7 7 0 0 1 14 0v10H5z"></path>
+            <path d="M9 21v-6a3 3 0 0 1 6 0v6"></path>
+            <rect x="10" y="8" width="4" height="3" rx="1"></rect>
+        </svg>
+                    </div>
+                    <div class="category-title">Cycladic home</div>
+                    <p class="category-desc">Whitewashed Aegean-style home with curved cubic architecture.</p>
+                </div>
+
+                <!-- 13. Dammuso -->
+                <div class="category-card" onclick="selectCategory('Dammuso', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21V12c0-3 3-6 9-6s9 3 9 6v9H3z"></path>
+            <path d="M10 21v-7a2 2 0 0 1 4 0v7"></path>
+            <line x1="3" y1="14" x2="21" y2="14"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Dammuso</div>
+                    <p class="category-desc">Traditional stone house with domed roof native to the Mediterranean.</p>
+                </div>
+
+                <!-- 14. Dome -->
+                <div class="category-card" onclick="selectCategory('Dome', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 20C3 10.5 7 4 12 4s9 6.5 9 16H3z"></path>
+            <path d="M9 20v-5a3 3 0 0 1 6 0v5"></path>
+            <path d="M12 4v6"></path>
+            <path d="M6 15l6-5 6 5"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Dome</div>
+                    <p class="category-desc">Futuristic geodesic or monolithic dome surrounded by open landscapes.</p>
+                </div>
+
+                <!-- 15. Earth home -->
+                <div class="category-card" onclick="selectCategory('Earth home', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 20c2-9 7-13 14-13s8 4 8 13H2z"></path>
+            <circle cx="12" cy="15" r="3"></circle>
+            <path d="M12 7V3"></path>
+            <path d="M10 4.5c1.5-.8 3-.8 4 0"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Earth home</div>
+                    <p class="category-desc">Sustainably built dwelling integrated naturally into the earth.</p>
+                </div>
+
+                <!-- 16. Farm -->
+                <div class="category-card" onclick="selectCategory('Farm', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 11L11 5l8 6v10H3V11z"></path>
+            <path d="M9 21v-7h4v7"></path>
+            <line x1="2" y1="21" x2="22" y2="21"></line>
+            <path d="M17 13l4-2"></path>
+            <path d="M17 17l4-1.5"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Farm</div>
+                    <p class="category-desc">A pastoral estate surrounded by greenery, groves, and open skies.</p>
+                </div>
+
+                <!-- 17. Guest house -->
+                <div class="category-card" onclick="selectCategory('Guest house', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 10L12 3l9 7v11H3V10z"></path>
+            <rect x="8" y="12" width="8" height="9" rx="1"></rect>
+            <circle cx="14" cy="17" r="0.8"></circle>
+        </svg>
+                    </div>
+                    <div class="category-title">Guest house</div>
+                    <p class="category-desc">Detached carriage house or private casita sharing host property.</p>
+                </div>
+
+                <!-- 18. Hotel -->
+                <div class="category-card" onclick="selectCategory('Hotel', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+            <path d="M9 21v-5h6v5"></path>
+            <circle cx="8" cy="7" r="1"></circle>
+            <circle cx="12" cy="7" r="1"></circle>
+            <circle cx="16" cy="7" r="1"></circle>
+            <circle cx="8" cy="12" r="1"></circle>
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="16" cy="12" r="1"></circle>
+        </svg>
+                    </div>
+                    <div class="category-title">Hotel</div>
+                    <p class="category-desc">Boutique hospitality suite with dedicated guest amenities and service.</p>
+                </div>
+
+                <!-- 19. Houseboat -->
+                <div class="category-card" onclick="selectCategory('Houseboat', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12L12 6l7 6v5H5v-5z"></path>
+            <path d="M3 17l2 4h14l2-4H3z"></path>
+            <path d="M2 22c3 1 6 1 9 0s6-1 9 0 2 .5 4 0"></path>
+            <line x1="12" y1="3" x2="12" y2="6"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Houseboat</div>
+                    <p class="category-desc">Permanently moored floating residence on calm lakes or rivers.</p>
+                </div>
+
+                <!-- 20. Minsu -->
+                <div class="category-card" onclick="selectCategory('Minsu', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 10c4-1.5 7-4 10-6 3 2 6 4.5 10 6"></path>
+            <rect x="5" y="10" width="14" height="11" rx="1"></rect>
+            <line x1="9" y1="14" x2="15" y2="14"></line>
+            <path d="M10 21v-7h4v7"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Minsu</div>
+                    <p class="category-desc">Charming boutique Asian bed and breakfast run with local heritage.</p>
+                </div>
+
+                <!-- 21. Riad -->
+                <div class="category-card" onclick="selectCategory('Riad', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+            <path d="M8 21V13a4 4 0 0 1 8 0v8"></path>
+            <path d="M7 8h10"></path>
+            <circle cx="12" cy="7" r="1"></circle>
+        </svg>
+                    </div>
+                    <div class="category-title">Riad</div>
+                    <p class="category-desc">Traditional Moroccan townhouse built around a peaceful courtyard.</p>
+                </div>
+
+                <!-- 22. Ryokan -->
+                <div class="category-card" onclick="selectCategory('Ryokan', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 8c4-1.5 6-4 10-5 4 1 6 3.5 10 5"></path>
+            <path d="M4 14c3-.8 5-2 8-3.5 3 1.5 5 2.7 8 3.5"></path>
+            <rect x="5" y="14" width="14" height="7" rx="1"></rect>
+            <line x1="12" y1="14" x2="12" y2="21"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Ryokan</div>
+                    <p class="category-desc">Authentic Japanese inn with tatami mats, futons, and tranquil design.</p>
+                </div>
+
+                <!-- 23. Shepherd’s hut -->
+                <div class="category-card" onclick="selectCategory('Shepherd’s hut', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 11c0-3 3-5 9-5s9 2 9 5v6H3v-6z"></path>
+            <circle cx="7" cy="19" r="2.5"></circle>
+            <circle cx="17" cy="19" r="2.5"></circle>
+            <line x1="9.5" y1="19" x2="14.5" y2="19"></line>
+            <line x1="20" y1="6" x2="20" y2="3"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Shepherd’s hut</div>
+                    <p class="category-desc">Cozy wheeled shepherd wagon nestled in tranquil pastoral pastures.</p>
+                </div>
+
+                <!-- 24. Tent -->
+                <div class="category-card" onclick="selectCategory('Tent', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3L3 20h18L12 3z"></path>
+            <line x1="12" y1="3" x2="12" y2="20"></line>
+            <path d="M12 12l5 8"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Tent</div>
+                    <p class="category-desc">Glamping safari tent, bell tent, or luxury canvas retreat in nature.</p>
+                </div>
+
+                <!-- 25. Tiny home -->
+                <div class="category-card" onclick="selectCategory('Tiny home', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 8l11-5v18H4V8z"></path>
+            <path d="M15 11l6 2v7h-6"></path>
+            <rect x="7" y="12" width="4" height="4" rx="1"></rect>
+        </svg>
+                    </div>
+                    <div class="category-title">Tiny home</div>
+                    <p class="category-desc">Cleverly designed compact standalone home with full self-sufficiency.</p>
+                </div>
+
+                <!-- 26. Tower -->
+                <div class="category-card" onclick="selectCategory('Tower', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 5h8l-1.5 16h-5L8 5z"></path>
+            <path d="M6 5l6-3 6 3"></path>
+            <rect x="11" y="9" width="3" height="3" rx="1"></rect>
+            <path d="M11 21v-4h3v4"></path>
+        </svg>
+                    </div>
+                    <div class="category-title">Tower</div>
+                    <p class="category-desc">Historic stone tower, lookout, or lighthouse with panoramic views.</p>
+                </div>
+
+                <!-- 27. Tree house -->
+                <div class="category-card" onclick="selectCategory('Tree house', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21v-5"></path>
+            <path d="M7 12L12 7l5 5v5H7v-5z"></path>
+            <line x1="4" y1="21" x2="9" y2="16"></line>
+            <line x1="20" y1="21" x2="15" y2="16"></line>
+            <circle cx="12" cy="4" r="2"></circle>
+        </svg>
+                    </div>
+                    <div class="category-title">Tree house</div>
+                    <p class="category-desc">Elevated canopy hideaway built among treetops and forest foliage.</p>
+                </div>
+
+                <!-- 28. Trullo -->
+                <div class="category-card" onclick="selectCategory('Trullo', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L5 11h14L12 2z"></path>
+            <rect x="5" y="11" width="14" height="10" rx="1"></rect>
+            <path d="M10 21v-5a2 2 0 0 1 4 0v5"></path>
+            <circle cx="12" cy="2" r="1"></circle>
+        </svg>
+                    </div>
+                    <div class="category-title">Trullo</div>
+                    <p class="category-desc">Historic dry-stone hut with a distinctive conical limestone roof.</p>
+                </div>
+
+                <!-- 29. Windmill -->
+                <div class="category-card" onclick="selectCategory('Windmill', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21l1.5-10h3l1.5 10H9z"></path>
+            <circle cx="12" cy="11" r="1.5"></circle>
+            <line x1="12" y1="5" x2="12" y2="10"></line>
+            <line x1="12" y1="12" x2="12" y2="17"></line>
+            <line x1="6" y1="11" x2="11" y2="11"></line>
+            <line x1="13" y1="11" x2="18" y2="11"></line>
+        </svg>
+                    </div>
+                    <div class="category-title">Windmill</div>
+                    <p class="category-desc">Converted historic mill offering circular multilevel living and vistas.</p>
+                </div>
+
+                <!-- 30. Yurt -->
+                <div class="category-card" onclick="selectCategory('Yurt', this)">
+                    <div class="category-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 14l9-6 9 6"></path>
+            <path d="M4 14v7h16v-7"></path>
+            <path d="M10 21v-5h4v5"></path>
+            <ellipse cx="12" cy="8" rx="2.5" ry="1"></ellipse>
+        </svg>
+                    </div>
+                    <div class="category-title">Yurt</div>
+                    <p class="category-desc">Traditional circular nomad tent with wooden lattice and skylight dome.</p>
+                </div>
+
+            </div>
         </div>
+
+<!-- ══ STEP 3: WHAT TYPE OF PLACE WILL GUESTS HAVE? (MATCHING EXACT AIRBNB SCREENSHOT) ══ -->
+        <div class="step-container" id="step-3">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
+                <span class="step-tag">Step 1.2 &bull; Privacy &amp; Space Type</span>
+                <h2 class="step-headline" style="font-size: 42px;">What type of place will guests <em>have?</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">Choose whether guests will have the entire accommodation to themselves or share spaces.</p>
+            </div>
+
+            <div class="place-type-list">
+                <!-- 1. An entire place -->
+                <div class="place-type-card selected" onclick="selectPlaceType('An entire place', this)">
+                    <div class="place-type-info">
+                        <div class="place-type-title">An entire place</div>
+                        <div class="place-type-sub">Guests have the whole place to themselves.</div>
+                    </div>
+                    <div class="place-type-icon">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 14L16 4l12 10v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V14z"></path>
+                            <path d="M12 30V18h8v12"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 2. A room -->
+                <div class="place-type-card" onclick="selectPlaceType('A room', this)">
+                    <div class="place-type-info">
+                        <div class="place-type-title">A room</div>
+                        <div class="place-type-sub">Guests have their own room in a home, plus access to shared spaces.</div>
+                    </div>
+                    <div class="place-type-icon">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="7" y="4" width="18" height="24" rx="2"></rect>
+                            <circle cx="12" cy="16" r="1.5"></circle>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 3. A shared room in a hostel -->
+                <div class="place-type-card" onclick="selectPlaceType('A shared room in a hostel', this)">
+                    <div class="place-type-info">
+                        <div class="place-type-title">A shared room in a hostel</div>
+                        <div class="place-type-sub">Guests sleep in a shared room in a professionally managed hostel with staff on-site 24/7.</div>
+                    </div>
+                    <div class="place-type-icon">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 14L16 4l12 10v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V14z"></path>
+                            <circle cx="12" cy="20" r="2.5"></circle>
+                            <path d="M8 28c0-2.5 1.8-4 4-4s4 1.5 4 4"></path>
+                            <circle cx="20" cy="20" r="2.5"></circle>
+                            <path d="M17 28c0-2 1.3-3.5 3-4s3 1.5 3 4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 4: SET UP YOUR STAYNEST LISTING (MATCHING EXACT USER SCREENSHOT) ══ -->
+        <div class="step-container" id="step-4">
+            <div class="split-layout">
+                <!-- Left: Typography & Pill Input matching screenshot 1 -->
+                <div>
+                    <h1 class="step-headline">Set up your<br />StayNest listing</h1>
+                    <p class="step-sub">It's easy to create a great listing &ndash; let's start with your address.</p>
+
+                    <div class="address-box">
+                        <!-- Pill Trigger Button opens modal matching screenshot 2 -->
+                        <div class="pill-search-trigger" id="pill-trigger-btn" onclick="openAddressModal()">
+                            <svg class="pill-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <span class="pill-placeholder" id="pill-placeholder-text">Enter your address</span>
+                        </div>
+
+                        <!-- Detected location tag -->
+                        <div class="location-detected-pill" id="pill-city-badge" style="display: none;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span id="pill-city-text"></span>
+                        </div>
+
+                        <p class="host-note-link">
+                            Not listing a home? Host an <a href="/">experience or service</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right: Rotating Photo Hero Card (Auto-rotating photo slideshow) -->
+                <div>
+                    <div class="split-hero-card" id="slideshow-hero-card">
+                        <!-- 5 Curated Architectural Homes matching screenshot style -->
+                        <img class="slide-img active" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" alt="Victorian Architectural Townhouses" />
+                        <img class="slide-img" src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80" alt="Timber Forest Sanctuary" />
+                        <img class="slide-img" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop&q=80" alt="Alpine Mountain Glass Chalet" />
+                        <img class="slide-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&fit=crop&q=80" alt="Modern Minimalist Estate" />
+                        <img class="slide-img" src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&auto=format&fit=crop&q=80" alt="Royal Heritage Residence" />
+
+                        <!-- Indicator Dots -->
+                        <div class="slideshow-dots" id="slideshow-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 5: IS THE PIN IN THE RIGHT SPOT? (MATCHING EXACT AIRBNB SCREENSHOT) ══ -->
+        <div class="step-container" id="step-5">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 32px auto;">
+                <span class="step-tag">Step 1.4 &bull; Location Accuracy</span>
+                <h2 class="step-headline" style="font-size: 42px;">Is the pin in the right <em>spot?</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">Your address is only shared with guests after they’ve made a reservation.</p>
+            </div>
+
+            <div class="map-step-wrap">
+                <div class="map-outer-container">
+                    <!-- Interactive Floating Address Search Bar -->
+                    <div class="map-search-pill-wrap">
+                        <div class="map-address-pill">
+                            <svg class="map-pin-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            <input 
+                                type="text" 
+                                id="live-map-search-input" 
+                                class="map-search-input" 
+                                placeholder="Search any city, state, or street (e.g. Munnar, Kerala)..."
+                                autocomplete="off"
+                                oninput="handleMapSearchInput(this.value)"
+                            />
+                            <button type="button" class="map-search-action-btn" id="map-search-trigger-btn" onclick="executeMapSearch()" title="Search location">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Live Search Auto-suggestions Dropdown -->
+                        <div class="map-suggestions-dropdown" id="map-suggestions-dropdown"></div>
+                    </div>
+
+                    <!-- GPS Locate Me Button on bottom-right of map -->
+                    <button type="button" class="btn-map-locate-me" id="btn-locate-me" onclick="detectCurrentDeviceLocation(true)" title="Use current device location">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="7"></circle>
+                            <line x1="12" y1="1" x2="12" y2="5"></line>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="1" y1="12" x2="5" y2="12"></line>
+                            <line x1="19" y1="12" x2="23" y2="12"></line>
+                            <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+                        </svg>
+                    </button>
+
+                    <!-- Live Leaflet Map Container -->
+                    <div id="live-pin-map"></div>
+
+                    <!-- Center Fixed House Pin (drags underneath like Airbnb) -->
+                    <div class="map-center-pin-wrap">
+                        <div class="map-center-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </div>
+                        <div class="map-pin-stem"></div>
+                        <div class="map-pin-pulse"></div>
+                    </div>
+
+                    <!-- Floating instruction tooltip matching screenshot -->
+                    <div class="map-reposition-tooltip">
+                        Drag the map to reposition the pin
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 6: CHOOSE HOW GUESTS SEE YOUR LOCATION ON A MAP (MATCHING EXACT AIRBNB SCREENSHOT) ══ -->
+        <div class="step-container" id="step-6">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 32px auto;">
+                <span class="step-tag">Step 1.5 &bull; Location Privacy</span>
+                <h2 class="step-headline" style="font-size: 42px;">Choose how guests see your location on a <em>map</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">We only share your address after guests book. Until then, they’ll see an approximate location.</p>
+            </div>
+
+            <div class="privacy-step-wrap">
+                <div class="privacy-map-container">
+                    <!-- Top Floating Address Pill -->
+                    <div class="privacy-address-pill">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <span id="privacy-address-pill-text">Your selected address</span>
+                    </div>
+
+                    <!-- Live Leaflet Privacy Map -->
+                    <div id="privacy-leaflet-map"></div>
+
+                    <!-- Bottom Floating Card with Toggle Switch -->
+                    <div class="privacy-floating-card">
+                        <div class="privacy-card-info">
+                            <div class="privacy-card-title">Show precise location</div>
+                            <div class="privacy-card-desc">Let guests see your home’s exact location on the map before they book.</div>
+                            <a href="javascript:void(0)" class="privacy-card-link" onclick="openPrivacyInfoModal()">Learn more</a>
+                        </div>
+                        <button type="button" class="staynest-toggle-switch active" id="privacy-toggle-btn" onclick="togglePreciseLocation()" aria-label="Toggle precise location">
+                            <div class="staynest-toggle-knob">
+                                <svg class="staynest-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 7: BASICS & CAPACITY ══ -->
+        <div class="step-container" id="step-7">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
+                <span class="step-tag">Step 1.6 &bull; Space Capacity</span>
+                <h2 class="step-headline" style="font-size: 42px;">Share some basics about your <em>place.</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">You'll add more details later, like exact bed dimensions and ensuite bathroom setups.</p>
+            </div>
+
+            <div class="stepper-list">
+                <div class="stepper-row">
+                    <div>
+                        <div class="stepper-label-title">Guests</div>
+                        <div class="stepper-label-sub">How many guests can comfortably stay?</div>
+                    </div>
+                    <div class="stepper-controls">
+                        <button type="button" class="btn-stepper" onclick="updateCounter('maxGuests', -1)">-</button>
+                        <span class="stepper-val" id="val-maxGuests">4</span>
+                        <button type="button" class="btn-stepper" onclick="updateCounter('maxGuests', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="stepper-row">
+                    <div>
+                        <div class="stepper-label-title">Bedrooms</div>
+                        <div class="stepper-label-sub">Dedicated private bedrooms available</div>
+                    </div>
+                    <div class="stepper-controls">
+                        <button type="button" class="btn-stepper" onclick="updateCounter('bedrooms', -1)">-</button>
+                        <span class="stepper-val" id="val-bedrooms">2</span>
+                        <button type="button" class="btn-stepper" onclick="updateCounter('bedrooms', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="stepper-row">
+                    <div>
+                        <div class="stepper-label-title">Beds</div>
+                        <div class="stepper-label-sub">Total number of king, queen, or twin beds</div>
+                    </div>
+                    <div class="stepper-controls">
+                        <button type="button" class="btn-stepper" onclick="updateCounter('beds', -1)">-</button>
+                        <span class="stepper-val" id="val-beds">2</span>
+                        <button type="button" class="btn-stepper" onclick="updateCounter('beds', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="stepper-row">
+                    <div>
+                        <div class="stepper-label-title">Bathrooms</div>
+                        <div class="stepper-label-sub">Private and shared bathrooms</div>
+                    </div>
+                    <div class="stepper-controls">
+                        <button type="button" class="btn-stepper" onclick="updateCounter('bathrooms', -1)">-</button>
+                        <span class="stepper-val" id="val-bathrooms">2</span>
+                        <button type="button" class="btn-stepper" onclick="updateCounter('bathrooms', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 8: AMENITIES ══ -->
+        <div class="step-container" id="step-8">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
+                <span class="step-tag">Step 8 &bull; Amenities</span>
+                <h2 class="step-headline" style="font-size: 42px;">Tell guests what your sanctuary <em>offers.</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">Select the signature touches that make your accommodation comfortable and bespoke.</p>
+            </div>
+
+            <div class="amenities-wizard-grid">
+                <div class="amenity-pick-card selected" onclick="toggleAmenity('wifi', this)">
+                    <div class="amenity-icon-bubble">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                    </div>
+                    <span class="amenity-pick-text">High-Speed Fiber WiFi</span>
+                </div>
+
+                <div class="amenity-pick-card selected" onclick="toggleAmenity('ac', this)">
+                    <div class="amenity-icon-bubble">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
+                    </div>
+                    <span class="amenity-pick-text">Climate Control / AC</span>
+                </div>
+
+                <div class="amenity-pick-card selected" onclick="toggleAmenity('parking', this)">
+                    <div class="amenity-icon-bubble">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    </div>
+                    <span class="amenity-pick-text">Free On-Premise Parking</span>
+                </div>
+
+                <div class="amenity-pick-card" onclick="toggleAmenity('pool', this)">
+                    <div class="amenity-icon-bubble">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path><path d="M2 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
+                    </div>
+                    <span class="amenity-pick-text">Private Swimming Pool</span>
+                </div>
+
+                <div class="amenity-pick-card" onclick="toggleAmenity('kitchen', this)">
+                    <div class="amenity-icon-bubble">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><path d="M6 12V4h12v8"></path></svg>
+                    </div>
+                    <span class="amenity-pick-text">Gourmet Kitchen</span>
+                </div>
+
+                <div class="amenity-pick-card selected" onclick="toggleAmenity('hotWater', this)">
+                    <div class="amenity-icon-bubble">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <span class="amenity-pick-text">Continuous Hot Water</span>
+                </div>
+
+                <div class="amenity-pick-card" onclick="toggleAmenity('view', this)">
+                    <div class="amenity-icon-bubble">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 17 9 11 13 15 21 7 21 17 3 17"></polygon></svg>
+                    </div>
+                    <span class="amenity-pick-text">Mountain / Valley View</span>
+                </div>
+
+                <div class="amenity-pick-card" onclick="toggleAmenity('workspace', this)">
+                    <div class="amenity-icon-bubble">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    </div>
+                    <span class="amenity-pick-text">Dedicated Workspace</span>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 9: PHOTOS ══ -->
+        <div class="step-container" id="step-9">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
+                <span class="step-tag">Step 9 &bull; Imagery</span>
+                <h2 class="step-headline" style="font-size: 42px;">Add high-resolution photos of your <em>sanctuary.</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">Provide a photography URL or click one of our curated architectural inspirations.</p>
+            </div>
+
+            <div class="photo-step-wrap">
+                <div class="standard-field-wrap">
+                    <label for="input-photo">Direct Image URL</label>
+                    <input 
+                        type="url" 
+                        id="input-photo" 
+                        class="standard-input" 
+                        value="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" 
+                        placeholder="https://images.unsplash.com/..." 
+                        oninput="onPhotoUrlChange(this.value)"
+                        required
+                    />
+                </div>
+
+                <div class="preset-photo-pills">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); align-self: center;">Quick Curations:</span>
+                    <button type="button" class="preset-btn" onclick="applyPresetPhoto('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80')">Victorian Townhouse</button>
+                    <button type="button" class="preset-btn" onclick="applyPresetPhoto('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80')">Timber Forest Villa</button>
+                    <button type="button" class="preset-btn" onclick="applyPresetPhoto('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop&q=80')">Alpine Glass Chalet</button>
+                    <button type="button" class="preset-btn" onclick="applyPresetPhoto('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&fit=crop&q=80')">Modern Lutyens Estate</button>
+                </div>
+
+                <div class="photo-preview-card">
+                    <img id="live-photo-preview" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" alt="Preview" />
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 10: TITLE & STORY ══ -->
+        <div class="step-container" id="step-10">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
+                <span class="step-tag">Step 10 &bull; Naming &amp; Story</span>
+                <h2 class="step-headline" style="font-size: 42px;">Now, let's give your place a <em>title and story.</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">Catchy titles highlight distinct design features or scenic landscapes. You can refine this anytime.</p>
+            </div>
+
+            <div class="story-step-wrap">
+                <div class="standard-field-wrap" style="margin-bottom: 22px;">
+                    <label for="input-title">Listing Title</label>
+                    <input 
+                        type="text" 
+                        id="input-title" 
+                        class="standard-input" 
+                        placeholder="e.g. The Cedar Forest Villa &amp; Alpine Spa" 
+                        maxlength="80"
+                        required
+                    />
+                </div>
+
+                <div class="standard-field-wrap">
+                    <label for="input-desc">Experience &amp; Description</label>
+                    <textarea 
+                        id="input-desc" 
+                        class="story-textarea" 
+                        placeholder="Describe the architectural nuances, natural light, serene neighborhood, and mindful comforts your sanctuary provides travelers."
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 11: PRICING & FINAL REVIEW ══ -->
+        <div class="step-container" id="step-11">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 28px auto;">
+                <span class="step-tag">Step 11 &bull; Final Tariff &amp; Review</span>
+                <h2 class="step-headline" style="font-size: 42px;">Now, set your <em>nightly price.</em></h2>
+                <p class="step-sub" style="margin: 0 auto;">Set your standard rate. You can adjust prices for weekends or peak seasonal dates later.</p>
+            </div>
+
+            <div class="price-center-box">
+                <div class="price-giant-row">
+                    <span class="currency-symbol">₹</span>
+                    <input 
+                        type="number" 
+                        id="input-price" 
+                        class="price-giant-input" 
+                        value="12500" 
+                        min="500"
+                        step="100"
+                        oninput="updatePriceEstimate(this.value)"
+                    />
+                    <span style="font-size: 18px; color: var(--text-muted); font-weight: 500;">/ night</span>
+                </div>
+
+                <div class="price-breakdown-card">
+                    <span>Base guest price</span>
+                    <strong id="disp-base-price">₹12,500</strong>
+                </div>
+                <div class="price-breakdown-card" style="margin-top: 8px;">
+                    <span>Your estimated host payout (approx 97%)</span>
+                    <strong id="disp-payout-price" style="color: var(--emerald-mid);">₹12,125</strong>
+                </div>
+            </div>
+
+            <!-- Review Card Preview -->
+            <div class="review-summary-card">
+                <img id="review-thumb-img" class="review-thumb" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&auto=format&fit=crop&q=80" alt="Preview" />
+                <div>
+                    <h4 class="review-info-title" id="review-title-disp">The Cedar Forest Villa</h4>
+                    <p class="review-info-location" id="review-loc-disp">Manali, Himachal Pradesh</p>
+                    <span class="review-info-price" id="review-price-disp">₹12,500 <span style="font-size: 12px; font-weight: 400; color: var(--text-muted);">/ night</span></span>
+                </div>
+            </div>
+        </div>
+
     </main>
+
+    <!-- ── Address Search / Geolocation Modal (Matching Screenshot 2 Exactly) ── -->
+    <div class="address-modal-overlay" id="address-modal-overlay" onclick="closeAddressModal(event)">
+        <div class="address-modal-card" onclick="event.stopPropagation()">
+            <!-- Close Button at Top Right -->
+            <button type="button" class="btn-modal-close" onclick="closeAddressModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <!-- Centered Modal Title -->
+            <h3 class="address-modal-title">Enter your address</h3>
+
+            <!-- Pill Search Input Bar matching screenshot 2 -->
+            <div class="modal-search-bar-wrap">
+                <svg class="modal-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input 
+                    type="text" 
+                    id="modal-address-input" 
+                    class="modal-search-input" 
+                    placeholder="Enter your address" 
+                    oninput="handleAddressSearch(this.value)"
+                    autocomplete="off" 
+                />
+            </div>
+
+            <!-- "Use my current location" option (Matching Screenshot 2 Exactly) -->
+            <button type="button" class="btn-current-location" id="btn-current-loc" onclick="detectCurrentLocation()">
+                <div class="loc-icon-bubble" id="loc-icon-box">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                    </svg>
+                </div>
+                <div>
+                    <span class="loc-title" id="loc-btn-title">Use my current location</span>
+                    <span class="loc-sub" id="loc-btn-sub">Detect location automatically using device GPS</span>
+                </div>
+            </button>
+
+            <!-- Search / Destination Suggestions (Always Visible Matching Screenshot) -->
+            <div class="modal-suggestions-box" id="address-suggestions-box">
+                <div class="suggestions-header-label" id="suggestions-header-label">
+                    Popular Indian Destinations
+                </div>
+
+                <!-- Dynamic Live Search Container -->
+                <div id="dynamic-search-results"></div>
+                
+                <!-- Curated Destinations matching screenshot -->
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('Taj East Gate Road, Fatehabad', 'Agra', 'Uttar Pradesh')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Taj East Gate Road, <strong>Agra</strong>, Uttar Pradesh</span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('Log Huts Area, Old Manali', 'Manali', 'Himachal Pradesh')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Log Huts Area, Old <strong>Manali</strong>, Himachal Pradesh</span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('Connaught Place, Barakhamba', 'Delhi', 'Delhi NCR')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Connaught Place, <strong>New Delhi</strong>, Delhi NCR</span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('Amer Fort Foot, Old City', 'Jaipur', 'Rajasthan')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Amer Fort Foot, <strong>Jaipur</strong>, Rajasthan</span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('Candolim Beach Road, North Goa', 'Goa', 'Goa')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Candolim Beach Road, <strong>Goa</strong></span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('Pichola Lakefront, City Palace Road', 'Udaipur', 'Rajasthan')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Pichola Lakefront, <strong>Udaipur</strong>, Rajasthan</span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('The Mall Road, Ridge View', 'Shimla', 'Himachal Pradesh')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>The Mall Road, <strong>Shimla</strong>, Himachal Pradesh</span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('Pali Hill, Bandra West', 'Mumbai', 'Maharashtra')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Pali Hill, Bandra West, <strong>Mumbai</strong>, Maharashtra</span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('100 Feet Road, Indiranagar', 'Bengaluru', 'Karnataka')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>100 Feet Road, <strong>Bengaluru</strong>, Karnataka</span>
+                </div>
+
+                <div class="suggestion-item preset-destination-item" onclick="applyPresetAddress('Laxman Jhula Road, Tapovan', 'Rishikesh', 'Uttarakhand')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Laxman Jhula Road, <strong>Rishikesh</strong>, Uttarakhand</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Privacy Info Modal ("Learn more") ── -->
+    <div class="address-modal-overlay" id="privacy-modal-overlay" onclick="closePrivacyInfoModal(event)">
+        <div class="address-modal-card" style="max-width: 520px; padding-top: 32px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closePrivacyInfoModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 8px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">Guest Location Privacy</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">How your accommodation's address is protected</p>
+            </div>
+            <div style="padding: 24px; color: #484848; font-size: 14.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(20, 53, 40, 0.08); color: #143528; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">When Precise Location is ON</strong>
+                        Guests browsing StayNest can see the pin placed directly at your home’s coordinates. This helps guests know the exact street before booking.
+                    </div>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(212, 175, 106, 0.15); color: #9A7B38; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2a10 10 0 0 0-10 10c0 5.25 10 12 10 12s10-6.75 10-12a10 10 0 0 0-10-10z"></path></svg>
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">When Precise Location is OFF</strong>
+                        Guests see a circular approximate zone (~500m radius) showing only your neighborhood. Your exact address and door location remain completely private until the booking is confirmed.
+                    </div>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; margin-top: 8px; border: none; cursor: pointer;" onclick="closePrivacyInfoModal()">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Sticky Bottom Navigation Bar ── -->
+    <footer class="wizard-footer">
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar-fill"></div>
+        </div>
+        <div class="footer-nav-row">
+            <button type="button" class="btn-wizard-back" id="btn-back" onclick="navigateStep(-1)" disabled>
+                Back
+            </button>
+
+            <button type="button" class="btn-wizard-next" id="btn-next" onclick="navigateStep(1)">
+                <span>Next</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+    </footer>
+
+        <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- ── Wizard JavaScript Controller ── -->
+    <script>
+        let currentStep = 1;
+        const totalSteps = 11;
+
+        // State holder
+        const wizardState = {
+            homeAddress: '',
+            city: '',
+            state: '',
+            propertyType: 'House',
+            placeType: 'An entire place',
+            latitude: 28.6139,
+            longitude: 77.2090,
+            showPreciseLocation: true,
+            maxGuests: 4,
+            bedrooms: 2,
+            beds: 2,
+            bathrooms: 2,
+            amenities: ['wifi', 'ac', 'parking', 'hotWater'],
+            housePhoto: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80',
+            homeName: '',
+            description: '',
+            homePrice: 12500
+        };
+
+        // ── Dynamic & Unbiased Location Detection Engine ──
+        window.__detectedCountryCode = null;
+
+        function getDetectedUserCountryCode() {
+            if (window.__detectedCountryCode) return window.__detectedCountryCode.toLowerCase();
+            try {
+                // 1. Timezone detection (fast and accurate for country)
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+                if (tz.includes('Kolkata') || tz.includes('Calcutta') || tz.includes('India') || tz.includes('Asia/Kolkata')) {
+                    window.__detectedCountryCode = 'in';
+                    return 'in';
+                }
+                if (tz.includes('Dubai') || tz.includes('Asia/Dubai')) return 'ae';
+                if (tz.includes('London') || tz.includes('Europe/London')) return 'gb';
+                if (tz.includes('Singapore')) return 'sg';
+                if (tz.includes('Tokyo')) return 'jp';
+                if (tz.includes('Sydney') || tz.includes('Melbourne')) return 'au';
+                if (tz.includes('Toronto') || tz.includes('Vancouver')) return 'ca';
+                if (tz.includes('Berlin') || tz.includes('Paris')) return 'de';
+
+                // 2. Language/Locale code
+                const lang = navigator.language || (navigator.languages && navigator.languages[0]) || '';
+                if (lang.includes('-')) {
+                    const cc = lang.split('-')[1].toLowerCase();
+                    if (cc && cc.length === 2) {
+                        window.__detectedCountryCode = cc;
+                        return cc;
+                    }
+                }
+            } catch (e) {
+                console.warn('Country detection error:', e);
+            }
+            // Default to India for StayNest if undetermined
+            return 'in';
+        }
+
+        // Unbiased & Dynamic Location Search
+        // Prioritizes user's current country/viewbox first, then falls back seamlessly to global search
+        async function searchPlacesDynamically(query, limit = 5) {
+            const cc = getDetectedUserCountryCode();
+            
+            // Build viewbox around current marker or map center if available (approx +/- 4.5 deg radius)
+            let viewboxParam = '';
+            const centerLat = wizardState.latitude || (typeof leafletMap !== 'undefined' && leafletMap ? leafletMap.getCenter().lat : null);
+            const centerLng = wizardState.longitude || (typeof leafletMap !== 'undefined' && leafletMap ? leafletMap.getCenter().lng : null);
+            if (centerLat && centerLng) {
+                const left = (centerLng - 4.5).toFixed(4);
+                const right = (centerLng + 4.5).toFixed(4);
+                const top = (centerLat + 4.5).toFixed(4);
+                const bottom = (centerLat - 4.5).toFixed(4);
+                viewboxParam = `&viewbox=${left},${top},${right},${bottom}`;
+            }
+
+            // Tier 1: Search within detected country (prioritizing local/regional places)
+            try {
+                const localUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=${cc}${viewboxParam}&addressdetails=1&limit=${limit}`;
+                const res = await fetch(localUrl);
+                if (res.ok) {
+                    const localResults = await res.json();
+                    if (localResults && localResults.length > 0) {
+                        return localResults;
+                    }
+                }
+            } catch (e) {
+                console.warn('Local priority search failed:', e);
+            }
+
+            // Tier 2: Unbiased Global Search (if query is international or not found in local country)
+            try {
+                const globalUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=${limit}`;
+                const res = await fetch(globalUrl);
+                if (res.ok) {
+                    const globalResults = await res.json();
+                    return globalResults || [];
+                }
+            } catch (e) {
+                console.warn('Global fallback search failed:', e);
+            }
+
+            return [];
+        }
+
+        // ── 1. Step 1 Rotating Slideshow ("photo change hote rhe") ──
+        let currentSlideIdx = 0;
+        const slides = document.querySelectorAll('.slide-img');
+        const dots = document.querySelectorAll('.slideshow-dots .dot');
+
+        function rotateSlideShow() {
+            if (!slides || slides.length === 0) return;
+            slides[currentSlideIdx].classList.remove('active');
+            if (dots[currentSlideIdx]) dots[currentSlideIdx].classList.remove('active');
+
+            currentSlideIdx = (currentSlideIdx + 1) % slides.length;
+
+            slides[currentSlideIdx].classList.add('active');
+            if (dots[currentSlideIdx]) dots[currentSlideIdx].classList.add('active');
+        }
+
+        // Auto rotate photos every 3.8 seconds with smooth cross-fade
+        let slideTimer = setInterval(rotateSlideShow, 3800);
+
+        // ── 2. Address Modal Logic ──
+        function openAddressModal() {
+            const overlay = document.getElementById('address-modal-overlay');
+            overlay.classList.add('open');
+            setTimeout(() => {
+                document.getElementById('modal-address-input').focus();
+            }, 100);
+        }
+
+        function closeAddressModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('address-modal-overlay').classList.remove('open');
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('address-modal-overlay');
+                if (overlay && overlay.classList.contains('open')) {
+                    closeAddressModal();
+                }
+            }
+        });
+
+        // ── 3. High-Accuracy Geolocation & Reverse Geocoding ──
+        async function detectCurrentLocation() {
+            const btnTitle = document.getElementById('loc-btn-title');
+            const btnSub = document.getElementById('loc-btn-sub');
+
+            btnTitle.innerHTML = `<span class="loc-spinner"></span> Detecting exact location...`;
+            if (btnSub) btnSub.textContent = 'Accessing high-accuracy GPS coordinates...';
+
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                btnTitle.textContent = 'Use my current location';
+                if (btnSub) btnSub.textContent = 'Detect location automatically using device GPS';
+                return;
+            }
+
+            // IP location fallback helper
+            const fallbackToIP = async (reason) => {
+                console.log('Using network/IP location fallback:', reason);
+                try {
+                    const ipRes = await fetch('https://ipwho.is/');
+                    if (!ipRes.ok) throw new Error('IP service error');
+                    const data = await ipRes.json();
+                    if (data.success === false) throw new Error('IP lookup failed');
+
+                    const city = data.city || 'Agra';
+                    const state = data.region || 'Uttar Pradesh';
+                    const fullAddress = `${city}, ${state}, India`;
+
+                    applySelectedAddress(fullAddress, city, state);
+                } catch (e) {
+                    console.warn('IP fallback failed:', e);
+                    applySelectedAddress('Fatehabad Road, Agra, Uttar Pradesh', 'Agra', 'Uttar Pradesh');
+                } finally {
+                    btnTitle.textContent = 'Use my current location';
+                    if (btnSub) btnSub.textContent = 'Detect location automatically using device GPS';
+                }
+            };
+
+            const geoOptions = {
+                enableHighAccuracy: true, // Request true GPS / high precision Wi-Fi triangulation
+                timeout: 18000,          // 18s window for user to allow and hardware to lock
+                maximumAge: 0            // Never use old cached location
+            };
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude, accuracy } = position.coords;
+                    console.log(`[StayNest GPS] Lat: ${latitude}, Lon: ${longitude}, Accuracy: ${accuracy}m`);
+
+                    btnTitle.innerHTML = `<span class="loc-spinner"></span> Pinpointing exact address...`;
+                    if (btnSub) btnSub.textContent = `GPS locked (±${Math.round(accuracy || 15)}m). Resolving street details...`;
+
+                    try {
+                        // OpenStreetMap Nominatim zoom=18 for exact street/building level precision
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
+                        if (!res.ok) throw new Error('Nominatim reverse error');
+                        const data = await res.json();
+                        const addr = data.address || {};
+                        if (addr.country_code) {
+                            window.__detectedCountryCode = addr.country_code.toLowerCase();
+                        }
+
+                        const houseNo = addr.house_number || addr.building || '';
+                        const road = addr.road || addr.street || addr.residential || addr.neighbourhood || addr.suburb || '';
+                        const city = addr.city || addr.town || addr.village || addr.municipality || addr.state_district || addr.county || 'Detected City';
+                        const state = addr.state || addr.region || '';
+                        const postcode = addr.postcode || '';
+
+                        // Build clean exact address parts
+                        const parts = [];
+                        if (houseNo && road) {
+                            parts.push(`${houseNo}, ${road}`);
+                        } else if (road) {
+                            parts.push(road);
+                        }
+                        if (addr.suburb && addr.suburb !== road) {
+                            parts.push(addr.suburb);
+                        }
+                        if (city) parts.push(city);
+                        if (state) parts.push(state);
+                        if (postcode) parts.push(postcode);
+
+                        let fullAddress = parts.join(', ');
+                        if (!fullAddress || fullAddress.length < 5) {
+                            fullAddress = data.display_name.split(',').slice(0, 4).join(', ');
+                        }
+
+                        applySelectedAddress(fullAddress, city, state);
+                    } catch (err) {
+                        console.warn('Nominatim reverse error, trying secondary reverse geocode:', err);
+                        try {
+                            const bdcRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+                            const bdcData = await bdcRes.json();
+                            const city = bdcData.city || bdcData.locality || bdcData.principalSubdivision || 'Agra';
+                            const state = bdcData.principalSubdivision || 'Uttar Pradesh';
+                            const locality = bdcData.locality || '';
+                            const full = [locality, city, state].filter(Boolean).join(', ') || `${city}, ${state}`;
+                            applySelectedAddress(full, city, state);
+                        } catch (e2) {
+                            await fallbackToIP('Reverse geocode failed');
+                        }
+                    } finally {
+                        btnTitle.textContent = 'Use my current location';
+                        if (btnSub) btnSub.textContent = 'Detect location automatically using device GPS';
+                    }
+                },
+                async (error) => {
+                    console.warn('Geolocation error:', error.code, error.message);
+                    btnTitle.textContent = 'Use my current location';
+                    
+                    if (error.code === 1) { // PERMISSION_DENIED
+                        if (btnSub) btnSub.textContent = 'Permission denied in browser';
+                        alert('Location permission blocked hai. Please browser ke URL address bar (top left lock icon) par click karke "Location: Allow" karein, ya neeche di gayi popular destinations me se select karein.');
+                    } else if (error.code === 2) { // POSITION_UNAVAILABLE
+                        if (btnSub) btnSub.textContent = 'GPS signal unavailable. Detecting via network...';
+                        await fallbackToIP('Position unavailable');
+                    } else if (error.code === 3) { // TIMEOUT
+                        if (btnSub) btnSub.textContent = 'GPS timeout. Detecting via network...';
+                        await fallbackToIP('GPS timeout');
+                    } else {
+                        await fallbackToIP('General error');
+                    }
+                },
+                geoOptions
+            );
+        }
+
+        // Apply chosen address
+        function applyPresetAddress(address, city, state) {
+            applySelectedAddress(address, city, state);
+        }
+
+        function applySelectedAddress(address, city, state) {
+            wizardState.homeAddress = address;
+            wizardState.city = city || '';
+            wizardState.state = state || '';
+
+            // Update Step 1 Pill
+            const pillText = document.getElementById('pill-placeholder-text');
+            pillText.textContent = address;
+            pillText.classList.add('has-val');
+
+            const badge = document.getElementById('pill-city-badge');
+            badge.style.display = 'inline-flex';
+            document.getElementById('pill-city-text').textContent = (city || 'Location') + (state ? ', ' + state : '');
+
+            // Update modal input
+            document.getElementById('modal-address-input').value = address;
+
+            // Update hidden form inputs
+            document.getElementById('f-homeAddress').value = address;
+            document.getElementById('f-city').value = city;
+            document.getElementById('f-state').value = state;
+
+            // Default suggested title if empty
+            if (!wizardState.homeName) {
+                const titleField = document.getElementById('input-title');
+                if (titleField && !titleField.value) {
+                    titleField.value = `The Grand Villa in ${city || 'Sanctuary'}`;
+                    wizardState.homeName = titleField.value;
+                }
+            }
+
+            closeAddressModal();
+        }
+
+        // ── 4. Live Search Filter & Dynamic Nominatim Autocomplete ──
+        let searchDebounceTimer = null;
+
+        function handleAddressSearch(val) {
+            const query = val.toLowerCase().trim();
+            const items = document.querySelectorAll('.preset-destination-item');
+            const headerLabel = document.getElementById('suggestions-header-label');
+            const dynamicList = document.getElementById('dynamic-search-results');
+
+            if (!query) {
+                headerLabel.textContent = 'Popular Indian Destinations';
+                items.forEach(item => item.style.display = 'flex');
+                if (dynamicList) dynamicList.innerHTML = '';
+                return;
+            }
+
+            headerLabel.textContent = `Matching Locations for "${val}"`;
+
+            // Filter static destinations
+            let localCount = 0;
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = 'flex';
+                    localCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Live OpenStreetMap Nominatim search with dynamic location awareness
+            clearTimeout(searchDebounceTimer);
+            if (query.length >= 2) {
+                searchDebounceTimer = setTimeout(async () => {
+                    try {
+                        const results = await searchPlacesDynamically(query, 5);
+                        
+                        if (dynamicList) {
+                            dynamicList.innerHTML = '';
+                            results.forEach(place => {
+                                const addr = place.address || {};
+                                if (addr.country_code) {
+                                    window.__detectedCountryCode = addr.country_code.toLowerCase();
+                                }
+                                const city = addr.city || addr.town || addr.village || addr.state_district || addr.county || '';
+                                const state = addr.state || '';
+                                const full = place.display_name.split(',').slice(0, 4).join(', ');
+
+                                const div = document.createElement('div');
+                                div.className = 'suggestion-item';
+                                div.onclick = () => applyPresetAddress(full, city, state);
+                                div.innerHTML = `
+                                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                    <span><strong>${city || place.name}</strong> &ndash; ${full}</span>
+                                `;
+                                dynamicList.appendChild(div);
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('Live search error:', e);
+                    }
+                }, 280);
+            }
+        }
+
+        // Also allow Enter key on modal input
+        document.getElementById('modal-address-input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = this.value.trim();
+                if (val) {
+                    const parts = val.split(',');
+                    const city = parts.length > 1 ? parts[1].trim() : parts[0].trim();
+                    const state = parts.length > 2 ? parts[2].trim() : '';
+                    applySelectedAddress(val, city, state);
+                }
+            }
+        });
+
+        
+        // ── 3. Step 4 Live Map Logic (Search Any Location & Auto-detect Device Location) ──
+        let leafletMap = null;
+        let mapSearchDebounce = null;
+        let hasAutoDetectedLocation = false;
+
+        function initOrUpdateMap() {
+            const lat = wizardState.latitude || 28.6139;
+            const lng = wizardState.longitude || 77.2090;
+
+            const searchInput = document.getElementById('live-map-search-input');
+            if (searchInput && !searchInput.value) {
+                searchInput.value = wizardState.homeAddress || ((wizardState.city ? wizardState.city + ', ' : '') + (wizardState.state || 'India')).trim();
+            }
+
+            if (!leafletMap) {
+                const mapEl = document.getElementById('live-pin-map');
+                if (!mapEl) return;
+
+                leafletMap = L.map('live-pin-map', {
+                    center: [lat, lng],
+                    zoom: 16,
+                    zoomControl: true,
+                    attributionControl: false
+                });
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(leafletMap);
+
+                // Update coordinates as user drags map
+                leafletMap.on('move', function () {
+                    const center = leafletMap.getCenter();
+                    wizardState.latitude = center.lat;
+                    wizardState.longitude = center.lng;
+                    const fLat = document.getElementById('f-latitude');
+                    const fLng = document.getElementById('f-longitude');
+                    if (fLat) fLat.value = center.lat.toFixed(6);
+                    if (fLng) fLng.value = center.lng.toFixed(6);
+                });
+
+                // On drag finish: reverse-geocode exact street and update input
+                leafletMap.on('moveend', function () {
+                    const center = leafletMap.getCenter();
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${center.lat}&lon=${center.lng}&addressdetails=1`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data && data.address && data.address.country_code) {
+                                window.__detectedCountryCode = data.address.country_code.toLowerCase();
+                            }
+                            if (data && data.display_name) {
+                                const input = document.getElementById('live-map-search-input');
+                                if (input) input.value = data.display_name;
+                                wizardState.homeAddress = data.display_name;
+                                const city = data.address.city || data.address.town || data.address.village || data.address.suburb || data.address.county || '';
+                                const state = data.address.state || '';
+                                if (city) wizardState.city = city;
+                                if (state) wizardState.state = state;
+                                
+                                const fHome = document.getElementById('f-homeAddress'); if (fHome) fHome.value = data.display_name;
+                                const fCity = document.getElementById('f-city'); if (fCity) fCity.value = wizardState.city;
+                                const fState = document.getElementById('f-state'); if (fState) fState.value = wizardState.state;
+                            }
+                        })
+                        .catch(() => {});
+                });
+
+                // Allow pressing Enter in map search input
+                const sInput = document.getElementById('live-map-search-input');
+                if (sInput) {
+                    sInput.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            executeMapSearch();
+                        }
+                    });
+                }
+            }
+
+            setTimeout(() => {
+                if (leafletMap) {
+                    leafletMap.invalidateSize();
+                    
+                    // If no address specified yet, auto-detect device location by default!
+                    if (!hasAutoDetectedLocation && (!wizardState.homeAddress || wizardState.homeAddress.toLowerCase().includes('india'))) {
+                        detectCurrentDeviceLocation(false);
+                    } else {
+                        geocodeAndPan();
+                    }
+                }
+            }, 250);
+        }
+
+        // Live typing search autocomplete with dynamic location awareness
+        function handleMapSearchInput(val) {
+            clearTimeout(mapSearchDebounce);
+            const dropdown = document.getElementById('map-suggestions-dropdown');
+            const query = val.trim();
+
+            if (!query || query.length < 2) {
+                if (dropdown) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; }
+                return;
+            }
+
+            mapSearchDebounce = setTimeout(async () => {
+                try {
+                    const results = await searchPlacesDynamically(query, 6);
+                    if (!dropdown) return;
+
+                    if (!results || results.length === 0) {
+                        dropdown.style.display = 'none';
+                        return;
+                    }
+
+                    dropdown.innerHTML = '';
+                    results.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'map-suggestion-item';
+                        
+                        const displayName = item.display_name;
+                        const parts = displayName.split(',').map(s => s.trim());
+                        const primary = parts[0] || displayName;
+                        const secondary = parts.slice(1, 4).join(', ');
+
+                        div.innerHTML = `
+                            <svg class="map-suggestion-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            <div style="display:flex; flex-direction:column; gap:2px; overflow:hidden;">
+                                <strong style="color:var(--text-primary); font-size:13.5px; font-weight:600; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${primary}</strong>
+                                ${secondary ? `<span style="font-size:11.5px; color:var(--text-muted); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${secondary}</span>` : ''}
+                            </div>
+                        `;
+                        div.onclick = () => {
+                            applyMapSearchSelection(item);
+                        };
+                        dropdown.appendChild(div);
+                    });
+                    dropdown.style.display = 'block';
+                } catch (e) {
+                    console.warn('Map autocomplete error:', e);
+                }
+            }, 260);
+        }
+
+        // Execute search on Enter or button click
+        async function executeMapSearch() {
+            const input = document.getElementById('live-map-search-input');
+            const dropdown = document.getElementById('map-suggestions-dropdown');
+            if (dropdown) dropdown.style.display = 'none';
+            if (!input || !input.value.trim()) return;
+
+            const query = input.value.trim();
+            try {
+                const results = await searchPlacesDynamically(query, 1);
+                if (results && results.length > 0) {
+                    applyMapSearchSelection(results[0]);
+                } else {
+                    alert('Location not found. Please try searching with city and state (e.g. "Lovely Professional University, Phagwara" or "Munnar, Kerala").');
+                }
+            } catch (err) {
+                console.error('Search failed:', err);
+            }
+        }
+
+        function applyMapSearchSelection(item) {
+            const dropdown = document.getElementById('map-suggestions-dropdown');
+            if (dropdown) dropdown.style.display = 'none';
+
+            const lat = parseFloat(item.lat);
+            const lon = parseFloat(item.lon);
+            wizardState.latitude = lat;
+            wizardState.longitude = lon;
+            wizardState.homeAddress = item.display_name;
+
+            const addr = item.address || {};
+            if (addr.country_code) {
+                window.__detectedCountryCode = addr.country_code.toLowerCase();
+            }
+            wizardState.city = addr.city || addr.town || addr.village || addr.suburb || addr.state_district || '';
+            wizardState.state = addr.state || '';
+
+            const input = document.getElementById('live-map-search-input');
+            if (input) input.value = item.display_name;
+
+            const fHome = document.getElementById('f-homeAddress'); if (fHome) fHome.value = item.display_name;
+            const fCity = document.getElementById('f-city'); if (fCity) fCity.value = wizardState.city;
+            const fState = document.getElementById('f-state'); if (fState) fState.value = wizardState.state;
+            const fLat = document.getElementById('f-latitude'); if (fLat) fLat.value = lat.toFixed(6);
+            const fLng = document.getElementById('f-longitude'); if (fLng) fLng.value = lon.toFixed(6);
+
+            if (leafletMap) {
+                leafletMap.flyTo([lat, lon], 16, { duration: 1.5 });
+            }
+        }
+
+        // Automatic and Manual GPS Detection for Current Device
+        function detectCurrentDeviceLocation(showFeedback = false) {
+            const locateBtn = document.getElementById('btn-locate-me');
+            if (locateBtn) locateBtn.classList.add('locating');
+
+            if (!navigator.geolocation) {
+                if (locateBtn) locateBtn.classList.remove('locating');
+                if (showFeedback) alert('Geolocation is not supported by your browser.');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    hasAutoDetectedLocation = true;
+                    if (locateBtn) locateBtn.classList.remove('locating');
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    wizardState.latitude = lat;
+                    wizardState.longitude = lon;
+
+                    if (leafletMap) {
+                        leafletMap.flyTo([lat, lon], 16, { duration: 1.5 });
+                    }
+
+                    // Reverse geocode to get street level details
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`);
+                        const data = await res.json();
+                        if (data && data.display_name) {
+                            const addr = data.address || {};
+                            if (addr.country_code) {
+                                window.__detectedCountryCode = addr.country_code.toLowerCase();
+                            }
+                            const input = document.getElementById('live-map-search-input');
+                            if (input) input.value = data.display_name;
+                            wizardState.homeAddress = data.display_name;
+                            wizardState.city = addr.city || addr.town || addr.village || addr.suburb || '';
+                            wizardState.state = addr.state || '';
+
+                            const fHome = document.getElementById('f-homeAddress'); if (fHome) fHome.value = data.display_name;
+                            const fCity = document.getElementById('f-city'); if (fCity) fCity.value = wizardState.city;
+                            const fState = document.getElementById('f-state'); if (fState) fState.value = wizardState.state;
+                            const fLat = document.getElementById('f-latitude'); if (fLat) fLat.value = lat.toFixed(6);
+                            const fLng = document.getElementById('f-longitude'); if (fLng) fLng.value = lon.toFixed(6);
+                        }
+                    } catch (e) {
+                        console.warn('Reverse geocode error:', e);
+                    }
+                },
+                (err) => {
+                    if (locateBtn) locateBtn.classList.remove('locating');
+                    console.warn('Geolocation position error:', err);
+                    if (showFeedback) {
+                        alert('Could not detect exact GPS position. Please check your browser location permission or use the search bar above to type your location.');
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+            );
+        }
+
+        function geocodeAndPan() {
+            if (!leafletMap) return;
+            const city = (wizardState.city || '').toLowerCase().trim();
+            const cityCoords = {
+                'mumbai': [19.0760, 72.8777],
+                'delhi': [28.6139, 77.2090],
+                'new delhi': [28.6139, 77.2090],
+                'bengaluru': [12.9716, 77.5946],
+                'bangalore': [12.9716, 77.5946],
+                'rishikesh': [30.0869, 78.2676],
+                'goa': [15.2993, 74.1240],
+                'jaipur': [26.9124, 75.7873],
+                'punjab': [31.1471, 75.3412],
+                'khajurla': [31.2584, 75.7042],
+                'chandigarh': [30.7333, 76.7794],
+                'kerala': [10.8505, 76.2711],
+                'kochi': [9.9312, 76.2673],
+                'munnar': [10.0889, 77.0595],
+                'wayanad': [11.6854, 76.1320],
+                'agra': [27.1767, 78.0081]
+            };
+
+            if (cityCoords[city]) {
+                wizardState.latitude = cityCoords[city][0];
+                wizardState.longitude = cityCoords[city][1];
+                leafletMap.setView(cityCoords[city], 15);
+            } else if (wizardState.homeAddress) {
+                searchPlacesDynamically(wizardState.homeAddress, 1)
+                    .then(results => {
+                        if (results && results.length > 0) {
+                            const lat = parseFloat(results[0].lat);
+                            const lon = parseFloat(results[0].lon);
+                            wizardState.latitude = lat;
+                            wizardState.longitude = lon;
+                            leafletMap.setView([lat, lon], 15);
+                        }
+                    })
+                    .catch(() => {});
+            }
+        }
+
+        // ── 4. Category Selection ──
+        function selectPlaceType(type, cardEl) {
+            wizardState.placeType = type;
+            const hiddenInput = document.getElementById('f-placeType');
+            if (hiddenInput) hiddenInput.value = type;
+            document.querySelectorAll('.place-type-card').forEach(c => c.classList.remove('selected'));
+            cardEl.classList.add('selected');
+        }
+
+        function selectCategory(type, cardEl) {
+            wizardState.propertyType = type;
+            const hiddenInput = document.getElementById('f-propertyType');
+            if (hiddenInput) hiddenInput.value = type;
+            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('selected'));
+            cardEl.classList.add('selected');
+        }
+
+        // ── 5. Stepper Counters ──
+        function updateCounter(field, delta) {
+            const min = field === 'maxGuests' ? 1 : (field === 'bathrooms' ? 1 : 0);
+            wizardState[field] = Math.max(min, wizardState[field] + delta);
+            document.getElementById('val-' + field).textContent = wizardState[field];
+        }
+
+        // ── 6. Amenity Toggles ──
+        function toggleAmenity(key, el) {
+            const idx = wizardState.amenities.indexOf(key);
+            if (idx > -1) {
+                wizardState.amenities.splice(idx, 1);
+                el.classList.remove('selected');
+            } else {
+                wizardState.amenities.push(key);
+                el.classList.add('selected');
+            }
+        }
+
+        // ── 7. Photos ──
+        function onPhotoUrlChange(url) {
+            if (url && url.startsWith('http')) {
+                wizardState.housePhoto = url;
+                document.getElementById('live-photo-preview').src = url;
+                document.getElementById('review-thumb-img').src = url;
+            }
+        }
+
+        function applyPresetPhoto(url) {
+            document.getElementById('input-photo').value = url;
+            onPhotoUrlChange(url);
+        }
+
+        // ── 8. Price Estimate ──
+        function updatePriceEstimate(val) {
+            const price = Number(val) || 0;
+            wizardState.homePrice = price;
+            document.getElementById('disp-base-price').textContent = '₹' + price.toLocaleString('en-IN');
+            document.getElementById('disp-payout-price').textContent = '₹' + Math.round(price * 0.97).toLocaleString('en-IN');
+            document.getElementById('review-price-disp').innerHTML = '₹' + price.toLocaleString('en-IN') + ' <span style="font-size: 12px; font-weight: 400; color: #6B7770;">/ night</span>';
+        }
+
+        // ── 9. Step 5 Leaflet Privacy Map & Precision Toggle ──
+        let privacyLeafletMap = null;
+        let privacyExactMarker = null;
+        let privacyApproxCircle = null;
+
+        function initOrUpdatePrivacyMap() {
+            const lat = wizardState.latitude || 28.6139;
+            const lon = wizardState.longitude || 77.2090;
+
+            // Update top floating address pill text
+            const pillText = document.getElementById('privacy-address-pill-text');
+            if (pillText) {
+                pillText.textContent = wizardState.homeAddress || `${wizardState.city ? wizardState.city + ', ' : ''}${wizardState.state || 'India'}`;
+            }
+
+            setTimeout(() => {
+                const mapEl = document.getElementById('privacy-leaflet-map');
+                if (!mapEl) return;
+
+                if (!privacyLeafletMap) {
+                    privacyLeafletMap = L.map('privacy-leaflet-map', {
+                        zoomControl: false,
+                        attributionControl: false,
+                        dragging: true,
+                        scrollWheelZoom: false,
+                        doubleClickZoom: true
+                    }).setView([lat, lon], 15);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(privacyLeafletMap);
+
+                    // Custom house pin icon matching Step 4 badge
+                    const pinIcon = L.divIcon({
+                        className: 'custom-privacy-marker',
+                        html: `
+                            <div class="map-center-badge" style="transform: translateY(-50%); box-shadow: 0 4px 14px rgba(0,0,0,0.35); pointer-events: none;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                            </div>
+                        `,
+                        iconSize: [44, 44],
+                        iconAnchor: [22, 22]
+                    });
+
+                    privacyExactMarker = L.marker([lat, lon], { icon: pinIcon });
+
+                    // Soft neighborhood approximate circular zone (~500m radius)
+                    privacyApproxCircle = L.circle([lat, lon], {
+                        radius: 500,
+                        color: '#143528',
+                        fillColor: '#1D4333',
+                        fillOpacity: 0.16,
+                        weight: 2,
+                        dashArray: '6, 6'
+                    });
+                } else {
+                    privacyLeafletMap.setView([lat, lon], 15);
+                    if (privacyExactMarker) privacyExactMarker.setLatLng([lat, lon]);
+                    if (privacyApproxCircle) privacyApproxCircle.setLatLng([lat, lon]);
+                    privacyLeafletMap.invalidateSize();
+                }
+
+                syncPrivacyMapLayers();
+            }, 120);
+        }
+
+        function syncPrivacyMapLayers() {
+            if (!privacyLeafletMap) return;
+            const toggleBtn = document.getElementById('privacy-toggle-btn');
+            const hiddenInput = document.getElementById('f-showPreciseLocation');
+
+            if (wizardState.showPreciseLocation) {
+                if (toggleBtn) toggleBtn.classList.add('active');
+                if (hiddenInput) hiddenInput.value = 'true';
+                if (privacyApproxCircle && privacyLeafletMap.hasLayer(privacyApproxCircle)) {
+                    privacyLeafletMap.removeLayer(privacyApproxCircle);
+                }
+                if (privacyExactMarker && !privacyLeafletMap.hasLayer(privacyExactMarker)) {
+                    privacyExactMarker.addTo(privacyLeafletMap);
+                }
+            } else {
+                if (toggleBtn) toggleBtn.classList.remove('active');
+                if (hiddenInput) hiddenInput.value = 'false';
+                if (privacyExactMarker && privacyLeafletMap.hasLayer(privacyExactMarker)) {
+                    privacyLeafletMap.removeLayer(privacyExactMarker);
+                }
+                if (privacyApproxCircle && !privacyLeafletMap.hasLayer(privacyApproxCircle)) {
+                    privacyApproxCircle.addTo(privacyLeafletMap);
+                }
+            }
+        }
+
+        function togglePreciseLocation() {
+            wizardState.showPreciseLocation = !wizardState.showPreciseLocation;
+            syncPrivacyMapLayers();
+        }
+
+        function openPrivacyInfoModal() {
+            const overlay = document.getElementById('privacy-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closePrivacyInfoModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('privacy-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        // ── 10. Step Navigation Logic ──
+        function navigateStep(direction) {
+            // Validation before going forward
+            if (direction === 1) {
+                if (currentStep === 4) {
+                    // Step 4 is Address selection
+                    if (!wizardState.homeAddress) {
+                        openAddressModal();
+                        return;
+                    }
+                } else if (currentStep === 9) {
+                    // Step 9 is Photo input
+                    const photo = document.getElementById('input-photo').value.trim();
+                    if (!photo) {
+                        alert('Please provide a photo URL or choose a preset.');
+                        document.getElementById('input-photo').focus();
+                        return;
+                    }
+                    wizardState.housePhoto = photo;
+                } else if (currentStep === 10) {
+                    // Step 10 is Title input
+                    const title = document.getElementById('input-title').value.trim();
+                    if (!title) {
+                        alert('Please provide a title for your sanctuary.');
+                        document.getElementById('input-title').focus();
+                        return;
+                    }
+                    wizardState.homeName = title;
+                    wizardState.description = document.getElementById('input-desc').value.trim();
+                } else if (currentStep === 11) {
+                    // Step 11 is Final submission!
+                    submitListingForm();
+                    return;
+                }
+            }
+
+            // Move step
+            document.getElementById('step-' + currentStep).classList.remove('active');
+            currentStep += direction;
+            currentStep = Math.max(1, Math.min(totalSteps, currentStep));
+            document.getElementById('step-' + currentStep).classList.add('active');
+            
+            if (currentStep === 1) {
+                triggerHouseRebuildAnimation();
+            } else if (currentStep === 5) {
+                initOrUpdateMap();
+            } else if (currentStep === 6) {
+                initOrUpdatePrivacyMap();
+            }
+
+            // Scroll to top of stage
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Update footer
+            updateFooterBar();
+        }
+
+        function updateFooterBar() {
+            // Progress bar
+            const pct = Math.round((currentStep / totalSteps) * 100);
+            document.getElementById('progress-bar-fill').style.width = pct + '%';
+
+            // Back button
+            const backBtn = document.getElementById('btn-back');
+            backBtn.disabled = (currentStep === 1);
+
+            // Next button text & styling
+            const nextBtn = document.getElementById('btn-next');
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Publish Accommodation</span>
+                `;
+                nextBtn.style.background = '#1D4333';
+                nextBtn.style.padding = '14px 40px';
+
+                // Populate Step 10 review card
+                document.getElementById('review-title-disp').textContent = wizardState.homeName || 'Untitled Sanctuary';
+                document.getElementById('review-loc-disp').textContent = (wizardState.city ? wizardState.city + ', ' : '') + (wizardState.state || 'India');
+                document.getElementById('review-thumb-img').src = wizardState.housePhoto;
+            } else {
+                nextBtn.innerHTML = `
+                    <span>Next</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                `;
+                nextBtn.style.background = '#143528';
+                nextBtn.style.padding = '14px 34px';
+            }
+        }
+
+        // ── 11. Form Submission ──
+        function submitListingForm() {
+            document.getElementById('f-propertyType').value = wizardState.propertyType;
+            const fPlace = document.getElementById('f-placeType'); if (fPlace) fPlace.value = wizardState.placeType;
+            const fLat = document.getElementById('f-latitude'); if (fLat) fLat.value = wizardState.latitude;
+            const fLng = document.getElementById('f-longitude'); if (fLng) fLng.value = wizardState.longitude;
+            const fPrecise = document.getElementById('f-showPreciseLocation'); if (fPrecise) fPrecise.value = wizardState.showPreciseLocation;
+            document.getElementById('f-homeAddress').value = wizardState.homeAddress;
+            document.getElementById('f-city').value = wizardState.city;
+            document.getElementById('f-state').value = wizardState.state;
+            document.getElementById('f-maxGuests').value = wizardState.maxGuests;
+            document.getElementById('f-bedrooms').value = wizardState.bedrooms;
+            document.getElementById('f-beds').value = wizardState.beds;
+            document.getElementById('f-bathrooms').value = wizardState.bathrooms;
+            document.getElementById('f-amenities').value = wizardState.amenities.join(',');
+            document.getElementById('f-housePhoto').value = wizardState.housePhoto;
+            document.getElementById('f-homeName').value = wizardState.homeName;
+            document.getElementById('f-description').value = wizardState.description;
+            document.getElementById('f-homePrice').value = wizardState.homePrice;
+
+            // Submit form
+            document.getElementById('airbnb-listing-form').submit();
+        }
+    </script>
 </body>
 </html>

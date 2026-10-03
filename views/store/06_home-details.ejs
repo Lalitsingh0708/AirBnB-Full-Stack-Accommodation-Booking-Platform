@@ -1,126 +1,455 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= home.houseName %> | Details</title>
-    <link rel="stylesheet" href="/output.css" />
+    <title><%= home.houseName %> &bull; StayNest</title>
+    <meta name="description" content="Book <%= home.houseName %> located in <%= home.houseAddress %> on StayNest." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+
     <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0f261b;
+            --emerald-mid: #143528;
+            --gold-accent: #D4AF6A;
+            --text-dark: #121A16;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background-color: #fcfcfc;
-            font-family: system-ui, -apple-system, sans-serif;
-            color: #222222;
+            background-color: var(--bg-beige);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
         }
 
         .details-container {
-            max-width: 960px;
-            margin: 32px auto;
+            max-width: 1140px;
+            margin: 28px auto 60px auto;
             padding: 0 20px;
+        }
+
+        .back-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: color 0.15s ease;
+        }
+
+        .back-nav-link:hover {
+            color: var(--emerald-dark);
+        }
+
+        /* Title Area */
+        .property-title-group {
+            margin-bottom: 24px;
+        }
+
+        .property-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--emerald-dark);
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 14.5px;
+        }
+
+        .loc-icon {
+            color: var(--emerald-mid);
+        }
+
+        /* Image Hero */
+        .property-image-hero-wrap {
+            width: 100%;
+            height: 480px;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 36px;
+            box-shadow: 0 16px 40px -10px rgba(18, 43, 32, 0.12);
+            background: #EFE9DC;
         }
 
         .property-image-hero {
             width: 100%;
-            height: 420px;
-            border-radius: 20px;
+            height: 100%;
             object-fit: cover;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
 
-        .booking-card {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-            position: sticky;
-            top: 100px;
+        /* Split Grid Layout */
+        .content-split-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 52px;
+            align-items: start;
         }
 
-        .btn-reserve {
-            background: linear-gradient(135deg, #ff385c, #e00b41);
-            color: white;
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
+        /* Left Side */
+        .left-info-area {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .host-summary-card {
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .host-title {
+            font-size: 21px;
             font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
 
-        .btn-reserve:hover {
-            opacity: 0.92;
+        .host-meta {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .section-heading {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .property-desc-text {
+            color: #374151;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* Amenities Grid */
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .amenity-icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #EBF2ED;
+            color: var(--emerald-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Sticky Booking Widget */
+        .booking-widget-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 16px 45px -10px rgba(18, 43, 32, 0.12);
+            position: sticky;
+            top: 110px;
+        }
+
+        .widget-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 22px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 18px;
+        }
+
+        .widget-price {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--emerald-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .widget-night {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .widget-rating-tag {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--emerald-dark);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .star-icon {
+            color: var(--gold-accent);
+        }
+
+        .booking-dates-box {
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        .date-input-row {
+            display: flex;
+        }
+
+        .date-field {
+            flex: 1;
+            padding: 10px 12px;
+            background: #FAF7F0;
+        }
+
+        .date-field:first-child {
+            border-right: 1px solid var(--border-light);
+        }
+
+        .date-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .date-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        .btn-reserve-action {
+            width: 100%;
+            height: 48px;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 9999px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(20, 53, 40, 0.28);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            margin-bottom: 14px;
+        }
+
+        .btn-reserve-action:hover {
+            background: #0B1C14;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(20, 53, 40, 0.38);
+        }
+
+        .widget-sub-note {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12.5px;
+        }
+
+        @media (max-width: 860px) {
+            .content-split-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .property-image-hero-wrap {
+                height: 320px;
+            }
+
+            .booking-widget-card {
+                position: static;
+            }
         }
     </style>
 </head>
-
 <body>
-    <!-- Header -->
-    <%- include("../partials/01_header") %>
+    <!-- 1. Global Navigation Header -->
+    <%- include("../partials/01_header.ejs") %>
 
     <main class="details-container">
-        <!-- Back Navigation Button -->
-        <a href="/" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #666; font-size: 14px; font-weight: 600; margin-bottom: 16px;">
-            ← Back to All Stays
+        <!-- Back Navigation -->
+        <a href="/" class="back-nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Stays</span>
         </a>
 
         <!-- Title & Location -->
-        <h1 style="font-size: 32px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px;">
-            <%= home.houseName %>
-        </h1>
-        <p style="font-size: 15px; color: #666; margin: 0 0 24px 0;">
-            📍 <%= home.houseAddress %>
-        </p>
+        <div class="property-title-group">
+            <h1 class="property-title"><%= home.houseName %></h1>
+            <p class="property-location">
+                <svg class="loc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span><%= home.houseAddress %></span>
+            </p>
+        </div>
 
         <!-- Main Banner Image -->
-        <div style="margin-bottom: 32px;">
+        <div class="property-image-hero-wrap">
             <img 
                 src="<%= home.housePhoto %>" 
                 alt="<%= home.houseName %>" 
                 class="property-image-hero"
-                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1000';"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80';"
             />
         </div>
 
-        <!-- Details Grid (Left Details, Right Reserve Box) -->
-        <div style="display: grid; grid-template-columns: 1fr 340px; gap: 48px; align-items: start;">
+        <!-- Split Grid (Left Details, Right Reserve Box) -->
+        <div class="content-split-grid">
             
             <!-- Left Info Area -->
-            <div>
-                <div style="padding-bottom: 24px; border-bottom: 1px solid #eee;">
-                    <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 8px 0;">Entire villa hosted by Admin</h3>
-                    <p style="color: #717171; font-size: 14px; margin: 0;">4 guests · 2 bedrooms · 2 beds · 2 baths</p>
+            <div class="left-info-area">
+                <div class="host-summary-card">
+                    <h2 class="host-title">Architectural Stay on StayNest</h2>
+                    <p class="host-meta">4 guests &bull; 2 bedrooms &bull; 2 king beds &bull; 2 private baths</p>
                 </div>
 
-                <div style="padding: 24px 0; border-bottom: 1px solid #eee;">
-                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">About this property</h4>
-                    <p style="color: #484848; line-height: 1.6; font-size: 15px; margin: 0;">
-                        Experience luxury and peace at <%= home.houseName %>. Located right in <%= home.houseAddress %>, this beautiful space offers top-tier amenities, comfortable bedding, and quick access to local attractions. Perfect for families, friends, or solo travelers.
+                <div>
+                    <h3 class="section-heading">About this Sanctuary</h3>
+                    <p class="property-desc-text">
+                        Experience bespoke luxury and restorative calm at <%= home.houseName %>. Situated in <%= home.houseAddress %>, this private sanctuary pairs natural light and curated architectural finishes with warm hospitality. Designed for mindful travelers, weekend retreats, and extended remote work.
                     </p>
+                </div>
+
+                <!-- Amenities with Clean SVGs -->
+                <div>
+                    <h3 class="section-heading">What this place offers</h3>
+                    <ul class="amenities-grid">
+                        <li class="amenity-item">
+                            <div class="amenity-icon-box">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                            </div>
+                            <span>High-speed Fiber WiFi</span>
+                        </li>
+                        <li class="amenity-item">
+                            <div class="amenity-icon-box">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
+                            </div>
+                            <span>Climate Control / AC</span>
+                        </li>
+                        <li class="amenity-item">
+                            <div class="amenity-icon-box">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                            </div>
+                            <span>Free On-Premise Parking</span>
+                        </li>
+                        <li class="amenity-item">
+                            <div class="amenity-icon-box">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><path d="M6 12V4h12v8"></path></svg>
+                            </div>
+                            <span>Fully Equipped Kitchen</span>
+                        </li>
+                        <li class="amenity-item">
+                            <div class="amenity-icon-box">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
+                            </div>
+                            <span>4K Smart Entertainment</span>
+                        </li>
+                        <li class="amenity-item">
+                            <div class="amenity-icon-box">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            </div>
+                            <span>Continuous Hot Water</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
             <!-- Right Side Reserve Widget -->
-            <div class="booking-card">
-                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px;">
+            <aside class="booking-widget-card" aria-label="Reservation summary">
+                <div class="widget-header-row">
                     <div>
-                        <span style="font-size: 26px; font-weight: 800; color: #222;">₹<%= home.housePrice %></span>
-                        <span style="font-size: 14px; color: #717171;"> / night</span>
+                        <span class="widget-price">₹<%= Number(home.housePrice).toLocaleString('en-IN') %></span>
+                        <span class="widget-night">/ night</span>
                     </div>
-                    <span style="font-size: 12px; font-weight: 600; color: #ff385c;">★ New</span>
+                    <span class="widget-rating-tag">
+                        <svg class="star-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>4.95 &bull; 28 reviews</span>
+                    </span>
                 </div>
 
-                <button class="btn-reserve">Reserve Now</button>
-                <div style="margin-top: 10px;">
-                    <%-include("../partials/02_favourite", {home : home}) %> 
+                <!-- Booking Dates -->
+                <div class="booking-dates-box">
+                    <div class="date-input-row">
+                        <div class="date-field">
+                            <label class="date-label" for="check-in-date">Check-in</label>
+                            <input type="date" id="check-in-date" class="date-input" value="2026-10-15" />
+                        </div>
+                        <div class="date-field">
+                            <label class="date-label" for="check-out-date">Checkout</label>
+                            <input type="date" id="check-out-date" class="date-input" value="2026-10-18" />
+                        </div>
+                    </div>
                 </div>
-                <p style="text-align: center; color: #717171; font-size: 12px; margin-top: 12px;">You won't be charged yet</p>
-            </div>
+
+                <!-- Reserve Button -->
+                <a href="/bookings" class="btn-reserve-action" style="text-decoration: none;">
+                    Reserve this Stay
+                </a>
+
+                <!-- Favourite Button -->
+                <div style="display: flex; justify-content: center; margin-bottom: 12px;">
+                    <%- include("../partials/02_favourite", { home: home }) %>
+                </div>
+
+                <p class="widget-sub-note">You will not be billed until booking confirmation</p>
+            </aside>
 
         </div>
     </main>
 </body>
-
 </html>

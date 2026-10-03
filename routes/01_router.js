@@ -12,7 +12,6 @@ UserRouter.use(express.static(path.join(paths , "public"))) ;
 // mai /host -> host-dashboard wala page dunga mai ab change krunga isko specialially host k liye or 
 // homelist ko store k liye 
 UserRouter.get("/",postAddHome) ;  // postAddHome gives me the list of the all homes which are listed on the portal 
-UserRouter.get("/host" ,getHomesList) ; // isme index page aata h host ka 
 UserRouter.get("/bookings" ,getBookings) ;
 UserRouter.get("/favourite-list" ,getFavroutelist) ;
 UserRouter.get("/index" ,postAddHome) ;

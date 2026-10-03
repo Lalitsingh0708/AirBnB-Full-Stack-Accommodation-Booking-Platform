@@ -1,33 +1,450 @@
-<header class="sticky top-0 z-50 bg-rose-500 border-b border-gray-200 px-6 py-4 md:px-12 flex items-center justify-between shadow-sm">
-    
-    <!-- Logo Area -->
-    <a href="/" class="flex items-center space-x-2 text-2xl font-black tracking-tight">
-        <span>🏠</span>
-        <span class="text-white" style="color: white;">airbnb</span>
-    </a>
-
-    <!-- Center Navigation Links (Fixed Color & Visibility) -->
-    <nav class="flex items-center space-x-4 md:space-x-8 text-xs md:text-sm font-medium">
-        <a href="/index" class="text-white font-semibold ">Stays</a>
-        <a href="/bookings" class="text-white font-semibold ">Bookings</a>
-        <a href="/favourite-list" class="text-white font-semibol ">Favourite</a>
-        <a href="/host/view-Home" class="text-white font-semibol ">Host-Homes</a>
+<!-- ═══════════════════════════════════════════════════════════
+     STAYNEST GLOBAL NAVIGATION HEADER
+     - Clean SVG branding (no emojis)
+     - Real user session integration (res.locals.user)
+     - Interactive profile dropdown with auth state & logout
+═══════════════════════════════════════════════════════════ -->
+<header class="staynest-nav-header">
+    <div class="nav-container">
         
-    
-    </nav>
-
-    <!-- Right Side Menu Actions -->
-    <div class="flex items-center space-x-4">
-        <a href="/host/add-home" class="text-xs md:text-sm font-medium text-white hover:bg-rose-600 px-3 py-2 rounded-full transition duration-200">
-            Airbnb your home
+        <!-- 1. Brand Logo -->
+        <a href="/" class="brand-link" aria-label="StayNest Home">
+            <svg class="brand-logo-icon" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="34" height="34" rx="10" fill="#122B20"/>
+                <path d="M17 7L8 14.5V25C8 25.5523 8.44772 26 9 26H14V19H20V26H25C25.5523 26 26 25.5523 26 25V14.5L17 7Z" fill="#FAF7F0"/>
+                <circle cx="17" cy="14" r="2.2" fill="#D4AF6A"/>
+            </svg>
+            <span class="brand-name">Stay<span class="brand-name-accent">Nest</span></span>
         </a>
-    
-        <!-- User Menu Profile Pill Widget -->
-        <button class="flex items-center space-x-3 border border-gray-300 rounded-full p-2 pl-3 hover:shadow-md transition duration-200 bg-white">
-            <span class="text-gray-600 text-sm">☰</span>
-            <div class="w-6 h-6 bg-gray-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                LB
+
+        <!-- 2. Center Nav Links -->
+        <nav class="center-nav" aria-label="Main Navigation">
+            <a href="/" class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'stays') ? 'active' : '' %>">Stays</a>
+            <a href="/bookings" class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'bookings') ? 'active' : '' %>">Bookings</a>
+            <a href="/favourite-list" class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'favourites') ? 'active' : '' %>">Saved</a>
+            <% if (typeof user !== 'undefined' && user && user.role === 'host') { %>
+                <a href="/host" class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'host') ? 'active' : '' %>">Host Dashboard</a>
+            <% } %>
+        </nav>
+
+        <!-- 3. Right User Section -->
+        <div class="right-nav">
+            <!-- Host CTA -->
+            <% if (!user || user.role !== 'host') { %>
+                <a href="<%= user ? '/host/add-home' : '/auth/register' %>" class="host-cta-link">
+                    List your home
+                </a>
+            <% } else { %>
+                <a href="/host/add-home" class="host-cta-link">
+                    + Add Listing
+                </a>
+            <% } %>
+
+            <!-- Profile Menu Pill Widget -->
+            <div class="profile-menu-wrap" id="profile-menu-container">
+                <button type="button" class="profile-pill-btn" id="profile-pill-trigger" aria-expanded="false" aria-label="User navigation menu">
+                    <!-- SVG Hamburger Icon -->
+                    <svg class="menu-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+
+                    <!-- User Avatar / Initials -->
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <div class="user-avatar user-avatar--logged" title="<%= user.name %>">
+                            <% 
+                                const names = (user.name || 'User').trim().split(' ');
+                                const initials = names.length > 1 ? (names[0][0] + names[names.length - 1][0]).toUpperCase() : names[0].substring(0, 2).toUpperCase();
+                            %>
+                            <span><%= initials %></span>
+                        </div>
+                    <% } else { %>
+                        <div class="user-avatar user-avatar--guest">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                    <% } %>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div class="profile-dropdown" id="profile-dropdown-menu">
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <!-- Logged In Header -->
+                        <div class="dropdown-header">
+                            <p class="dropdown-user-name"><%= user.name %></p>
+                            <p class="dropdown-user-email"><%= user.email %></p>
+                            <span class="dropdown-role-badge <%= user.role === 'host' ? 'role-host' : 'role-guest' %>">
+                                <%= user.role === 'host' ? 'Host Account' : 'Guest Account' %>
+                            </span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+
+                        <!-- User Links -->
+                        <a href="/bookings" class="dropdown-item">My Bookings</a>
+                        <a href="/favourite-list" class="dropdown-item">Saved Stays</a>
+
+                        <% if (user.role === 'host') { %>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-section-title">Host Operations</div>
+                            <a href="/host" class="dropdown-item">Host Dashboard</a>
+                            <a href="/host/view-home" class="dropdown-item">Manage Listings</a>
+                            <a href="/host/add-home" class="dropdown-item font-semibold text-emerald-800">+ Add New Stay</a>
+                        <% } %>
+
+                        <div class="dropdown-divider"></div>
+                        <form action="/auth/logout" method="POST" class="logout-form">
+                            <button type="submit" class="dropdown-item dropdown-item--logout">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                <span>Log out</span>
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <!-- Guest Links -->
+                        <a href="/auth/login" class="dropdown-item dropdown-item--primary">Log in</a>
+                        <a href="/auth/register" class="dropdown-item">Sign up</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/auth/register" class="dropdown-item">Host your home</a>
+                        <a href="/terms" class="dropdown-item">Help & Terms</a>
+                    <% } %>
+                </div>
             </div>
-        </button>
+        </div>
+
     </div>
 </header>
+
+<!-- Scoped CSS for Global Nav -->
+<style>
+    .staynest-nav-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #FAF7F0;
+        border-bottom: 1px solid #E8E2D5;
+        box-shadow: 0 1px 4px rgba(18, 43, 32, 0.04);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .nav-container {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* Brand */
+    .brand-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: #111827;
+        transition: transform 0.15s ease;
+    }
+
+    .brand-link:hover {
+        transform: translateY(-0.5px);
+    }
+
+    .brand-name {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: #111827;
+    }
+
+    .brand-name-accent {
+        color: #122B20;
+        font-weight: 900;
+    }
+
+    /* Center Nav */
+    .center-nav {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+    }
+
+    .nav-link {
+        text-decoration: none;
+        color: #4B5563;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 6px 4px;
+        position: relative;
+        transition: color 0.15s ease;
+    }
+
+    .nav-link:hover {
+        color: #111827;
+    }
+
+    .nav-link.active {
+        color: #122B20;
+        font-weight: 600;
+    }
+
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #D4AF6A;
+        border-radius: 2px;
+    }
+
+    /* Right Nav */
+    .right-nav {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .host-cta-link {
+        text-decoration: none;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #122B20;
+        padding: 8px 14px;
+        border-radius: 9999px;
+        transition: background 0.15s ease;
+    }
+
+    .host-cta-link:hover {
+        background: #EFE9DC;
+    }
+
+    /* Profile Pill Widget */
+    .profile-menu-wrap {
+        position: relative;
+    }
+
+    .profile-pill-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #FAF7F0;
+        border: 1px solid #D8D2C4;
+        padding: 5px 6px 5px 12px;
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .profile-pill-btn:hover {
+        box-shadow: 0 2px 8px rgba(18, 43, 32, 0.12);
+        border-color: #D4AF6A;
+    }
+
+    .menu-icon {
+        color: #122B20;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .user-avatar--logged {
+        background: #122B20;
+        color: #FAF7F0;
+    }
+
+    .user-avatar--guest {
+        background: #EFE9DC;
+        color: #122B20;
+    }
+
+    /* Dropdown */
+    .profile-dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 250px;
+        background: #FAF7F0;
+        border-radius: 16px;
+        border: 1px solid #E8E2D5;
+        box-shadow: 0 12px 36px -5px rgba(18, 43, 32, 0.18), 0 0 1px rgba(0, 0, 0, 0.08);
+        padding: 8px 0;
+        display: none;
+        z-index: 1000;
+        animation: dropFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .profile-dropdown.is-open {
+        display: block;
+    }
+
+    @keyframes dropFade {
+        from {
+            opacity: 0;
+            transform: translateY(-6px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .dropdown-header {
+        padding: 10px 18px 8px;
+    }
+
+    .dropdown-user-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .dropdown-user-email {
+        font-size: 12px;
+        color: #6B7280;
+        margin: 2px 0 6px;
+        word-break: break-all;
+    }
+
+    .dropdown-role-badge {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+    .dropdown-role-badge.role-host {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .dropdown-role-badge.role-guest {
+        background: #E0E7FF;
+        color: #3730A3;
+    }
+
+    .dropdown-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #9CA3AF;
+        padding: 6px 18px 4px;
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background: #F3F4F6;
+        margin: 6px 0;
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 9px 18px;
+        font-size: 13.5px;
+        color: #374151;
+        text-decoration: none;
+        background: transparent;
+        border: none;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.12s ease, color 0.12s ease;
+        box-sizing: border-box;
+    }
+
+    .dropdown-item:hover {
+        background: #F9FAFB;
+        color: #111827;
+    }
+
+    .dropdown-item--primary {
+        font-weight: 600;
+        color: #122B20;
+    }
+
+    .dropdown-item--logout {
+        color: #DC2626;
+        font-weight: 500;
+    }
+
+    .dropdown-item--logout:hover {
+        background: #FEF2F2;
+        color: #B91C1C;
+    }
+
+    .logout-form {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .center-nav {
+            display: none;
+        }
+
+        .host-cta-link {
+            display: none;
+        }
+    }
+</style>
+
+<!-- Toggle Script for User Menu Dropdown -->
+<script>
+    (function () {
+        const trigger = document.getElementById('profile-pill-trigger');
+        const dropdown = document.getElementById('profile-dropdown-menu');
+        const container = document.getElementById('profile-menu-container');
+
+        if (!trigger || !dropdown || !container) return;
+
+        function toggleDropdown(e) {
+            e.stopPropagation();
+            const isOpen = dropdown.classList.toggle('is-open');
+            trigger.setAttribute('aria-expanded', isOpen);
+        }
+
+        function closeDropdown() {
+            dropdown.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        trigger.addEventListener('click', toggleDropdown);
+
+        // Close on clicking outside
+        document.addEventListener('click', function (e) {
+            if (!container.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeDropdown();
+            }
+        });
+    })();
+</script>

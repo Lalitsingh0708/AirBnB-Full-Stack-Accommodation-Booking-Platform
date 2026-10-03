@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= mode === 'login' ? 'Sign In' : 'Create Account' %> | StayNest</title>
+    <meta name="description" content="StayNest - Premium accommodation and vacation rentals booking platform." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-deep: #050c08;
+            --cream-bg: #FAF7F0;
+            --emerald-dark: #0f261b;
+            --emerald-mid: #173829;
+            --gold-accent: #D4AF6A;
+            --gold-light: #EBD6A7;
+            --text-dark: #141A17;
+            --input-border: #D8D2C4;
+            --input-focus: #173829;
+            --rake: -7deg;
+            --rake-reverse: 7deg;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: var(--cream-bg);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ─── PURE FULL-PAGE SHELL (NO MARGINS, 100VW x 100VH) ─── */
+        .auth-card {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: var(--cream-bg);
+        }
+
+        /* ─── FIXED 50VW FORM PANES ───────────────────── */
+        .form-pane {
+            position: absolute;
+            top: 0;
+            height: 100vh;
+            width: 50vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: opacity 0.35s ease;
+        }
+
+        /* Left half for Login */
+        .pane-login {
+            left: 0;
+        }
+
+        /* Right half for Register */
+        .pane-register {
+            right: 0;
+        }
+
+        /* Centered form box with fixed max-width */
+        .form-box {
+            width: 100%;
+            max-width: 410px;
+            padding: 24px;
+        }
+
+        /* Inactive pane styling */
+        .auth-card[data-mode="login"] .pane-register {
+            pointer-events: none;
+            user-select: none;
+            opacity: 0;
+        }
+        .auth-card[data-mode="register"] .pane-login {
+            pointer-events: none;
+            user-select: none;
+            opacity: 0;
+        }
+
+        /* Active pane */
+        .auth-card[data-mode="login"] .pane-login {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .auth-card[data-mode="register"] .pane-register {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ─── FORM TYPOGRAPHY & ELEMENTS ──────────────── */
+        .form-title-group {
+            margin-bottom: 24px;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .title-accent-bar {
+            width: 44px;
+            height: 3.5px;
+            background: linear-gradient(90deg, #D4AF6A 0%, #E8C885 100%);
+            box-shadow: 0 1px 6px rgba(212, 175, 106, 0.35);
+            border-radius: 3px;
+            margin-top: 6px;
+        }
+
+        .error-alert {
+            background: #FDF1F2;
+            border: 1px solid #F5C6CB;
+            border-left: 3.5px solid #D63031;
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 13px;
+            color: #C0152E;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ─── UNDERLINE INPUT FIELDS ──────────────────── */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px solid var(--input-border);
+            transform-origin: left center;
+            transition: border-color 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+        }
+
+        .input-wrap:hover {
+            transform: scale(1.025);
+            border-bottom-color: #D4AF6A;
+        }
+
+        .input-wrap:focus-within {
+            transform: scale(1.025);
+            border-bottom-color: #D4AF6A;
+            border-bottom-width: 2px;
+            box-shadow: 0 2px 8px rgba(212, 175, 106, 0.28);
+        }
+
+        .input-wrap input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--text-dark);
+            padding: 10px 32px 10px 0;
+            font-weight: 400;
+        }
+
+        .input-wrap input::placeholder {
+            color: #9AA39E;
+            font-size: 14.5px;
+            font-weight: 400;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 2px;
+            color: #8C9690;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.25s ease;
+        }
+
+        .input-wrap:hover .input-icon,
+        .input-wrap:focus-within .input-icon {
+            color: #D4AF6A;
+        }
+
+        .btn-toggle-pw {
+            position: absolute;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #8C9690;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.25s ease;
+        }
+
+        .btn-toggle-pw:hover,
+        .input-wrap:focus-within .btn-toggle-pw {
+            color: #D4AF6A;
+        }
+
+        /* ─── PASSWORD STRENGTH METER ─────────────────── */
+        .pw-strength-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: -10px;
+            margin-bottom: 18px;
+        }
+
+        .strength-bars {
+            display: flex;
+            gap: 4px;
+        }
+
+        .strength-bar {
+            width: 24px;
+            height: 3.5px;
+            background: #D9D3C7;
+            border-radius: 2px;
+            transition: background 0.25s ease;
+        }
+
+        .strength-bar.active {
+            background: #2E7D32;
+        }
+
+        .strength-hint {
+            font-size: 11.5px;
+            color: #7A857F;
+            font-weight: 400;
+        }
+
+        /* ─── ROLE SELECTOR (GUEST / HOST) ────────────── */
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .role-choice {
+            flex: 1;
+            position: relative;
+        }
+
+        .role-choice input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .role-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 12px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #55625B;
+            background: rgba(255, 255, 255, 0.55);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .role-choice input[type="radio"]:checked + .role-label {
+            border-color: var(--emerald-mid);
+            background: #EBF2ED;
+            color: var(--emerald-mid);
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(23, 56, 41, 0.08);
+        }
+
+        /* ─── CHECKBOX & FORGOT PASSWORD ROW ──────────── */
+        .form-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+            font-size: 13.5px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #4A5650;
+            user-select: none;
+            font-size: 13.5px;
+            font-weight: 400;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 17px;
+            height: 17px;
+            border: 1.5px solid #28543E;
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .checkbox-label input[type="checkbox"]::before {
+            content: "";
+            width: 9px;
+            height: 5px;
+            border-left: 2px solid #fff;
+            border-bottom: 2px solid #fff;
+            transform: rotate(-45deg) translate(1px, -1px) scale(0);
+            transition: transform 0.15s ease;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked {
+            background: #1B4533;
+            border-color: #1B4533;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked::before {
+            transform: rotate(-45deg) translate(1px, -1px) scale(1);
+        }
+
+        .forgot-link {
+            color: #55625B;
+            font-weight: 500;
+            text-decoration: underline;
+            text-decoration-color: #D4AF6A;
+            text-underline-offset: 3px;
+            font-size: 13px;
+            transition: color 0.15s, text-decoration-color 0.15s;
+        }
+
+        .forgot-link:hover {
+            color: #17221C;
+            text-decoration-color: #C59A45;
+        }
+
+        /* ─── PRIMARY BUTTON ──────────────────────────── */
+        .btn-auth-submit {
+            width: 100%;
+            height: 50px;
+            background: #143528;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 9999px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(18, 48, 35, 0.32);
+            transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+            margin-bottom: 18px;
+        }
+
+        .btn-auth-submit:hover {
+            background: #0E271D;
+            transform: translateY(-1.5px);
+            box-shadow: 0 8px 24px rgba(18, 48, 35, 0.42);
+        }
+
+        .btn-auth-submit:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(18, 48, 35, 0.3);
+        }
+
+        /* ─── SWITCH PROMPT ───────────────────────────── */
+        .auth-switch-text {
+            font-size: 13.5px;
+            color: #6C7771;
+            text-align: left;
+        }
+
+        .switch-link-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #17221C;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: #D4AF6A;
+            text-decoration-thickness: 1.5px;
+            text-underline-offset: 4px;
+            transition: text-decoration-color 0.2s ease, text-decoration-thickness 0.2s ease;
+        }
+
+        .switch-link-btn:hover {
+            color: #17221C;
+            text-decoration-color: #C59A45;
+            text-decoration-thickness: 2.5px;
+        }
+
+        /* ═════════════════════════════════════════════════
+           THE FULL-SCREEN SKEWED BLADE (.auth_band)
+           - Occupies 60vw width, 110vh height.
+           - In Login mode: left is 46vw (Right side covered).
+           - In Register mode: sweeps across to the left!
+        ═════════════════════════════════════════════════ */
+        .auth_band {
+            position: absolute;
+            top: -5vh;
+            bottom: -5vh;
+            height: 110vh;
+            width: 60vw;
+            background: radial-gradient(ellipse 95% 90% at 75% 30%, #1D4333 0%, #132E22 55%, #0B1C14 100%);
+            overflow: hidden;
+            z-index: 15;
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.7);
+            transition: transform 0.85s cubic-bezier(0.65, 0, 0.15, 1);
+            will-change: transform;
+        }
+
+        /* Login state: parked over the right side */
+        .auth-card[data-mode="login"] .auth_band {
+            left: 46vw;
+            transform: skewX(var(--rake)) translateX(0%);
+        }
+
+        /* Register state: sweeps over to the left side */
+        .auth-card[data-mode="register"] .auth_band {
+            left: 46vw;
+            transform: skewX(var(--rake)) translateX(-100%);
+        }
+
+        /* ─── DUAL LIT SEAMS (GLOWING GOLDEN SEAMS) ───── */
+        .band__edge {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2.5px;
+            background: linear-gradient(
+                180deg,
+                rgba(235, 205, 140, 0.1) 0%,
+                rgba(245, 222, 165, 0.95) 20%,
+                rgba(215, 175, 95, 1) 50%,
+                rgba(245, 222, 165, 0.95) 80%,
+                rgba(235, 205, 140, 0.1) 100%
+            );
+            box-shadow: 
+                0 0 12px 2px rgba(225, 185, 110, 0.75),
+                0 0 30px 5px rgba(200, 155, 75, 0.45),
+                0 0 60px 10px rgba(180, 135, 55, 0.25);
+            z-index: 25;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .band__edge--lead { left: 0; }
+        .band__edge--trail { right: 0; }
+
+        .auth-card[data-mode="login"] .band__edge--lead { opacity: 1; }
+        .auth-card[data-mode="login"] .band__edge--trail { opacity: 0; }
+        .auth-card[data-mode="register"] .band__edge--lead { opacity: 0; }
+        .auth-card[data-mode="register"] .band__edge--trail { opacity: 1; }
+
+        /* ─── BLADE INNER (UPRIGHT TYPOGRAPHY) ────────── */
+        .band__inner {
+            position: absolute;
+            top: 5vh;
+            bottom: 5vh;
+            width: 100%;
+            height: 100vh;
+            transform: skewX(var(--rake-reverse));
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .band__page {
+            position: absolute;
+            width: 100%;
+            max-width: 410px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #FFFFFF;
+            transition: opacity 0.35s ease, transform 0.4s ease;
+        }
+
+        /* In Login mode: text is centered in the right half of the blade */
+        .band__page--login {
+            left: 8vw;
+        }
+
+        /* In Register mode: text is centered in the left half of the blade */
+        .band__page--register {
+            right: 8vw;
+        }
+
+        /* Text styling inside blade */
+        .brand-eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+            color: #9CB79A;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .welcome__title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.15;
+            color: #FFFFFF;
+            letter-spacing: -0.5px;
+            margin-bottom: 20px;
+        }
+
+        .welcome__title em {
+            font-style: italic;
+            color: var(--gold-accent);
+            font-weight: 400;
+            display: block;
+        }
+
+        .welcome__desc {
+            font-size: 15px;
+            line-height: 1.68;
+            color: rgba(255, 255, 255, 0.68);
+            max-width: 320px;
+            font-weight: 300;
+        }
+
+        /* Smooth visibility toggle of messages */
+        .auth-card[data-mode="login"] .band__page--login {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .auth-card[data-mode="login"] .band__page--register {
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
+        }
+
+        .auth-card[data-mode="register"] .band__page--login {
+            opacity: 0;
+            transform: translateY(-12px);
+            pointer-events: none;
+        }
+        .auth-card[data-mode="register"] .band__page--register {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* ─── RESPONSIVE / MOBILE ( < 880px ) ─────────── */
+        @media (max-width: 880px) {
+            html, body {
+                overflow-y: auto;
+            }
+
+            .auth-card {
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .auth_band {
+                display: none;
+            }
+
+            .form-pane {
+                position: static;
+                width: 100%;
+                min-height: 100vh;
+                padding: 40px 24px;
+            }
+
+            .auth-card[data-mode="login"] .pane-register {
+                display: none;
+            }
+            .auth-card[data-mode="login"] .pane-login {
+                display: flex;
+            }
+
+            .auth-card[data-mode="register"] .pane-login {
+                display: none;
+            }
+            .auth-card[data-mode="register"] .pane-register {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ══════════════════════════════════════════════════
+         PURE FULL-PAGE AUTH SHELL (100vw x 100vh, NO MARGINS)
+    ══════════════════════════════════════════════════ -->
+    <main class="auth-card" id="auth-card" data-mode="<%= mode %>">
+
+        <!-- ══════════════════════════════════════════════
+             1. SIGN IN FORM PANE (Left 50vw)
+        ══════════════════════════════════════════════ -->
+        <section class="form-pane pane-login" id="pane-login" aria-label="Sign in to your StayNest account">
+            <div class="form-box">
+                <div class="form-title-group">
+                    <h1 class="form-title">Sign in</h1>
+                    <div class="title-accent-bar"></div>
+                </div>
+
+                <% if (mode === 'login' && error) { %>
+                    <div class="error-alert" role="alert">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span><%= error %></span>
+                    </div>
+                <% } %>
+
+                <form action="/auth/login" method="POST" id="form-login" novalidate>
+                    <!-- Username / Email -->
+                    <div class="input-group">
+                        <div class="input-wrap">
+                            <input 
+                                type="email" 
+                                id="login-email" 
+                                name="email" 
+                                value="<%= (mode === 'login' && formData && formData.email) ? formData.email : '' %>"
+                                placeholder="Username or email" 
+                                required 
+                                autocomplete="username"
+                            />
+                            <span class="input-icon" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="input-group">
+                        <div class="input-wrap">
+                            <input 
+                                type="password" 
+                                id="login-password" 
+                                name="password" 
+                                placeholder="Password" 
+                                required 
+                                autocomplete="current-password"
+                            />
+                            <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('login-password', this)" aria-label="Toggle password visibility">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Options: Keep signed in & Forgot password -->
+                    <div class="form-meta-row">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember" id="remember-me" checked />
+                            <span>Keep me signed in</span>
+                        </label>
+                        <a href="/forgot-password" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-auth-submit" id="btn-login-submit">
+                        Sign in
+                    </button>
+                </form>
+
+                <!-- Switch Link -->
+                <p class="auth-switch-text">
+                    New to StayNest? 
+                    <button type="button" class="switch-link-btn" onclick="switchTo('register')">Create an account</button>
+                </p>
+            </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════════
+             2. CREATE ACCOUNT FORM PANE (Right 50vw)
+        ══════════════════════════════════════════════ -->
+        <section class="form-pane pane-register" id="pane-register" aria-label="Create a new StayNest account">
+            <div class="form-box">
+                <div class="form-title-group">
+                    <h1 class="form-title">Create account</h1>
+                    <div class="title-accent-bar"></div>
+                </div>
+
+                <% if (mode === 'register' && error) { %>
+                    <div class="error-alert" role="alert">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span><%= error %></span>
+                    </div>
+                <% } %>
+
+                <form action="/auth/register" method="POST" id="form-register" novalidate>
+                    <!-- Full Name -->
+                    <div class="input-group">
+                        <div class="input-wrap">
+                            <input 
+                                type="text" 
+                                id="reg-name" 
+                                name="name" 
+                                value="<%= (mode === 'register' && formData && formData.name) ? formData.name : '' %>"
+                                placeholder="Full name" 
+                                required 
+                                autocomplete="name"
+                            />
+                            <span class="input-icon" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="input-group">
+                        <div class="input-wrap">
+                            <input 
+                                type="email" 
+                                id="reg-email" 
+                                name="email" 
+                                value="<%= (mode === 'register' && formData && formData.email) ? formData.email : '' %>"
+                                placeholder="Email address" 
+                                required 
+                                autocomplete="email"
+                            />
+                            <span class="input-icon" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="input-group" style="margin-bottom: 12px;">
+                        <div class="input-wrap">
+                            <input 
+                                type="password" 
+                                id="reg-password" 
+                                name="password" 
+                                placeholder="Password" 
+                                required 
+                                autocomplete="new-password"
+                                oninput="checkPasswordStrength(this.value)"
+                            />
+                            <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('reg-password', this)" aria-label="Toggle password visibility">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Password Strength indicator bars -->
+                    <div class="pw-strength-row">
+                        <div class="strength-bars">
+                            <span class="strength-bar" id="bar-1"></span>
+                            <span class="strength-bar" id="bar-2"></span>
+                            <span class="strength-bar" id="bar-3"></span>
+                            <span class="strength-bar" id="bar-4"></span>
+                        </div>
+                        <span class="strength-hint" id="pw-hint">Use 8 characters or more.</span>
+                    </div>
+
+                    <!-- Role choice -->
+                    <div class="role-selector">
+                        <div class="role-choice">
+                            <input type="radio" id="role-guest" name="role" value="guest"
+                                <%= (!formData || !formData.role || formData.role === 'guest') ? 'checked' : '' %> />
+                            <label for="role-guest" class="role-label">
+                                <span>Book stays (Guest)</span>
+                            </label>
+                        </div>
+                        <div class="role-choice">
+                            <input type="radio" id="role-host" name="role" value="host"
+                                <%= (formData && formData.role === 'host') ? 'checked' : '' %> />
+                            <label for="role-host" class="role-label">
+                                <span>List place (Host)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-auth-submit" id="btn-reg-submit">
+                        Create account
+                    </button>
+                </form>
+
+                <!-- Switch Link -->
+                <p class="auth-switch-text">
+                    Already have an account? 
+                    <button type="button" class="switch-link-btn" onclick="switchTo('login')">Sign in</button>
+                </p>
+            </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════════
+             3. THE FULL-SCREEN SKEWED BLADE (.auth_band)
+        ══════════════════════════════════════════════ -->
+        <div class="auth_band" id="auth-band" aria-hidden="true">
+            <!-- Dual lit seams: lead seam on left edge, trail seam on right edge -->
+            <span class="band__edge band__edge--lead" id="band-lead"></span>
+            <span class="band__edge band__edge--trail" id="band-trail"></span>
+
+            <!-- Counter-skewed inner wrapper: keeps text upright -->
+            <div class="band__inner">
+                <!-- Login mode content: Welcome back -->
+                <div class="band__page band__page--login" id="content-login">
+                    <span class="brand-eyebrow">STAYNEST</span>
+                    <h2 class="welcome__title">
+                        Welcome <em>back.</em>
+                    </h2>
+                    <p class="welcome__desc">
+                        Your bookings, your saved stays and your trips are exactly where you left them.
+                    </p>
+                </div>
+
+                <!-- Register mode content: Start the first page -->
+                <div class="band__page band__page--register" id="content-register">
+                    <span class="brand-eyebrow">STAYNEST</span>
+                    <h2 class="welcome__title">
+                        Start the <em>first page.</em>
+                    </h2>
+                    <p class="welcome__desc">
+                        One account to book unique stays, host travelers and explore the world.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ─── SCRIPT LOGIC ────────────────────────────────── -->
+    <script>
+        (function () {
+            const card = document.getElementById('auth-card');
+            const paneLogin = document.getElementById('pane-login');
+            const paneRegister = document.getElementById('pane-register');
+            let currentMode = card.getAttribute('data-mode') || 'login';
+
+            // Sync inert states for accessibility & keyboard navigation
+            function updateInert(mode) {
+                if (mode === 'login') {
+                    paneLogin.removeAttribute('inert');
+                    paneRegister.setAttribute('inert', '');
+                } else {
+                    paneRegister.removeAttribute('inert');
+                    paneLogin.setAttribute('inert', '');
+                }
+            }
+
+            // Initial inert sync
+            updateInert(currentMode);
+
+            // ─── BLADE SLIDE TRANSITION ────────────────────
+            function switchTo(targetMode) {
+                if (targetMode === currentMode) return;
+                currentMode = targetMode;
+
+                // 1. Update data-mode attribute on the card (triggers full-screen blade translation)
+                card.setAttribute('data-mode', targetMode);
+
+                // 2. Change inert attribute after slight delay to match blade coverage
+                setTimeout(function () {
+                    updateInert(targetMode);
+                }, 380);
+
+                // 3. Update browser URL & document title smoothly
+                const newTitle = targetMode === 'login' ? 'Sign In | StayNest' : 'Create Account | StayNest';
+                document.title = newTitle;
+                const newUrl = '/auth/' + targetMode;
+                if (window.location.pathname !== newUrl) {
+                    window.history.pushState({ mode: targetMode }, newTitle, newUrl);
+                }
+            }
+
+            // Handle browser Back / Forward buttons
+            window.addEventListener('popstate', function (e) {
+                if (e.state && e.state.mode) {
+                    switchTo(e.state.mode);
+                } else {
+                    const path = window.location.pathname;
+                    if (path.includes('register')) {
+                        switchTo('register');
+                    } else {
+                        switchTo('login');
+                    }
+                }
+            });
+
+            // Password strength feedback
+            window.checkPasswordStrength = function (val) {
+                const b1 = document.getElementById('bar-1');
+                const b2 = document.getElementById('bar-2');
+                const b3 = document.getElementById('bar-3');
+                const b4 = document.getElementById('bar-4');
+                const hint = document.getElementById('pw-hint');
+
+                let score = 0;
+                if (val.length >= 6) score++;
+                if (val.length >= 8) score++;
+                if (/[0-9]/.test(val)) score++;
+                if (/[A-Z]/.test(val) || /[^A-Za-z0-9]/.test(val)) score++;
+
+                const bars = [b1, b2, b3, b4];
+                bars.forEach((bar, idx) => {
+                    if (idx < score) {
+                        bar.classList.add('active');
+                    } else {
+                        bar.classList.remove('active');
+                    }
+                });
+
+                if (score === 0) hint.textContent = 'Use 8 characters or more.';
+                else if (score < 2) hint.textContent = 'Weak password';
+                else if (score < 4) hint.textContent = 'Good password';
+                else hint.textContent = 'Strong password';
+            };
+
+            // Password visibility toggle
+            window.togglePasswordVisibility = function (inputId, btn) {
+                const input = document.getElementById(inputId);
+                if (!input) return;
+                const isPassword = input.getAttribute('type') === 'password';
+                input.setAttribute('type', isPassword ? 'text' : 'password');
+
+                btn.innerHTML = isPassword 
+                    ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>'
+                    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            };
+
+            // Expose switchTo globally for onclick events
+            window.switchTo = switchTo;
+        })();
+    </script>
+</body>
+</html>

@@ -1,67 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Airbnb Home</title>
-    <link rel="stylesheet" href="/output.css" />
+    <title>Saved Stays &bull; StayNest</title>
+    <meta name="description" content="View your saved favourite vacation homes and villas on StayNest." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+
     <style>
-        body {
-            background-color: #f7f7f7;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0f261b;
+            --emerald-mid: #143528;
+            --gold-accent: #D4AF6A;
+            --text-dark: #121A16;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        .cards-grid {
+        body {
+            background-color: var(--bg-beige);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
             display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            padding: 30px 0;
-            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hero-banner-wrap {
+            max-width: 1320px;
+            margin: 24px auto 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .hero-banner {
+            background: radial-gradient(ellipse 110% 100% at 75% 20%, #1D4333 0%, #132E22 55%, #0B1C14 100%);
+            border-radius: 28px;
+            padding: 44px 44px;
+            color: #FFFFFF;
+            box-shadow: 0 20px 50px -15px rgba(11, 28, 20, 0.45);
+        }
+
+        .hero-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold-accent);
+            margin-bottom: 10px;
+        }
+
+        .hero-headline {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 38px;
+            font-weight: 500;
+            line-height: 1.18;
+            margin-bottom: 10px;
+        }
+
+        .hero-headline em {
+            font-style: italic;
+            color: var(--gold-accent);
+        }
+
+        .hero-sub {
+            font-size: 14.5px;
+            color: rgba(255, 255, 255, 0.72);
+            max-width: 520px;
+            line-height: 1.6;
+        }
+
+        .listings-container {
+            max-width: 1320px;
+            margin: 28px auto 48px auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 28px;
             list-style: none;
             margin: 0;
+            padding: 0;
         }
 
         .card-item {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            border: 1px solid #eaeaea;
-            width: 290px;
-            padding: 12px;
+            background: var(--surface-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 16px rgba(18, 43, 32, 0.04);
+            padding: 14px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-sizing: border-box;
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
         }
 
         .card-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 16px 36px -10px rgba(18, 43, 32, 0.14), 0 0 0 1px rgba(212, 175, 106, 0.35);
         }
 
         .image-box {
+            position: relative;
             width: 100%;
-            height: 150px;
-            border-radius: 12px;
+            height: 200px;
+            border-radius: 14px;
             overflow: hidden;
-            background-color: #f0f0f0;
-            margin-bottom: 10px;
+            background: #EFE9DC;
+            margin-bottom: 14px;
         }
 
         .image-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .card-item:hover .image-box img {
+            transform: scale(1.05);
         }
 
         .title-text {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
-            color: #222222;
+            color: var(--text-dark);
             margin: 0 0 4px 0;
             white-space: nowrap;
             overflow: hidden;
@@ -69,127 +145,161 @@
         }
 
         .location-text {
-            font-size: 12px;
-            color: #717171;
-            margin: 0 0 12px 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0 0 14px 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .loc-icon {
+            color: var(--emerald-mid);
+        }
+
+        .card-footer {
+            border-top: 1px solid var(--border-light);
+            padding-top: 12px;
+            margin-top: 6px;
         }
 
         .price-row {
             display: flex;
+            align-items: baseline;
             justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 10px;
-            margin-bottom: 10px;
-        }
-        .btn-reserve {
-            background: linear-gradient(135deg, #ff385c, #e00b41);
-            color: white;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            margin-bottom: 12px;
         }
 
         .price-tag {
-            font-size: 14px;
-            font-weight: 700;
-            color: #ff385c;
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--emerald-dark);
         }
 
         .night-tag {
-            font-size: 11px;
-            color: #717171;
-            font-weight: normal;
-        }
-
-        .button-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-details {
-            flex: 1;
-            background: rgb(235, 116, 116);
-            color: #222;
-            border: none;
-            padding: 8px 0;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-book {
-            flex: 1;
-            background: #ff385c;
-            color: #ffffff;
-            border: none;
-            padding: 8px 0;
-            border-radius: 8px;
             font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
+            color: var(--text-muted);
         }
 
-        .banner-box {
-            background: linear-gradient(135deg, #ff385c, #e00b41);
-            color: #ffffff;
-            border-radius: 16px;
-            padding: 24px;
+        .btn-view-details {
+            width: 100%;
+            height: 38px;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 9999px;
+            font-size: 13.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(20, 53, 40, 0.22);
+        }
+
+        .btn-view-details:hover {
+            background: #0B1C14;
+            transform: translateY(-1px);
+        }
+
+        .empty-saved-box {
             text-align: center;
-            max-width: 1100px;
-            margin: 20px auto 0 auto;
-            box-shadow: 0 4px 12px rgba(224, 11, 65, 0.2);
+            padding: 80px 24px;
+            background: var(--surface-card);
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            max-width: 580px;
+            margin: 40px auto;
+        }
+
+        .empty-heart-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #EBF2ED;
+            color: var(--emerald-mid);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .empty-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .empty-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.6;
         }
     </style>
 </head>
-
 <body>
-    <!-- Header Section -->
     <%- include("../partials/01_header.ejs") %>
-    <!-- Banner Section -->
-    <div class="banner-box">
-        <h2 style="margin: 0; font-size: 28px; font-weight: 800;">Here Are Your Favurite Homes</h2>
-        <p style="margin: 6px 0 0 0; font-size: 14px; opacity: 0.9;">Explore handpicked stays for your next trip</p>
-    </div>
-    <!-- Listings Section -->
-    <div style="max-width: 1300px; margin: 0 auto; padding: 0 16px;">
-        <ul class="cards-grid">
-            <% favWithDetails.forEach((homes) => { %>
-                <li class="card-item">
-                    <div>
-                        <!-- Image Box -->
-                        <div class="image-box">
-                            <img 
-                                src="<%= homes.housePhoto %>" 
-                                alt="<%= homes.houseName %>"
-                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500';" 
-                            />
-                        </div>
-                        <!-- Details -->
-                        <div class="title-text"><%= homes.houseName %></div>
-                        <div class="location-text">📍 <%= homes.houseAddress %></div>
-                    </div>
-                    <!-- Bottom Area -->
-                    <div>
-                        <div class="price-row">
-                            <span style="font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600;">Price</span>
-                            <div class="price-tag">
-                                ₹<%= homes.housePrice %> <span class="night-tag">/ night</span>
+
+    <section class="hero-banner-wrap">
+        <div class="hero-banner">
+            <p class="hero-eyebrow">Wishlist &bull; StayNest</p>
+            <h1 class="hero-headline">Saved <em>places.</em></h1>
+            <p class="hero-sub">All your bookmarked vacation homes and architectural stays in one curated collection.</p>
+        </div>
+    </section>
+
+    <main class="listings-container">
+        <% const list = (typeof favWithDetails !== 'undefined' && favWithDetails) ? favWithDetails : []; %>
+        <% if (list && list.length > 0) { %>
+            <ul class="cards-grid">
+                <% list.forEach((home) => { %>
+                    <li class="card-item">
+                        <div>
+                            <div class="image-box">
+                                <img 
+                                    src="<%= home.housePhoto %>" 
+                                    alt="<%= home.houseName %>"
+                                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&auto=format&fit=crop&q=80';" 
+                                />
                             </div>
+                            <h2 class="title-text" title="<%= home.houseName %>"><%= home.houseName %></h2>
+                            <p class="location-text">
+                                <svg class="loc-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <span><%= home.houseAddress %></span>
+                            </p>
                         </div>
-                    </div>
-                </li>
-            <% }) %>
-        </ul>
-    </div>
+                        <div class="card-footer">
+                            <div class="price-row">
+                                <span class="price-tag">₹<%= Number(home.housePrice).toLocaleString('en-IN') %> <span class="night-tag">/ night</span></span>
+                            </div>
+                            <a href="/homes/<%= home.id %>" class="btn-view-details">
+                                View Details
+                            </a>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <div class="empty-saved-box">
+                <div class="empty-heart-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </div>
+                <h2 class="empty-title">Your wishlist is empty</h2>
+                <p class="empty-desc">Explore stays and tap the heart icon on any property to save it to your personal wishlist.</p>
+                <a href="/" class="btn-view-details" style="display: inline-flex; width: auto; padding: 0 28px;">Explore Stays</a>
+            </div>
+        <% } %>
+    </main>
 </body>
 </html>

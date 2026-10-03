@@ -1,81 +1,456 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>airbnb Home</title>
-    <link rel="stylesheet" href="/output.css" />
+    <title>Manage My Stays &bull; StayNest Host</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+
     <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0f261b;
+            --emerald-mid: #143528;
+            --gold-accent: #D4AF6A;
+            --text-dark: #121A16;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+            --danger-red: #B91C1C;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background-color: black;
-            color: green;
+            background-color: var(--bg-beige);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-banner-wrap {
+            max-width: 1320px;
+            margin: 28px auto 0 auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        .hero-banner {
+            background: radial-gradient(ellipse 110% 100% at 75% 20%, #1D4333 0%, #132E22 55%, #0B1C14 100%);
+            border-radius: 28px;
+            padding: 44px 48px;
+            color: #FFFFFF;
+            box-shadow: 0 20px 50px -15px rgba(11, 28, 20, 0.45);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .hero-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold-accent);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold-accent);
+            display: inline-block;
+        }
+
+        .hero-headline {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 38px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .hero-headline em {
+            font-style: italic;
+            color: var(--gold-accent);
+        }
+
+        .hero-sub {
+            font-size: 14.5px;
+            color: rgba(255, 255, 255, 0.76);
+            max-width: 560px;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-add-new {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 26px;
+            background: #FAF7F0;
+            color: #122B20;
+            border-radius: 9999px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .btn-add-new:hover {
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-back-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 9999px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
+        }
+
+        .btn-back-dash:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-1.5px);
+        }
+
+        /* Listings Grid */
+        .listings-container {
+            max-width: 1320px;
+            margin: 32px auto 60px auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 28px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .card-item {
+            background: var(--surface-card);
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 18px rgba(18, 43, 32, 0.04);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 36px -8px rgba(18, 43, 32, 0.12);
+            border-color: rgba(212, 175, 106, 0.6);
+        }
+
+        .image-box {
+            position: relative;
+            width: 100%;
+            height: 210px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #EFE9DC;
+            margin-bottom: 16px;
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .card-item:hover .image-box img {
+            transform: scale(1.04);
+        }
+
+        .type-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(18, 43, 32, 0.82);
+            backdrop-filter: blur(8px);
+            color: #FAF7F0;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            border: 1px solid rgba(212, 175, 106, 0.4);
+        }
+
+        .title-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 6px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .location-text {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin: 0 0 16px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .loc-icon {
+            color: var(--emerald-mid);
+            flex-shrink: 0;
+        }
+
+        .card-footer {
+            border-top: 1px solid var(--border-light);
+            padding-top: 14px;
+            margin-top: 6px;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .price-tag {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--emerald-dark);
+        }
+
+        .night-tag {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-action {
+            flex: 1;
+            height: 38px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .btn-preview {
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+        }
+
+        .btn-preview:hover {
+            background: #0B1C14;
+            transform: translateY(-1px);
+        }
+
+        .btn-edit {
+            background: #EBF2ED;
+            color: var(--emerald-mid);
+        }
+
+        .btn-edit:hover {
+            background: #D8E6DC;
+            color: var(--emerald-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #FEE2E2;
+            color: var(--danger-red);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .btn-delete:hover {
+            background: #FCA5A5;
+            transform: scale(1.05);
+        }
+
+        /* Empty State */
+        .empty-host-state {
+            background: var(--surface-card);
+            border: 1px dashed var(--border-light);
+            border-radius: 28px;
+            padding: 64px 32px;
+            text-align: center;
+            max-width: 580px;
+            margin: 20px auto;
+        }
+
+        .empty-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: #EBF2ED;
+            color: var(--emerald-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .empty-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--emerald-dark);
+            margin-bottom: 8px;
+        }
+
+        .empty-text {
+            font-size: 14.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 24px;
         }
     </style>
 </head>
-
-<body class="bg-grey-50 font-sans antialiased">
-
-    <!-- Header Section -->
+<body>
     <%- include("../partials/01_header.ejs") %>
 
-        <!-- Main Content Section -->
-        <main class="container mx-auto bg-rose-400 shadow-lg rounded-lg p-8 mt-10 w-full">
-            <h2 class="text-5xl text-gray-800 font-bold text-center mb-6">
-                Here Are Our Registered Homes
-            </h2>
+    <section class="hero-banner-wrap">
+        <div class="hero-banner">
+            <div>
+                <p class="hero-eyebrow">Property Portfolio &bull; StayNest</p>
+                <h1 class="hero-headline">My Listed <em>Stays.</em></h1>
+                <p class="hero-sub">Review your published accommodations, modify nightly tariffs, adjust amenities, or unlist spaces.</p>
+            </div>
+            <div class="hero-actions">
+                <a href="/host" class="btn-back-dash">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/host/add-home" class="btn-add-new">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Add New Stay</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
-        </main>
-
-        <section class="p-6">
-            <ul class="flex flex-row flex-wrap gap-6 m-6 list-none p-0 justify-start"
-                style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 24px;">
-                <% registeredHome.forEach((homes)=> { %>
-
-                    <!-- Fixed width container with flexible vertical padding to prevent clipping -->
-                    <li class="bg-gray-100 p-4 rounded-xl shadow-md border border-rose-500 hover:shadow-lg transition duration-200 flex flex-col justify-between"
-                        style="width: 270px; box-sizing: border-box;">
+    <main class="listings-container">
+        <% if (registeredHome && registeredHome.length > 0) { %>
+            <ul class="cards-grid">
+                <% registeredHome.forEach((home) => { %>
+                    <li class="card-item">
                         <div>
-                            <!-- Image Box: Proportional height that doesn't overwhelm the text layout -->
-                            <div class="w-full h-36 mb-3 overflow-hidden rounded-lg bg-gray-200">
-                                <img src="<%= homes.housePhoto %>" alt="<%= homes.houseName %>"
-                                    class="w-full h-full object-cover transform hover:scale-105 transition duration-300"
-                                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500';" />
+                            <div class="image-box">
+                                <span class="type-badge"><%= home.propertyType || "Villa" %></span>
+                                <img 
+                                    src="<%= home.housePhoto %>" 
+                                    alt="<%= home.houseName %>"
+                                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&auto=format&fit=crop&q=80';" 
+                                />
                             </div>
-
-                            <!-- Details Zone with adequate spacing -->
-                            <div class="space-y-1">
-                                <h3 class="font-bold text-gray-800 tracking-wide text-base truncate">
-                                    <%= homes.houseName %>
-                                </h3>
-                                <div class="flex items-center text-gray-500 text-xs truncate space-x-1">
-                                    <span class="text-rose-500">📍</span>
-                                    <span class="truncate">Registered Property at <%= homes.houseAddress %></span>
-                                </div>
-                            </div>
+                            <h2 class="title-text" title="<%= home.houseName %>"><%= home.houseName %></h2>
+                            <p class="location-text">
+                                <svg class="loc-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <span><%= home.houseAddress %></span>
+                            </p>
                         </div>
-
-                        <!-- Bottom Section: Generous top margin and balanced padding so nothing sits on the edge -->
-                        <div class="mt-4 pt-3 border-t border-gray-200 flex justify-between items-center">
-                            <!-- Left Side: Price Details -->
-                            <div class="flex items-baseline space-x-1">
-                                <span class="text-sm font-semibold text-green-700">Price: </span>
-                                <span class="text-sm font-semibold text-rose-500"> &nbsp; ₹<%= homes.housePrice %></span>
-                                <span class="text-sm font-normal text-gray-500">/night</span>
+                        <div class="card-footer">
+                            <div class="price-row">
+                                <span class="price-tag">₹<%= Number(home.housePrice).toLocaleString('en-IN') %> <span class="night-tag">/ night</span></span>
                             </div>
-
-                            <!-- Right Side: Styled Book Now Button -->
-                            <button 
-                                class="bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm hover:shadow transition duration-200 active:scale-95">
-                                Book Now
-                            </button>
+                            <div class="action-row">
+                                <a href="/homes/<%= home.id %>" class="btn-action btn-preview">Preview</a>
+                                <a href="/host/edit/<%= home.id %>" class="btn-action btn-edit">Edit</a>
+                                
+                                <form action="/host/delete/<%= home.id %>" method="POST" onsubmit="return confirm('Are you sure you want to remove <%= home.houseName.replace(/'/g, '\\\'') %> from your StayNest listings?');" style="margin: 0;">
+                                    <button type="submit" class="btn-delete" title="Delete listing" aria-label="Delete listing">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </li>
-
-                    <% }) %>
+                <% }) %>
             </ul>
-        </section>
-
+        <% } else { %>
+            <div class="empty-host-state">
+                <div class="empty-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+                <h3 class="empty-title">No accommodations listed yet</h3>
+                <p class="empty-text">You haven't published any properties under your StayNest host account. Publish your first sanctuary to begin welcoming discerning travelers.</p>
+                <a href="/host/add-home" class="btn-add-new" style="display: inline-flex;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Publish Your First Stay</span>
+                </a>
+            </div>
+        <% } %>
+    </main>
 </body>
-
 </html>

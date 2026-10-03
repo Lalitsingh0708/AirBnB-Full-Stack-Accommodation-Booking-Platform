@@ -3,12 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/output.css">
-    <title>Page Not Found</title>
+    <title>Page Not Found &bull; StayNest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0f261b;
+            --emerald-mid: #143528;
+            --gold-accent: #D4AF6A;
+            --text-dark: #121A16;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-beige);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .not-found-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .error-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 28px;
+            padding: 56px 44px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 16px 45px -10px rgba(18, 43, 32, 0.08);
+        }
+
+        .error-code {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 72px;
+            font-weight: 600;
+            color: var(--gold-accent);
+            line-height: 1;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .error-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--emerald-dark);
+            margin-bottom: 12px;
+        }
+
+        .error-desc {
+            font-size: 14.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .btn-return-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 32px;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(20, 53, 40, 0.28);
+            transition: all 0.2s ease;
+        }
+
+        .btn-return-home:hover {
+            background: #0B1C14;
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
 <body>
     <%- include("partials/01_header.ejs") %>
-    <h1>404 Not Found</h1>
-    <h1> <a href="/">Go To Home</a></h1>
+
+    <main class="not-found-main">
+        <div class="error-card">
+            <div class="error-code">404</div>
+            <h1 class="error-title">Page not found</h1>
+            <p class="error-desc">
+                The stay or page you are looking for might have been relocated, unlisted, or does not exist.
+            </p>
+            <a href="/" class="btn-return-home">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>Return to Stays</span>
+            </a>
+        </div>
+    </main>
 </body>
 </html>

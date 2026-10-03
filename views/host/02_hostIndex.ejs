@@ -3,56 +3,499 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home AirBnB</title>
-    <!-- Tailwind Output Link -->
-    <link rel="stylesheet" href="/output.css">
-</head>
-<body class="bg-gray-50 font-sans antialiased text-gray-900 min-h-screen flex flex-col">
+    <title>Host Operations &bull; StayNest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
 
-    <!-- 1. AIRBNB STYLED NAVIGATION HEADER -->
+    <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0f261b;
+            --emerald-mid: #143528;
+            --emerald-accent: #1D4333;
+            --gold-accent: #D4AF6A;
+            --text-dark: #121A16;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-beige);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 36px auto 60px auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        /* Hero Banner */
+        .host-hero-card {
+            background: radial-gradient(ellipse 95% 90% at 75% 30%, #1D4333 0%, #132E22 55%, #0B1C14 100%);
+            border-radius: 28px;
+            padding: 48px;
+            color: #FFFFFF;
+            box-shadow: 0 20px 50px -15px rgba(11, 28, 20, 0.45);
+            margin-bottom: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .host-hero-card::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 106, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .host-badge {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold-accent);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .host-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold-accent);
+            display: inline-block;
+        }
+
+        .host-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 40px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+
+        .host-title em {
+            font-style: italic;
+            color: var(--gold-accent);
+        }
+
+        .host-sub {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.76);
+            max-width: 580px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn-host-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .btn-host-action--primary {
+            background: #FAF7F0;
+            color: #122B20;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-host-action--primary:hover {
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-host-action--secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-host-action--secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+        }
+
+        /* Metrics Row */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 36px;
+        }
+
+        .metric-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(18, 43, 32, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(18, 43, 32, 0.08);
+        }
+
+        .metric-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #EBF2ED;
+            color: var(--emerald-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .metric-val {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--emerald-dark);
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Operations Section */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--emerald-dark);
+        }
+
+        .section-link {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--emerald-mid);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.15s ease;
+        }
+
+        .section-link:hover {
+            color: var(--gold-accent);
+        }
+
+        /* Operations Cards */
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .op-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 16px rgba(18, 43, 32, 0.04);
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .op-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(18, 43, 32, 0.08);
+            border-color: var(--gold-accent);
+        }
+
+        .op-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: #EBF2ED;
+            color: var(--emerald-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .op-card:hover .op-icon-wrap {
+            background: var(--emerald-mid);
+            color: #FAF7F0;
+        }
+
+        .op-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .op-card-desc {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Quick Listings Strip */
+        .preview-strip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .preview-mini-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(18, 43, 32, 0.03);
+            transition: transform 0.18s ease;
+        }
+
+        .preview-mini-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .preview-mini-thumb {
+            width: 68px;
+            height: 68px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #EFE9DC;
+            flex-shrink: 0;
+        }
+
+        .preview-mini-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .preview-mini-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px;
+        }
+
+        .preview-mini-address {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .preview-mini-price {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--emerald-dark);
+        }
+
+        .preview-mini-edit {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--emerald-mid);
+            text-decoration: none;
+            padding: 5px 12px;
+            background: #EBF2ED;
+            border-radius: 9999px;
+            transition: background 0.15s ease;
+        }
+
+        .preview-mini-edit:hover {
+            background: #D8E6DC;
+        }
+    </style>
+</head>
+<body>
     <%- include("../partials/01_header.ejs") %>
 
-    <!-- 2. MAIN HUB LANDING DASHBOARD CONTENT -->
-    <main class="flex-1 flex flex-col justify-center items-center p-6 my-12">
-        
-        <!-- Card Container -->
-        <div class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100 max-w-md w-full text-center space-y-6">
+    <main class="dashboard-container">
+        <!-- Hero Card -->
+        <div class="host-hero-card">
+            <span class="host-badge">StayNest Host Operations</span>
+            <h1 class="host-title">Welcome back, <em><%= (typeof user !== 'undefined' && user && user.name) ? user.name : 'Host' %>.</em></h1>
+            <p class="host-sub">Oversee your architectural portfolio, monitor booking reception, and maintain exquisite guest experiences across your listed accommodations.</p>
             
-            <!-- Host Badge -->
-            <span class="inline-block px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-xs font-semibold uppercase tracking-wider">
-                Host Dashboard
-            </span>
-
-            <!-- Main Welcome Heading -->
-            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">
-                Welcome to AirBnB,<br><span class="text-rose-500 font-black">Lalit Baghel</span>
-            </h1>
-            
-            <!-- Description Text -->
-            <p class="text-gray-500 text-sm md:text-base leading-relaxed">
-                Ready to start hosting? List your property details today and start sharing your beautiful space with worldwide travelers.
-            </p>
-
-            <!-- Divider Line -->
-            <div class="h-px bg-gray-100 my-4"></div>
-
-            <!-- Primary Call to Action Button Links -->
-             <div class="flex flex-row space-x-4">
-
-                 <div class="pt-2">
-                     <a href="/host/add-home" class="inline-block w-full text-center px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition-all duration-200 shadow-md shadow-rose-500/10 hover:shadow-lg hover:shadow-rose-500/20 transform hover:-translate-y-0.5">
-                         Add New Home
-                    </a>
+            <% if (typeof hostCities !== 'undefined' && hostCities && hostCities.length > 0) { %>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; align-items: center;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.1em;">Portfolio Across <%= hostCities.length %> <%= hostCities.length > 1 ? 'Destinations' : 'Destination' %>:</span>
+                    <% hostCities.forEach(city => { %>
+                        <span style="background: rgba(212, 175, 106, 0.18); border: 1px solid rgba(212, 175, 106, 0.4); color: #FAF7F0; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#D4AF6A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <%= city %>
+                        </span>
+                    <% }) %>
                 </div>
-                 <div class="pt-2">
-                     <a href="/host/view-home" class="inline-block w-full text-center px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition-all duration-200 shadow-md shadow-rose-500/10 hover:shadow-lg hover:shadow-rose-500/20 transform hover:-translate-y-0.5">
-                         View  Homes
-                    </a>
-                </div>
+            <% } %>
+
+            <div class="btn-row">
+                <a href="/host/add-home" class="btn-host-action btn-host-action--primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Add New Stay</span>
+                </a>
+                <a href="/host/view-home" class="btn-host-action btn-host-action--secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span>Manage My Stays (<%= typeof totalHomes !== 'undefined' ? totalHomes : 0 %>)</span>
+                </a>
             </div>
-            
         </div>
-    </main>
 
+        <!-- Metric Cards -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+                <div class="metric-val"><%= typeof totalHomes !== 'undefined' ? totalHomes : 0 %></div>
+                <div class="metric-label">Active Listed Properties</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
+                <div class="metric-val">&lt; 1 hr</div>
+                <div class="metric-label">Average Host Response Time</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+                <div class="metric-val">4.95</div>
+                <div class="metric-label">Superhost Guest Rating</div>
+            </div>
+        </div>
+
+        <!-- Quick Operations Actions -->
+        <div class="section-header">
+            <h2 class="section-title">Operations Center</h2>
+        </div>
+
+        <div class="operations-grid">
+            <a href="/host/add-home" class="op-card">
+                <div class="op-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+                <div>
+                    <h3 class="op-card-title">Publish New Accommodation</h3>
+                    <p class="op-card-desc">List a new villa, cottage, or apartment with high-resolution imagery and bespoke pricing.</p>
+                </div>
+            </a>
+
+            <a href="/host/view-home" class="op-card">
+                <div class="op-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                </div>
+                <div>
+                    <h3 class="op-card-title">Manage Inventory &amp; Pricing</h3>
+                    <p class="op-card-desc">Edit nightly tariffs, update details, or remove properties from the StayNest catalog.</p>
+                </div>
+            </a>
+
+            <a href="/" class="op-card">
+                <div class="op-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </div>
+                <div>
+                    <h3 class="op-card-title">Browse Guest Perspective</h3>
+                    <p class="op-card-desc">Preview how your listings and photos appear to global guests on the main discovery feed.</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Recent Properties Preview -->
+        <% if (typeof hostHomes !== 'undefined' && hostHomes && hostHomes.length > 0) { %>
+            <div class="section-header">
+                <h2 class="section-title">Recent Properties</h2>
+                <a href="/host/view-home" class="section-link">
+                    <span>View all (<%= hostHomes.length %>)</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </a>
+            </div>
+
+            <div class="preview-strip-grid">
+                <% hostHomes.slice(0, 4).forEach(home => { %>
+                    <div class="preview-mini-card">
+                        <img 
+                            src="<%= home.housePhoto %>" 
+                            alt="<%= home.houseName %>" 
+                            class="preview-mini-thumb"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&auto=format&fit=crop&q=80';"
+                        />
+                        <div class="preview-mini-info">
+                            <h4 class="preview-mini-title"><%= home.houseName %></h4>
+                            <p class="preview-mini-address"><%= home.houseAddress %></p>
+                            <span class="preview-mini-price">₹<%= Number(home.housePrice).toLocaleString('en-IN') %>/night</span>
+                        </div>
+                        <a href="/host/edit/<%= home.id %>" class="preview-mini-edit">Edit</a>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </main>
 </body>
 </html>

@@ -3,91 +3,521 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Home</title>
-    <link rel="stylesheet" href="/output.css">
-    
-</head>
-<!-- black ko baad mai grey-50 krna h  -->
-<body class="bg-black font-sans antialiased text-gray-900 min-h-screen flex flex-col">
+    <title>Edit Accommodation &bull; StayNest Host</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
 
+    <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0f261b;
+            --emerald-mid: #143528;
+            --gold-accent: #D4AF6A;
+            --text-dark: #121A16;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-beige);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-page-container {
+            max-width: 740px;
+            margin: 36px auto 60px auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        .back-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: color 0.15s ease;
+        }
+
+        .back-nav-link:hover {
+            color: var(--emerald-dark);
+        }
+
+        .form-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 28px;
+            padding: 44px 48px;
+            box-shadow: 0 16px 45px -10px rgba(18, 43, 32, 0.08);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 34px;
+        }
+
+        .form-tag {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold-accent);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .form-tag::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold-accent);
+            display: inline-block;
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 34px;
+            font-weight: 600;
+            color: var(--emerald-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-title em {
+            font-style: italic;
+            color: var(--gold-accent);
+        }
+
+        .form-sub {
+            font-size: 14.5px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .field-input, .field-select, .field-textarea {
+            width: 100%;
+            height: 48px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 12px;
+            padding: 0 16px;
+            font-family: inherit;
+            font-size: 14.5px;
+            color: var(--text-dark);
+            background: #FAF7F0;
+            outline: none;
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .field-textarea {
+            height: auto;
+            min-height: 90px;
+            padding: 12px 16px;
+            resize: vertical;
+        }
+
+        .field-input:hover, .field-select:hover, .field-textarea:hover {
+            border-color: rgba(212, 175, 106, 0.6);
+        }
+
+        .field-input:focus, .field-select:focus, .field-textarea:focus {
+            border-color: var(--gold-accent);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3.5px rgba(212, 175, 106, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .amenities-section-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .amenities-checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .amenity-checkbox-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 12px;
+            background: #FAF7F0;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .amenity-checkbox-card:hover {
+            border-color: var(--gold-accent);
+            background: #FFFFFF;
+        }
+
+        .amenity-checkbox-card input[type="checkbox"] {
+            accent-color: var(--emerald-mid);
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
+        }
+
+        .amenity-checkbox-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .image-preview-box {
+            width: 100%;
+            height: 180px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #EFE9DC;
+            margin-top: 10px;
+        }
+
+        .image-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .form-actions-row {
+            display: flex;
+            gap: 14px;
+            margin-top: 28px;
+        }
+
+        .btn-submit-home {
+            flex: 2;
+            height: 52px;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 9999px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 18px rgba(20, 53, 40, 0.28);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .btn-submit-home:hover {
+            background: #0B1C14;
+            transform: translateY(-1.5px);
+            box-shadow: 0 8px 24px rgba(20, 53, 40, 0.38);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            height: 52px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1.5px solid var(--border-light);
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--text-dark);
+            color: var(--text-dark);
+        }
+
+        @media (max-width: 600px) {
+            .form-grid-2, .form-grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .form-card {
+                padding: 32px 20px;
+            }
+            .form-actions-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
     <%- include("../partials/01_header.ejs") %>
-    <main class="flex-1 flex flex-col justify-center items-center px-4 py-12">
-        <div class="bg-rose-300 p-8 md:p-10 rounded-2xl shadow-md border border-rose-500 max-w-md w-full space-y-6">
-            <div class="text-center">
-                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-black">
-                    Edit Your Home
-                </h1>
-                <p class="text-gray-900 text-sm mt-2">
-                    Make changes to your listing and attract more guests..
-                </p>
+
+    <main class="form-page-container">
+        <!-- Back Navigation -->
+        <a href="/host/view-home" class="back-nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to My Stays</span>
+        </a>
+
+        <div class="form-card">
+            <div class="form-header">
+                <span class="form-tag">StayNest Host Management</span>
+                <h1 class="form-title">Edit your <em>listing.</em></h1>
+                <p class="form-sub">Update property specifications, nightly pricing, and imagery for <%= home.houseName %>.</p>
             </div>
 
-            <form action="/host/edit-home" method="POST" class="space-y-4">
-                <div class="space-y-1">
-                    <label for="homeName" class="text-xs font-semibold uppercase tracking-wider text-gray-900 block">
-                        Property Name
-                    </label>
-                    <input 
-                        type="text" 
-                        id="homeName"
-                        name="homeName" 
-                        value="<%= home.houseName %>"
-                        placeholder="e.g., Cozy Beachfront Apartment" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl border border-rose-500 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition duration-200 text-sm placeholder-gray-900 bg-gray-50/50"
-                    >
-                </div>
-                <div class="space-y-1">
-                    <label for="homeAddress" class="text-xs font-semibold uppercase tracking-wider text-gray-900 block">
-                        Property Address 
-                    </label>
-                    <input 
-                        type="text" 
-                        id="homeAddress"
-                        value="<%= home.houseAddress %>"
-                        name="homeAddress" 
-                        placeholder="e.g., 123 Main St, Anytown, USA" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl border border-rose-500 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition duration-200 text-sm placeholder-gray-900 bg-gray-50/50"
-                    >
-                </div>
-                <div class="space-y-1">
-                    <label for="homePrice" class="text-xs font-semibold uppercase tracking-wider text-gray-900 block">
-                        Property Price Per Night
-                    </label>
-                    <input 
-                        type="text" 
-                        id="homePrice"
-                        value="<%= home.housePrice %>"
-                        name="homePrice" 
-                        placeholder="$100" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl border border-rose-500 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition duration-200 text-sm placeholder-gray-900 bg-gray-50/50"
-                    >
-                </div>
-                <div class="space-y-1">
-                    <label for="homePhoto" class="text-xs font-semibold uppercase tracking-wider text-gray-900 block">
-                        Property Pictures
-                    </label>
-                    <input 
-                        type="text" 
-                        id="homePhoto"
-                        name="homePhoto" 
-                        value="<%= home.housePhoto %>"
-                        placeholder="https://property-image-url.com" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl border border-rose-500 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition duration-200 text-sm placeholder-gray-900 bg-gray-50/50"
-                    >
+            <form action="/host/edit/<%= home.id %>" method="POST">
+                <input type="hidden" name="id" value="<%= home.id %>" />
+                <input type="hidden" name="placeType" value="<%= home.placeType || 'An entire place' %>" />
+                <input type="hidden" name="latitude" value="<%= home.latitude || 28.6139 %>" />
+                <input type="hidden" name="longitude" value="<%= home.longitude || 77.2090 %>" />
+
+                <!-- 1. Title & Type -->
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="homeName" class="field-label">Property Title</label>
+                        <input 
+                            type="text" 
+                            id="homeName" 
+                            name="homeName" 
+                            value="<%= home.houseName %>"
+                            class="field-input" 
+                            required 
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="propertyType" class="field-label">Property Type</label>
+                        <select id="propertyType" name="propertyType" class="field-select">
+                            <% const propertyCategories = [
+                                "House", "Flat/apartment", "Barn", "Bed & breakfast", "Boat", "Cabin",
+                                "Campervan/motorhome", "Casa particular", "Castle", "Cave", "Container",
+                                "Cycladic home", "Dammuso", "Dome", "Earth home", "Farm", "Guest house",
+                                "Hotel", "Houseboat", "Minsu", "Riad", "Ryokan", "Shepherd’s hut",
+                                "Tent", "Tiny home", "Tower", "Tree house", "Trullo", "Windmill", "Yurt"
+                            ]; %>
+                            <% propertyCategories.forEach(cat => { %>
+                                <option value="<%= cat %>" <%= home.propertyType === cat ? 'selected' : '' %>><%= cat %></option>
+                            <% }); %>
+                            <% if (['Villa', 'Apartment', 'Cottage', 'Farmhouse', 'Studio', 'Bungalow'].includes(home.propertyType)) { %>
+                                <option value="<%= home.propertyType %>" selected><%= home.propertyType %> (Legacy)</option>
+                            <% } %>
+                        </select>
+                    </div>
                 </div>
 
-                <button 
-                    type="submit"
-                    class="w-full text-center px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition duration-200 shadow-md shadow-rose-500/10 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2"
-                >
-                    Update Home 
-                </button>
+                <!-- 2. Location & Pricing -->
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="homeAddress" class="field-label">Location / Address</label>
+                        <input 
+                            type="text" 
+                            id="homeAddress" 
+                            name="homeAddress" 
+                            value="<%= home.houseAddress %>"
+                            class="field-input" 
+                            required 
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="homePrice" class="field-label">Nightly Rate (INR ₹)</label>
+                        <input 
+                            type="number" 
+                            id="homePrice" 
+                            name="homePrice" 
+                            value="<%= home.housePrice %>"
+                            class="field-input" 
+                            required 
+                            min="500"
+                        />
+                    </div>
+                </div>
+
+                <!-- 3. Capacity Specifications -->
+                <div class="form-grid-3">
+                    <div class="form-group">
+                        <label for="maxGuests" class="field-label">Max Guests</label>
+                        <input 
+                            type="number" 
+                            id="maxGuests" 
+                            name="maxGuests" 
+                            value="<%= home.maxGuests || 4 %>"
+                            class="field-input" 
+                            min="1" 
+                            max="20"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="bedrooms" class="field-label">Bedrooms</label>
+                        <input 
+                            type="number" 
+                            id="bedrooms" 
+                            name="bedrooms" 
+                            value="<%= home.bedrooms || 2 %>"
+                            class="field-input" 
+                            min="0" 
+                            max="15"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="bathrooms" class="field-label">Bathrooms</label>
+                        <input 
+                            type="number" 
+                            id="bathrooms" 
+                            name="bathrooms" 
+                            value="<%= home.bathrooms || 2 %>"
+                            class="field-input" 
+                            min="1" 
+                            max="15"
+                        />
+                    </div>
+                </div>
+
+                <!-- 4. Photo URL & Preview -->
+                <div class="form-group">
+                    <label for="housePhoto" class="field-label">High-Resolution Photo URL</label>
+                    <input 
+                        type="url" 
+                        id="housePhoto" 
+                        name="housePhoto" 
+                        value="<%= home.housePhoto %>"
+                        class="field-input" 
+                        required 
+                    />
+                    <div class="image-preview-box">
+                        <img 
+                            id="preview-img" 
+                            src="<%= home.housePhoto %>" 
+                            alt="<%= home.houseName %>" 
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80';"
+                        />
+                    </div>
+                </div>
+
+                <!-- 5. Description -->
+                <div class="form-group">
+                    <label for="description" class="field-label">Description &amp; Story</label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        class="field-textarea" 
+                    ><%= home.description || "" %></textarea>
+                </div>
+
+                <!-- 6. Amenities Checkboxes -->
+                <% const homeAmenities = home.amenities || []; %>
+                <span class="amenities-section-label">Included Amenities</span>
+                <div class="amenities-checkbox-grid">
+                    <label class="amenity-checkbox-card">
+                        <input type="checkbox" name="amenities" value="wifi" <%= homeAmenities.includes('wifi') ? 'checked' : '' %> />
+                        <span class="amenity-checkbox-title">High-Speed Fiber WiFi</span>
+                    </label>
+                    <label class="amenity-checkbox-card">
+                        <input type="checkbox" name="amenities" value="ac" <%= homeAmenities.includes('ac') ? 'checked' : '' %> />
+                        <span class="amenity-checkbox-title">Climate Control / AC</span>
+                    </label>
+                    <label class="amenity-checkbox-card">
+                        <input type="checkbox" name="amenities" value="parking" <%= homeAmenities.includes('parking') ? 'checked' : '' %> />
+                        <span class="amenity-checkbox-title">Free Parking</span>
+                    </label>
+                    <label class="amenity-checkbox-card">
+                        <input type="checkbox" name="amenities" value="pool" <%= homeAmenities.includes('pool') ? 'checked' : '' %> />
+                        <span class="amenity-checkbox-title">Private Pool</span>
+                    </label>
+                    <label class="amenity-checkbox-card">
+                        <input type="checkbox" name="amenities" value="kitchen" <%= homeAmenities.includes('kitchen') ? 'checked' : '' %> />
+                        <span class="amenity-checkbox-title">Equipped Kitchen</span>
+                    </label>
+                    <label class="amenity-checkbox-card">
+                        <input type="checkbox" name="amenities" value="hotWater" <%= homeAmenities.includes('hotWater') ? 'checked' : '' %> />
+                        <span class="amenity-checkbox-title">Continuous Hot Water</span>
+                    </label>
+                    <label class="amenity-checkbox-card">
+                        <input type="checkbox" name="amenities" value="view" <%= homeAmenities.includes('view') ? 'checked' : '' %> />
+                        <span class="amenity-checkbox-title">Mountain / Valley View</span>
+                    </label>
+                    <label class="amenity-checkbox-card">
+                        <input type="checkbox" name="amenities" value="workspace" <%= homeAmenities.includes('workspace') ? 'checked' : '' %> />
+                        <span class="amenity-checkbox-title">Dedicated Workspace</span>
+                    </label>
+                </div>
+
+                <!-- 7. Actions -->
+                <div class="form-actions-row">
+                    <button type="submit" class="btn-submit-home">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span>Save Listing Changes</span>
+                    </button>
+                    <a href="/host/view-home" class="btn-cancel">Cancel</a>
+                </div>
+
             </form>
         </div>
     </main>
+
+    <script>
+        const photoInput = document.getElementById('housePhoto');
+        const previewImg = document.getElementById('preview-img');
+
+        photoInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if (val && val.startsWith('http')) {
+                previewImg.src = val;
+            }
+        });
+    </script>
 </body>
 </html>
