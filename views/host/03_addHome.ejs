@@ -1867,8 +1867,61 @@
 
     <!-- ── Main Multi-step Wizard Container ── -->
     <main class="wizard-stage">
-        <!-- ══ STEP 1: TELL US ABOUT YOUR PLACE (INTRO & ASSEMBLING HOUSE ANIMATION) ══ -->
+        <!-- ══ STEP 1: SET UP YOUR STAYNEST LISTING (MATCHING EXACT USER SCREENSHOT - NO STEP TAG) ══ -->
         <div class="step-container active" id="step-1">
+            <div class="split-layout">
+                <!-- Left: Typography & Pill Input matching screenshot 1 -->
+                <div>
+                    <h1 class="step-headline">Set up your<br />StayNest listing</h1>
+                    <p class="step-sub">It's easy to create a great listing &ndash; let's start with your address.</p>
+
+                    <div class="address-box">
+                        <!-- Pill Trigger Button opens modal matching screenshot 2 -->
+                        <div class="pill-search-trigger" id="pill-trigger-btn" onclick="openAddressModal()">
+                            <svg class="pill-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <span class="pill-placeholder" id="pill-placeholder-text">Enter your address</span>
+                        </div>
+
+                        <!-- Detected location tag -->
+                        <div class="location-detected-pill" id="pill-city-badge" style="display: none;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span id="pill-city-text"></span>
+                        </div>
+
+                        <p class="host-note-link">
+                            Not listing a home? Host an <a href="/">experience or service</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right: Rotating Photo Hero Card (Auto-rotating photo slideshow) -->
+                <div>
+                    <div class="split-hero-card" id="slideshow-hero-card">
+                        <!-- 5 Curated Architectural Homes matching screenshot style -->
+                        <img class="slide-img active" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" alt="Victorian Architectural Townhouses" />
+                        <img class="slide-img" src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80" alt="Timber Forest Sanctuary" />
+                        <img class="slide-img" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop&q=80" alt="Alpine Mountain Glass Chalet" />
+                        <img class="slide-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&fit=crop&q=80" alt="Modern Minimalist Estate" />
+                        <img class="slide-img" src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&auto=format&fit=crop&q=80" alt="Royal Heritage Residence" />
+
+                        <!-- Indicator Dots -->
+                        <div class="slideshow-dots" id="slideshow-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ STEP 2: TELL US ABOUT YOUR PLACE (INTRO & ASSEMBLING HOUSE ANIMATION) ══ -->
+        <div class="step-container" id="step-2">
             <div class="intro-hero-split">
                 <!-- Left: Headline & Context matching Airbnb screenshot -->
                 <div class="intro-left-content">
@@ -1937,9 +1990,8 @@
             </div>
         </div>
 
-
-<!-- ══ STEP 2: CATEGORY SELECTION ══ -->
-        <div class="step-container" id="step-2">
+        <!-- ══ STEP 3: CATEGORY SELECTION ══ -->
+        <div class="step-container" id="step-3">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
                 <span class="step-tag">Step 1.1 &bull; Architectural Structure</span>
                 <h2 class="step-headline" style="font-size: 42px;">Which of these best describes your <em>place?</em></h2>
@@ -2383,8 +2435,8 @@
             </div>
         </div>
 
-<!-- ══ STEP 3: WHAT TYPE OF PLACE WILL GUESTS HAVE? (MATCHING EXACT AIRBNB SCREENSHOT) ══ -->
-        <div class="step-container" id="step-3">
+<!-- ══ STEP 4: WHAT TYPE OF PLACE WILL GUESTS HAVE? (MATCHING EXACT AIRBNB SCREENSHOT) ══ -->
+        <div class="step-container" id="step-4">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
                 <span class="step-tag">Step 1.2 &bull; Privacy &amp; Space Type</span>
                 <h2 class="step-headline" style="font-size: 42px;">What type of place will guests <em>have?</em></h2>
@@ -2439,63 +2491,10 @@
             </div>
         </div>
 
-<!-- ══ STEP 4: SET UP YOUR STAYNEST LISTING (MATCHING EXACT USER SCREENSHOT) ══ -->
-        <div class="step-container" id="step-4">
-            <div class="split-layout">
-                <!-- Left: Typography & Pill Input matching screenshot 1 -->
-                <div>
-                    <h1 class="step-headline">Set up your<br />StayNest listing</h1>
-                    <p class="step-sub">It's easy to create a great listing &ndash; let's start with your address.</p>
-
-                    <div class="address-box">
-                        <!-- Pill Trigger Button opens modal matching screenshot 2 -->
-                        <div class="pill-search-trigger" id="pill-trigger-btn" onclick="openAddressModal()">
-                            <svg class="pill-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                            <span class="pill-placeholder" id="pill-placeholder-text">Enter your address</span>
-                        </div>
-
-                        <!-- Detected location tag -->
-                        <div class="location-detected-pill" id="pill-city-badge" style="display: none;">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            <span id="pill-city-text"></span>
-                        </div>
-
-                        <p class="host-note-link">
-                            Not listing a home? Host an <a href="/">experience or service</a>.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Right: Rotating Photo Hero Card (Auto-rotating photo slideshow) -->
-                <div>
-                    <div class="split-hero-card" id="slideshow-hero-card">
-                        <!-- 5 Curated Architectural Homes matching screenshot style -->
-                        <img class="slide-img active" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" alt="Victorian Architectural Townhouses" />
-                        <img class="slide-img" src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80" alt="Timber Forest Sanctuary" />
-                        <img class="slide-img" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop&q=80" alt="Alpine Mountain Glass Chalet" />
-                        <img class="slide-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&fit=crop&q=80" alt="Modern Minimalist Estate" />
-                        <img class="slide-img" src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&auto=format&fit=crop&q=80" alt="Royal Heritage Residence" />
-
-                        <!-- Indicator Dots -->
-                        <div class="slideshow-dots" id="slideshow-dots">
-                            <span class="dot active"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
 <!-- ══ STEP 5: IS THE PIN IN THE RIGHT SPOT? (MATCHING EXACT AIRBNB SCREENSHOT) ══ -->
         <div class="step-container" id="step-5">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 32px auto;">
-                <span class="step-tag">Step 1.4 &bull; Location Accuracy</span>
+                <span class="step-tag">Step 1.3 &bull; Location Accuracy</span>
                 <h2 class="step-headline" style="font-size: 42px;">Is the pin in the right <em>spot?</em></h2>
                 <p class="step-sub" style="margin: 0 auto;">Your address is only shared with guests after they’ve made a reservation.</p>
             </div>
@@ -2565,7 +2564,7 @@
 <!-- ══ STEP 6: CHOOSE HOW GUESTS SEE YOUR LOCATION ON A MAP (MATCHING EXACT AIRBNB SCREENSHOT) ══ -->
         <div class="step-container" id="step-6">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 32px auto;">
-                <span class="step-tag">Step 1.5 &bull; Location Privacy</span>
+                <span class="step-tag">Step 1.4 &bull; Location Privacy</span>
                 <h2 class="step-headline" style="font-size: 42px;">Choose how guests see your location on a <em>map</em></h2>
                 <p class="step-sub" style="margin: 0 auto;">We only share your address after guests book. Until then, they’ll see an approximate location.</p>
             </div>
@@ -2605,7 +2604,7 @@
 <!-- ══ STEP 7: BASICS & CAPACITY ══ -->
         <div class="step-container" id="step-7">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
-                <span class="step-tag">Step 1.6 &bull; Space Capacity</span>
+                <span class="step-tag">Step 1.5 &bull; Space Capacity</span>
                 <h2 class="step-headline" style="font-size: 42px;">Share some basics about your <em>place.</em></h2>
                 <p class="step-sub" style="margin: 0 auto;">You'll add more details later, like exact bed dimensions and ensuite bathroom setups.</p>
             </div>
@@ -3874,8 +3873,8 @@
         function navigateStep(direction) {
             // Validation before going forward
             if (direction === 1) {
-                if (currentStep === 4) {
-                    // Step 4 is Address selection
+                if (currentStep === 1) {
+                    // Step 1 is Address selection
                     if (!wizardState.homeAddress) {
                         openAddressModal();
                         return;
@@ -3912,7 +3911,7 @@
             currentStep = Math.max(1, Math.min(totalSteps, currentStep));
             document.getElementById('step-' + currentStep).classList.add('active');
             
-            if (currentStep === 1) {
+            if (currentStep === 2) {
                 triggerHouseRebuildAnimation();
             } else if (currentStep === 5) {
                 initOrUpdateMap();
