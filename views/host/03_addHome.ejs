@@ -465,6 +465,24 @@
             animation-delay: 2s;
         }
 
+        .marker-jacuzzi {
+            top: 12%;
+            left: 50%;
+            animation-delay: 0.4s;
+        }
+
+        .marker-fireplace {
+            bottom: 34%;
+            left: 28%;
+            animation-delay: 1.2s;
+        }
+
+        .marker-dining {
+            bottom: 16%;
+            right: 24%;
+            animation-delay: 2.2s;
+        }
+
         @keyframes floatMarker {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
@@ -2660,10 +2678,80 @@
             </div>
         </div>
 
-<!-- ══ STEP 8: AMENITIES ══ -->
+<!-- ══ STEP 8: MAKE YOUR PLACE STAND OUT (INTRO TO STEP 2 & FURNISHED 3D HOUSE ANIMATION) ══ -->
         <div class="step-container" id="step-8">
+            <div class="intro-hero-split">
+                <!-- Left: Headline & Context matching Airbnb Step 2 screenshot -->
+                <div class="intro-left-content">
+                    <span class="intro-step-pill">Step 2</span>
+                    <h1 class="intro-headline-airbnb">Make your place <em>stand out</em></h1>
+                    <p class="intro-desc-airbnb">
+                        In this step, you’ll add some of the amenities your place offers, plus 5 or more photos. Then you’ll create a title and description.
+                    </p>
+
+                    <div class="intro-checklist">
+                        <div class="intro-check-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Signature Amenities &amp; Creature Comforts</span>
+                        </div>
+                        <div class="intro-check-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>High-Resolution Photographic Visuals</span>
+                        </div>
+                        <div class="intro-check-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Bespoke Title &amp; Storytelling Narrative</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: 3D Assembling & Furnished House Arena -->
+                <div class="house-construction-arena" id="house-arena-step2" onmousemove="handleHouseArenaMouseMoveStep2(event)" onmouseleave="resetHouseArenaTiltStep2()">
+                    <!-- Blueprint Grid Background -->
+                    <div class="construction-grid-bg"></div>
+
+                    <!-- Building Progress Controller Pill -->
+                    <div class="building-status-pill" onclick="triggerHouseFurnishAnimation()" title="Click to replay styling animation">
+                        <span class="status-dot-live"></span>
+                        <span id="furnish-phase-text">Interior Styling &amp; Amenities • Stage Complete</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                    </div>
+
+                    <!-- 3D Isometric Card with Tilt -->
+                    <div class="house-3d-stage constructing" id="house-stage-step2" onclick="triggerHouseFurnishAnimation()">
+                        <!-- Glowing Laser Scanner Beam -->
+                        <div class="house-scanner-beam" id="house-scanner-step2"></div>
+
+                        <!-- 3D Isometric Furnished House Image -->
+                        <img 
+                            src="/images/isometric-house-furnished.jpg" 
+                            alt="Luxury Furnished Isometric House with Jacuzzi and Amenities" 
+                            class="house-build-visual" 
+                            id="house-visual-img-step2"
+                        />
+
+                        <!-- Floating Architectural Amenity Markers -->
+                        <div class="architect-marker marker-jacuzzi" id="marker-jacuzzi">
+                            <span class="marker-dot"></span>
+                            <span>Rooftop Jacuzzi &amp; Solarium</span>
+                        </div>
+                        <div class="architect-marker marker-fireplace" id="marker-fireplace">
+                            <span class="marker-dot"></span>
+                            <span>Fireplace &amp; Designer Lounge</span>
+                        </div>
+                        <div class="architect-marker marker-dining" id="marker-dining">
+                            <span class="marker-dot"></span>
+                            <span>Bespoke Dining &amp; Chef Kitchen</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 9: AMENITIES ══ -->
+        <div class="step-container" id="step-9">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
-                <span class="step-tag">Step 8 &bull; Amenities</span>
+                <span class="step-tag">Step 2.1 &bull; Amenities &amp; Features</span>
                 <h2 class="step-headline" style="font-size: 42px;">Tell guests what your sanctuary <em>offers.</em></h2>
                 <p class="step-sub" style="margin: 0 auto;">Select the signature touches that make your accommodation comfortable and bespoke.</p>
             </div>
@@ -2727,10 +2815,10 @@
             </div>
         </div>
 
-<!-- ══ STEP 9: PHOTOS ══ -->
-        <div class="step-container" id="step-9">
+<!-- ══ STEP 10: PHOTOS ══ -->
+        <div class="step-container" id="step-10">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
-                <span class="step-tag">Step 9 &bull; Imagery</span>
+                <span class="step-tag">Step 2.2 &bull; Visual Representation</span>
                 <h2 class="step-headline" style="font-size: 42px;">Add high-resolution photos of your <em>sanctuary.</em></h2>
                 <p class="step-sub" style="margin: 0 auto;">Provide a photography URL or click one of our curated architectural inspirations.</p>
             </div>
@@ -2763,10 +2851,10 @@
             </div>
         </div>
 
-<!-- ══ STEP 10: TITLE & STORY ══ -->
-        <div class="step-container" id="step-10">
+<!-- ══ STEP 11: TITLE & STORY ══ -->
+        <div class="step-container" id="step-11">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
-                <span class="step-tag">Step 10 &bull; Naming &amp; Story</span>
+                <span class="step-tag">Step 2.3 &bull; Title &amp; Narrative</span>
                 <h2 class="step-headline" style="font-size: 42px;">Now, let's give your place a <em>title and story.</em></h2>
                 <p class="step-sub" style="margin: 0 auto;">Catchy titles highlight distinct design features or scenic landscapes. You can refine this anytime.</p>
             </div>
@@ -2795,10 +2883,10 @@
             </div>
         </div>
 
-<!-- ══ STEP 11: PRICING & FINAL REVIEW ══ -->
-        <div class="step-container" id="step-11">
+<!-- ══ STEP 12: PRICING & FINAL REVIEW ══ -->
+        <div class="step-container" id="step-12">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 28px auto;">
-                <span class="step-tag">Step 11 &bull; Final Tariff &amp; Review</span>
+                <span class="step-tag">Step 3 &bull; Nightly Rate &amp; Confirmation</span>
                 <h2 class="step-headline" style="font-size: 42px;">Now, set your <em>nightly price.</em></h2>
                 <p class="step-sub" style="margin: 0 auto;">Set your standard rate. You can adjust prices for weekends or peak seasonal dates later.</p>
             </div>
@@ -3007,7 +3095,7 @@
     <!-- ── Wizard JavaScript Controller ── -->
     <script>
         let currentStep = 1;
-        const totalSteps = 11;
+        const totalSteps = 12;
 
         // State holder
         const wizardState = {
@@ -3879,8 +3967,8 @@
                         openAddressModal();
                         return;
                     }
-                } else if (currentStep === 9) {
-                    // Step 9 is Photo input
+                } else if (currentStep === 10) {
+                    // Step 10 is Photo input (previously step 9)
                     const photo = document.getElementById('input-photo').value.trim();
                     if (!photo) {
                         alert('Please provide a photo URL or choose a preset.');
@@ -3888,8 +3976,8 @@
                         return;
                     }
                     wizardState.housePhoto = photo;
-                } else if (currentStep === 10) {
-                    // Step 10 is Title input
+                } else if (currentStep === 11) {
+                    // Step 11 is Title input (previously step 10)
                     const title = document.getElementById('input-title').value.trim();
                     if (!title) {
                         alert('Please provide a title for your sanctuary.');
@@ -3898,8 +3986,8 @@
                     }
                     wizardState.homeName = title;
                     wizardState.description = document.getElementById('input-desc').value.trim();
-                } else if (currentStep === 11) {
-                    // Step 11 is Final submission!
+                } else if (currentStep === 12) {
+                    // Step 12 is Final submission!
                     submitListingForm();
                     return;
                 }
@@ -3917,6 +4005,8 @@
                 initOrUpdateMap();
             } else if (currentStep === 6) {
                 initOrUpdatePrivacyMap();
+            } else if (currentStep === 8) {
+                triggerHouseFurnishAnimation();
             }
 
             // Scroll to top of stage
@@ -3924,6 +4014,48 @@
 
             // Update footer
             updateFooterBar();
+        }
+
+        // ── Step 2 Furnished House Animation Controllers ──
+        function triggerHouseFurnishAnimation() {
+            const stage = document.getElementById('house-stage-step2');
+            const pillText = document.getElementById('furnish-phase-text');
+            if (!stage) return;
+
+            stage.classList.remove('constructing');
+            void stage.offsetWidth; // Force reflow
+            stage.classList.add('constructing');
+
+            if (pillText) {
+                pillText.textContent = 'Styling & Furnishing Interior...';
+                setTimeout(() => {
+                    if (pillText) pillText.textContent = 'Interior Styling & Amenities • Stage Complete';
+                }, 3300);
+            }
+        }
+
+        function handleHouseArenaMouseMoveStep2(e) {
+            const arena = document.getElementById('house-arena-step2');
+            const stage = document.getElementById('house-stage-step2');
+            if (!arena || !stage) return;
+
+            const rect = arena.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((centerY - y) / centerY) * 12;
+            const rotateY = ((x - centerX) / centerX) * 16;
+
+            stage.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+
+        function resetHouseArenaTiltStep2() {
+            const stage = document.getElementById('house-stage-step2');
+            if (!stage) return;
+            stage.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
         }
 
         function updateFooterBar() {
