@@ -1493,60 +1493,109 @@
             color: var(--emerald-dark);
         }
 
-        /* ── Step 4: Amenities Grid ── */
-        .amenities-wizard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            max-width: 860px;
+        /* ── Step 2.1: Full Airbnb-Style Amenities Grid ── */
+        .airbnb-amenities-stage {
+            max-width: 840px;
+            width: 100%;
             margin: 0 auto;
+            text-align: left;
+            padding-bottom: 24px;
         }
 
-        .amenity-pick-card {
-            background: #FFFFFF;
-            border: 2px solid var(--border-light);
-            border-radius: 18px;
-            padding: 20px 18px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
+        .amenities-header-block {
+            margin-bottom: 32px;
+        }
+
+        .amenities-main-headline {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222222;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .amenities-main-sub {
+            font-size: 16px;
+            color: #717171;
+            line-height: 1.4;
+        }
+
+        .amenity-section-group {
+            margin-bottom: 36px;
+        }
+
+        .amenity-section-heading {
+            font-size: 18px;
+            font-weight: 700;
+            color: #222222;
+            margin-bottom: 16px;
+            letter-spacing: -0.2px;
+        }
+
+        .amenities-grid-airbnb {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 14px;
         }
 
-        .amenity-pick-card:hover {
-            border-color: rgba(212, 175, 106, 0.7);
-            transform: translateY(-2px);
+        @media (max-width: 768px) {
+            .amenities-grid-airbnb {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .amenity-pick-card.selected {
-            border-color: var(--emerald-mid);
-            background: #FAF9F5;
-            box-shadow: 0 0 0 3px rgba(20, 53, 40, 0.12);
+        @media (max-width: 480px) {
+            .amenities-grid-airbnb {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .amenity-icon-bubble {
-            width: 42px;
-            height: 42px;
+        .airbnb-amenity-card {
+            background: #FFFFFF;
+            border: 1px solid #DDDDDD;
             border-radius: 12px;
-            background: #EBF2ED;
-            color: var(--emerald-mid);
+            padding: 22px 20px;
+            cursor: pointer;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: 106px;
+            user-select: none;
+            position: relative;
+        }
+
+        .airbnb-amenity-card:hover {
+            border-color: #222222;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+        }
+
+        .airbnb-amenity-card.selected {
+            border: 2px solid #222222;
+            background: #F7F7F7;
+            padding: 21px 19px;
+        }
+
+        .airbnb-amenity-icon {
+            color: #222222;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.2s ease;
         }
 
-        .amenity-pick-card.selected .amenity-icon-bubble {
-            background: var(--emerald-mid);
-            color: #FAF7F0;
-        }
-
-        .amenity-pick-text {
-            font-size: 14.5px;
+        .airbnb-amenity-title {
+            font-size: 15px;
             font-weight: 600;
-            color: var(--text-dark);
+            color: #222222;
+            line-height: 1.3;
+        }
+
+        .airbnb-amenity-sub {
+            font-size: 12.5px;
+            color: #717171;
+            line-height: 1.35;
+            margin-top: 4px;
         }
 
         /* ── Step 5: Photo Preset & Preview ── */
@@ -2748,69 +2797,406 @@
             </div>
         </div>
 
-<!-- ══ STEP 9: AMENITIES ══ -->
+<!-- ══ STEP 9: AMENITIES (MATCHING EXACT AIRBNB 5-CATEGORY SCREENSHOTS) ══ -->
         <div class="step-container" id="step-9">
-            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
-                <span class="step-tag">Step 2.1 &bull; Amenities &amp; Features</span>
-                <h2 class="step-headline" style="font-size: 42px;">Tell guests what your sanctuary <em>offers.</em></h2>
-                <p class="step-sub" style="margin: 0 auto;">Select the signature touches that make your accommodation comfortable and bespoke.</p>
-            </div>
-
-            <div class="amenities-wizard-grid">
-                <div class="amenity-pick-card selected" onclick="toggleAmenity('wifi', this)">
-                    <div class="amenity-icon-bubble">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
-                    </div>
-                    <span class="amenity-pick-text">High-Speed Fiber WiFi</span>
+            <div class="airbnb-amenities-stage">
+                <!-- Header Block Matching Screenshot 1 -->
+                <div class="amenities-header-block">
+                    <h1 class="amenities-main-headline">Tell guests which amenities they’ll find at your place</h1>
+                    <p class="amenities-main-sub">You can add more amenities after you publish your listing.</p>
                 </div>
 
-                <div class="amenity-pick-card selected" onclick="toggleAmenity('ac', this)">
-                    <div class="amenity-icon-bubble">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
+                <!-- 1. Basics Category -->
+                <div class="amenity-section-group">
+                    <h3 class="amenity-section-heading">Basics</h3>
+                    <div class="amenities-grid-airbnb">
+                        <!-- Air conditioning -->
+                        <div class="airbnb-amenity-card selected" onclick="toggleAmenity('ac', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"></path>
+                                    <path d="M12 6l2-2M12 6l-2-2M12 18l2 2M12 18l-2 2M6 12l-2-2M6 12l-2 2M18 12l2-2M18 12l2 2"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Air conditioning</div>
+                        </div>
+
+                        <!-- Essentials -->
+                        <div class="airbnb-amenity-card selected" onclick="toggleAmenity('essentials', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="13" height="16" rx="2"></rect>
+                                    <path d="M16 8h4v10a2 2 0 0 1-2 2h-2"></path>
+                                    <path d="M7 8h5M7 12h5M7 16h3"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Essentials</div>
+                            <div class="airbnb-amenity-sub">Towels, bed sheets, soap and toilet paper</div>
+                        </div>
+
+                        <!-- Fridge -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('fridge', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="2" width="14" height="20" rx="2"></rect>
+                                    <line x1="5" y1="9" x2="19" y2="9"></line>
+                                    <line x1="8" y1="5" x2="8" y2="7"></line>
+                                    <line x1="8" y1="13" x2="8" y2="16"></line>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Fridge</div>
+                        </div>
+
+                        <!-- Heating -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('heating', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Heating</div>
+                        </div>
+
+                        <!-- Hot water -->
+                        <div class="airbnb-amenity-card selected" onclick="toggleAmenity('hotWater', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 14h16c0 4.42-3.58 8-8 8s-8-3.58-8-8z"></path>
+                                    <path d="M8 4c0 2-1 3-1 5M12 2c0 2-1 3-1 5M16 4c0 2-1 3-1 5"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Hot water</div>
+                        </div>
+
+                        <!-- Kitchen -->
+                        <div class="airbnb-amenity-card selected" onclick="toggleAmenity('kitchen', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+                                    <circle cx="8" cy="6" r="1"></circle>
+                                    <circle cx="12" cy="6" r="1"></circle>
+                                    <circle cx="16" cy="6" r="1"></circle>
+                                    <line x1="4" y1="9" x2="20" y2="9"></line>
+                                    <rect x="7" y="12" width="10" height="6" rx="1"></rect>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Kitchen</div>
+                        </div>
+
+                        <!-- TV -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('tv', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="13" rx="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">TV</div>
+                        </div>
+
+                        <!-- Tumble dryer -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('dryer', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                                    <circle cx="12" cy="13" r="5"></circle>
+                                    <line x1="8.5" y1="9.5" x2="15.5" y2="16.5"></line>
+                                    <circle cx="8" cy="6" r="1"></circle>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Tumble dryer</div>
+                        </div>
+
+                        <!-- Washing machine -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('washingMachine', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                                    <circle cx="12" cy="13" r="5"></circle>
+                                    <circle cx="8" cy="6" r="1"></circle>
+                                    <circle cx="12" cy="6" r="1"></circle>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Washing machine</div>
+                        </div>
+
+                        <!-- Wifi -->
+                        <div class="airbnb-amenity-card selected" onclick="toggleAmenity('wifi', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                                    <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                                    <circle cx="12" cy="20" r="1.2" fill="currentColor"></circle>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Wifi</div>
+                        </div>
                     </div>
-                    <span class="amenity-pick-text">Climate Control / AC</span>
                 </div>
 
-                <div class="amenity-pick-card selected" onclick="toggleAmenity('parking', this)">
-                    <div class="amenity-icon-bubble">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <!-- 2. Popular Category -->
+                <div class="amenity-section-group">
+                    <h3 class="amenity-section-heading">Popular</h3>
+                    <div class="amenities-grid-airbnb">
+                        <!-- Coffee maker -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('coffeeMaker', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6 3h10a2 2 0 0 1 2 2v2H6V5a2 2 0 0 1 2-2z"></path>
+                                    <path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7"></path>
+                                    <path d="M18 10h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"></path>
+                                    <line x1="6" y1="13" x2="18" y2="13"></line>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Coffee maker</div>
+                        </div>
+
+                        <!-- Cooking basics -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('cookingBasics', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 2v20M18 7a3 3 0 0 0 3-3V2h-3v5z"></path>
+                                    <path d="M6 2v7a2 2 0 0 0 2 2v11M10 2v7a2 2 0 0 1-2 2"></path>
+                                    <line x1="8" y1="2" x2="8" y2="8"></line>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Cooking basics</div>
+                            <div class="airbnb-amenity-sub">Pots and pans, oil, salt and pepper</div>
+                        </div>
+
+                        <!-- Hairdryer -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('hairdryer', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 8h10a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2z"></path>
+                                    <path d="M11 16v5a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-5"></path>
+                                    <circle cx="6" cy="12" r="1.5"></circle>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Hairdryer</div>
+                        </div>
+
+                        <!-- Hangers -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('hangers', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 4a2 2 0 0 1 2 2c0 1.5-1.5 2.5-2 3.5L2 17a2 2 0 0 0 1 3h18a2 2 0 0 0 1-3l-10-7.5"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Hangers</div>
+                        </div>
+
+                        <!-- Iron -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('iron', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 17h17a2 2 0 0 0 2-2c0-4-3-7-7-7H7a4 4 0 0 0-4 4v5z"></path>
+                                    <line x1="7" y1="21" x2="7" y2="21.01"></line>
+                                    <line x1="12" y1="21" x2="12" y2="21.01"></line>
+                                    <line x1="17" y1="21" x2="17" y2="21.01"></line>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Iron</div>
+                        </div>
+
+                        <!-- Shampoo -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('shampoo', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="7" y="8" width="10" height="13" rx="3"></rect>
+                                    <path d="M10 8V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3"></path>
+                                    <line x1="9" y1="4" x2="15" y2="4"></line>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Shampoo</div>
+                        </div>
                     </div>
-                    <span class="amenity-pick-text">Free On-Premise Parking</span>
                 </div>
 
-                <div class="amenity-pick-card" onclick="toggleAmenity('pool', this)">
-                    <div class="amenity-icon-bubble">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path><path d="M2 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0"></path></svg>
+                <!-- 3. Features Category -->
+                <div class="amenity-section-group">
+                    <h3 class="amenity-section-heading">Features</h3>
+                    <div class="amenities-grid-airbnb">
+                        <!-- Cot -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('cot', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 6v14M21 6v14"></path>
+                                    <path d="M3 10h18v6H3z"></path>
+                                    <line x1="7" y1="10" x2="7" y2="16"></line>
+                                    <line x1="11" y1="10" x2="11" y2="16"></line>
+                                    <line x1="15" y1="10" x2="15" y2="16"></line>
+                                    <line x1="19" y1="10" x2="19" y2="16"></line>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Cot</div>
+                        </div>
+
+                        <!-- Dedicated workspace -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('workspace', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="10" width="18" height="4" rx="1"></rect>
+                                    <line x1="6" y1="14" x2="6" y2="21"></line>
+                                    <line x1="18" y1="14" x2="18" y2="21"></line>
+                                    <path d="M7 10V6l3 2"></path>
+                                    <path d="M12 14v4a2 2 0 0 0 2 2h2"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Dedicated workspace</div>
+                        </div>
+
+                        <!-- EV charger -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('evCharger', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="3" width="10" height="18" rx="2"></rect>
+                                    <line x1="7" y1="7" x2="11" y2="7"></line>
+                                    <path d="M14 9h3a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0v-4"></path>
+                                    <path d="M8 12l2-2v6l-2-2"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">EV charger</div>
+                        </div>
+
+                        <!-- Free parking on premises -->
+                        <div class="airbnb-amenity-card selected" onclick="toggleAmenity('parking', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 11l2-5h10l2 5v7a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H7v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7z"></path>
+                                    <circle cx="7.5" cy="14.5" r="1.5"></circle>
+                                    <circle cx="16.5" cy="14.5" r="1.5"></circle>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Free parking on premises</div>
+                        </div>
+
+                        <!-- Gym -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('gym', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6 4v16M18 4v16M2 8v8M22 8v8M6 12h12"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Gym</div>
+                        </div>
+
+                        <!-- Hot tub -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('hotTub', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 13h18v4a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-4z"></path>
+                                    <path d="M7 6c0 1.5-1 2.5-1 4M12 4c0 1.5-1 2.5-1 4M17 6c0 1.5-1 2.5-1 4"></path>
+                                    <circle cx="9" cy="11" r="1.5"></circle>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Hot tub</div>
+                        </div>
+
+                        <!-- Indoor fireplace -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('fireplace', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+                                    <path d="M8 21v-7a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v7"></path>
+                                    <path d="M12 17c1-1 1-2 0-3-.5 1-1.5 1-1 2 .5 1 .5 1 1 1z" fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Indoor fireplace</div>
+                        </div>
+
+                        <!-- Outdoor furniture -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('outdoorFurniture', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v10M5 7c0-2.8 3.1-5 7-5s7 2.2 7 5H5z"></path>
+                                    <path d="M6 16h12v4M8 16v5M16 16v5"></path>
+                                    <path d="M3 18h2M19 18h2"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Outdoor furniture</div>
+                        </div>
+
+                        <!-- Pool -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('pool', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 17c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0"></path>
+                                    <path d="M2 21c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0"></path>
+                                    <path d="M7 3v9M11 3v9M7 6h4M7 9h4"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Pool</div>
+                        </div>
                     </div>
-                    <span class="amenity-pick-text">Private Swimming Pool</span>
                 </div>
 
-                <div class="amenity-pick-card" onclick="toggleAmenity('kitchen', this)">
-                    <div class="amenity-icon-bubble">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><path d="M6 12V4h12v8"></path></svg>
+                <!-- 4. Location Category -->
+                <div class="amenity-section-group">
+                    <h3 class="amenity-section-heading">Location</h3>
+                    <div class="amenities-grid-airbnb">
+                        <!-- Beach access -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('beachAccess', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 20c2-1 4-1 6 0s4 1 6 0 4-1 6 0"></path>
+                                    <path d="M17 4a5 5 0 0 1 5 5h-10a5 5 0 0 1 5-5z"></path>
+                                    <line x1="17" y1="4" x2="17" y2="17"></line>
+                                    <path d="M4 14l3-6 3 6"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Beach access</div>
+                        </div>
+
+                        <!-- Waterfront -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('waterfront', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 9l5-4 5 4v5H3V9z"></path>
+                                    <path d="M17 6l3 5h-6l3-5zM17 11v3"></path>
+                                    <path d="M2 18c2-1 4-1 6 0s4 1 6 0 4-1 6 0"></path>
+                                    <path d="M2 21c2-1 4-1 6 0s4 1 6 0 4-1 6 0"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Waterfront</div>
+                        </div>
                     </div>
-                    <span class="amenity-pick-text">Gourmet Kitchen</span>
                 </div>
 
-                <div class="amenity-pick-card selected" onclick="toggleAmenity('hotWater', this)">
-                    <div class="amenity-icon-bubble">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                    </div>
-                    <span class="amenity-pick-text">Continuous Hot Water</span>
-                </div>
+                <!-- 5. Safety Category -->
+                <div class="amenity-section-group">
+                    <h3 class="amenity-section-heading">Safety</h3>
+                    <div class="amenities-grid-airbnb">
+                        <!-- Carbon monoxide alarm -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('carbonMonoxideAlarm', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="4" width="16" height="16" rx="4"></rect>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <line x1="12" y1="6" x2="12" y2="7"></line>
+                                    <line x1="12" y1="17" x2="12" y2="18"></line>
+                                    <line x1="6" y1="12" x2="7" y2="12"></line>
+                                    <line x1="17" y1="12" x2="18" y2="12"></line>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Carbon monoxide alarm</div>
+                        </div>
 
-                <div class="amenity-pick-card" onclick="toggleAmenity('view', this)">
-                    <div class="amenity-icon-bubble">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 17 9 11 13 15 21 7 21 17 3 17"></polygon></svg>
+                        <!-- Smoke alarm -->
+                        <div class="airbnb-amenity-card" onclick="toggleAmenity('smokeAlarm', this)">
+                            <div class="airbnb-amenity-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="8"></circle>
+                                    <circle cx="12" cy="12" r="4"></circle>
+                                    <circle cx="12" cy="12" r="1" fill="currentColor"></circle>
+                                    <path d="M12 2v2M12 20v2M2 12h2M20 12h2"></path>
+                                </svg>
+                            </div>
+                            <div class="airbnb-amenity-title">Smoke alarm</div>
+                        </div>
                     </div>
-                    <span class="amenity-pick-text">Mountain / Valley View</span>
-                </div>
-
-                <div class="amenity-pick-card" onclick="toggleAmenity('workspace', this)">
-                    <div class="amenity-icon-bubble">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                    </div>
-                    <span class="amenity-pick-text">Dedicated Workspace</span>
                 </div>
             </div>
         </div>
@@ -3111,7 +3497,7 @@
             bedrooms: 2,
             beds: 2,
             bathrooms: 2,
-            amenities: ['wifi', 'ac', 'parking', 'hotWater'],
+            amenities: ['wifi', 'ac', 'parking', 'hotWater', 'essentials', 'kitchen'],
             housePhoto: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80',
             homeName: '',
             description: '',
