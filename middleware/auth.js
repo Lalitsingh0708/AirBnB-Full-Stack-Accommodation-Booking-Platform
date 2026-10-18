@@ -22,7 +22,8 @@ export const protect = async (req, res, next) => {
     const token = req.cookies?.staynest_token;
 
     if (!token) {
-        return res.redirect("/auth/login");
+        const returnUrl = encodeURIComponent(req.originalUrl || "/");
+        return res.redirect(`/auth/login?returnUrl=${returnUrl}`);
     }
 
     try {
@@ -31,7 +32,8 @@ export const protect = async (req, res, next) => {
 
         if (!user) {
             res.clearCookie("staynest_token");
-            return res.redirect("/auth/login");
+            const returnUrl = encodeURIComponent(req.originalUrl || "/");
+            return res.redirect(`/auth/login?returnUrl=${returnUrl}`);
         }
 
         req.user = user;
@@ -39,7 +41,8 @@ export const protect = async (req, res, next) => {
         next();
     } catch (err) {
         res.clearCookie("staynest_token");
-        return res.redirect("/auth/login");
+        const returnUrl = encodeURIComponent(req.originalUrl || "/");
+        return res.redirect(`/auth/login?returnUrl=${returnUrl}`);
     }
 };
 

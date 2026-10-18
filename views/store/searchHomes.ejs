@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stays in <%= displayDestination %> &bull; StayNest</title>
+    <meta name="description" content="Explore luxury stays, apartments, and villas in <%= displayDestination %>. View live availability, prices, and interactive map on StayNest." />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0B1C14;
+            --emerald-mid: #143528;
+            --gold-accent: #D4AF6A;
+            --gold-light: #EBD6A7;
+            --text-dark: #121A16;
+            --text-muted: #717171;
+            --border-light: #EBEBEB;
+            --coral-accent: #E00B41;
+            --green-perk: #0E7044;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ── Subheader / Quick Filter Pills Row (Exact Match to Screenshot 1) ── */
+        .search-filter-subbar {
+            position: sticky;
+            top: 73px;
+            z-index: 90;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-light);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .search-filter-subbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            border: 1px solid #DDDDDD;
+            background: #FFFFFF;
+            color: #222222;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.16s ease;
+            user-select: none;
+        }
+
+        .filter-chip-btn:hover {
+            border-color: #222222;
+            background: #F7F7F7;
+        }
+
+        .filter-chip-btn.active {
+            border-color: #143528;
+            background: #143528;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        .filter-chip-btn.active svg {
+            stroke: #FFFFFF;
+        }
+
+        .filter-chip-btn--main {
+            font-weight: 600;
+        }
+
+        /* ── Split Layout Container ── */
+        .search-split-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+            max-width: 100vw;
+            overflow: hidden;
+        }
+
+        /* ── Left Column: Listings List ── */
+        .search-listings-pane {
+            flex: 1;
+            min-width: 0;
+            max-width: 58%;
+            padding: 24px 28px 48px 28px;
+            overflow-y: auto;
+            height: calc(100vh - 138px);
+            scrollbar-width: thin;
+            scrollbar-color: #DDDDDD transparent;
+        }
+
+        .search-listings-pane::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .search-listings-pane::-webkit-scrollbar-thumb {
+            background: #DDDDDD;
+            border-radius: 4px;
+        }
+
+        /* Results Title and Price Badge */
+        .results-header-row {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .results-count-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #222222;
+            letter-spacing: -0.4px;
+        }
+
+        .all-fees-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #484848;
+            background: #FFF1F4;
+            border: 1px solid #FFE0E6;
+            padding: 6px 14px;
+            border-radius: 9999px;
+        }
+
+        .all-fees-tag-icon {
+            color: #E00B41;
+            transform: rotate(-10deg);
+        }
+
+        /* Homes Grid: 2 Columns Matching Screenshot */
+        .search-homes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px 18px;
+        }
+
+        /* Individual Listing Card */
+        .search-stay-card {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: transform 0.18s ease;
+            position: relative;
+            background: #FFFFFF;
+            padding: 4px;
+        }
+
+        .search-stay-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .search-stay-card.card-highlighted {
+            outline: 2px solid #143528;
+            box-shadow: 0 8px 24px rgba(20, 53, 40, 0.16);
+        }
+
+        /* Image Box with Carousel Dots */
+        .card-img-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1.05 / 1;
+            border-radius: 14px;
+            overflow: hidden;
+            background-color: #F0F0F0;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .search-stay-card:hover .card-img-wrapper img {
+            transform: scale(1.03);
+        }
+
+        /* Badge (Guest favourite / Superhost) */
+        .card-badge-pill {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #222222;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-badge-pill--superhost {
+            background: rgba(20, 53, 40, 0.92);
+            color: #FFFFFF;
+        }
+
+        /* Favourite Heart Button */
+        .card-fav-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease;
+        }
+
+        .card-fav-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .card-fav-icon {
+            fill: rgba(0, 0, 0, 0.3);
+            stroke: #FFFFFF;
+            stroke-width: 2.2;
+            transition: fill 0.2s ease, stroke 0.2s ease;
+        }
+
+        .card-fav-btn.is-active .card-fav-icon {
+            fill: #E00B41;
+            stroke: #E00B41;
+        }
+
+        /* Carousel Indicator Dots */
+        .card-dots-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 5;
+        }
+
+        .card-dot {
+            width: 5.5px;
+            height: 5.5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        .card-dot.active {
+            width: 7px;
+            height: 7px;
+            background: #FFFFFF;
+        }
+
+        /* Card Meta Information */
+        .card-body {
+            padding: 10px 4px 6px 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .card-title-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .card-property-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222222;
+            line-height: 1.25;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-rating-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #222222;
+            flex-shrink: 0;
+        }
+
+        .card-rating-badge svg {
+            color: #222222;
+        }
+
+        .card-house-name {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-room-specs {
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        .card-date-range {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .card-price-row {
+            margin-top: 5px;
+            font-size: 14.5px;
+            color: #222222;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .card-price-original {
+            text-decoration: line-through;
+            color: #717171;
+            font-weight: 400;
+            font-size: 13.5px;
+        }
+
+        .card-price-bold {
+            font-weight: 700;
+            font-size: 15px;
+            color: #111111;
+        }
+
+        .card-price-period {
+            font-size: 13.5px;
+            color: #222222;
+        }
+
+        .card-perks-row {
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge-perk {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green-perk);
+        }
+
+        /* ── Right Column: Interactive Map ── */
+        .search-map-pane {
+            flex: 1;
+            min-width: 0;
+            max-width: 42%;
+            height: calc(100vh - 138px);
+            position: sticky;
+            top: 138px;
+            background: #E5E3DF;
+            border-left: 1px solid var(--border-light);
+        }
+
+        #search-results-map {
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        /* Completely remove Leaflet watermark & attribution bar */
+        .leaflet-control-attribution {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        /* ── Custom Price Pill Map Markers (Matching Screenshot 1) ── */
+        .map-price-pill {
+            background: #FFFFFF;
+            color: #111111;
+            font-weight: 700;
+            font-size: 13.5px;
+            letter-spacing: -0.2px;
+            padding: 6px 11px;
+            border-radius: 9999px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+            transform-origin: center center;
+        }
+
+        .map-price-pill:hover,
+        .map-price-pill.is-active {
+            background: #222222 !important;
+            color: #FFFFFF !important;
+            transform: scale(1.12);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.32);
+            z-index: 9999 !important;
+        }
+
+        /* Floating Controls on Map */
+        .map-floating-overlay {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 800;
+            background: #FFFFFF;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #222222;
+            cursor: pointer;
+        }
+
+        .map-fullscreen-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 800;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #222222;
+            transition: background 0.15s ease;
+        }
+
+        .map-fullscreen-btn:hover {
+            background: #F7F7F7;
+        }
+
+        /* Empty State */
+        .empty-search-box {
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+            text-align: center;
+            background: #FAF7F0;
+            border-radius: 20px;
+            border: 1px dashed #D4AF6A;
+        }
+
+        .empty-search-box h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #143528;
+        }
+
+        .empty-search-box p {
+            color: #717171;
+            font-size: 14.5px;
+            margin-bottom: 20px;
+        }
+
+        .empty-reset-btn {
+            display: inline-block;
+            background: #143528;
+            color: #FFFFFF;
+            padding: 10px 24px;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .search-listings-pane {
+                max-width: 100%;
+                width: 100%;
+                height: auto;
+            }
+            .search-map-pane {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .search-homes-grid {
+                grid-template-columns: 1fr;
+            }
+            .search-listings-pane {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. StayNest Luxury Header (With Compact Search Bar Mode for Search Page) -->
+    <%- include('../partials/01_header.ejs', { isSearchResultsPage: true }) %>
+
+    <!-- 2. Subheader Filter Chips Bar (Matching Screenshot 1) -->
+    <div class="search-filter-subbar" role="toolbar" aria-label="Filters">
+        
+        <!-- Filters Button -->
+        <a href="javascript:void(0)" class="filter-chip-btn filter-chip-btn--main" id="btn-open-filter-modal" onclick="alert('Filters drawer: Adjust price, property types, and amenities!')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="21" x2="4" y2="14"></line>
+                <line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line>
+                <line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="1" y1="14" x2="7" y2="14"></line>
+                <line x1="9" y1="8" x2="15" y2="8"></line>
+                <line x1="17" y1="16" x2="23" y2="16"></line>
+            </svg>
+            <span>Filters</span>
+        </a>
+
+        <!-- Washing machine -->
+        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'washing_machine' ? '' : 'washing_machine') }).toString() %>" 
+           class="filter-chip-btn <%= (searchQuery.amenity === 'washing_machine') ? 'active' : '' %>">
+            <span>Washing machine</span>
+        </a>
+
+        <!-- Wifi -->
+        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'wifi' ? '' : 'wifi') }).toString() %>" 
+           class="filter-chip-btn <%= (searchQuery.amenity === 'wifi') ? 'active' : '' %>">
+            <span>Wifi</span>
+        </a>
+
+        <!-- Kitchen -->
+        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'kitchen' ? '' : 'kitchen') }).toString() %>" 
+           class="filter-chip-btn <%= (searchQuery.amenity === 'kitchen') ? 'active' : '' %>">
+            <span>Kitchen</span>
+        </a>
+
+        <!-- 1+ bathrooms -->
+        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'bathrooms' ? '' : 'bathrooms') }).toString() %>" 
+           class="filter-chip-btn <%= (searchQuery.amenity === 'bathrooms') ? 'active' : '' %>">
+            <span>1+ bathrooms</span>
+        </a>
+
+        <!-- Air conditioning -->
+        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'ac' ? '' : 'ac') }).toString() %>" 
+           class="filter-chip-btn <%= (searchQuery.amenity === 'ac') ? 'active' : '' %>">
+            <span>Air conditioning</span>
+        </a>
+
+    </div>
+
+    <!-- 3. Main Split-Screen Container -->
+    <div class="search-split-container">
+        
+        <!-- ── Left Column: Listings & Header ── -->
+        <div class="search-listings-pane" id="search-listings-pane">
+            
+            <!-- Header Row: Title & Price Tag Pill (Matching Screenshot 1) -->
+            <div class="results-header-row">
+                <h1 class="results-count-title">
+                    Over <%= (registeredHome.length > 5 ? '1,000' : (registeredHome.length || '0')) %> homes in <%= displayDestination %>
+                </h1>
+                <div class="all-fees-pill">
+                    <svg class="all-fees-tag-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82zM7 5a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+                    </svg>
+                    <span>Prices include all fees</span>
+                </div>
+            </div>
+
+            <!-- Homes Grid: 2 Columns Matching Screenshot 1 -->
+            <div class="search-homes-grid" id="search-homes-grid">
+                
+                <% if (registeredHome && registeredHome.length > 0) { %>
+                    <% registeredHome.forEach((home, index) => { %>
+                        <div class="search-stay-card" 
+                             id="stay-card-<%= home.id %>"
+                             data-home-id="<%= home.id %>"
+                             data-lat="<%= home.mapLat %>"
+                             data-lng="<%= home.mapLng %>"
+                             onmouseenter="highlightMapMarker('<%= home.id %>')"
+                             onmouseleave="unhighlightMapMarker('<%= home.id %>')">
+                            
+                            <!-- Image Box with Favourite & Badge -->
+                            <div class="card-img-wrapper" onclick="window.location.href='/homes/<%= home.id %>'">
+                                <img src="<%= home.housePhoto %>" alt="<%= home.houseName %>" loading="lazy" />
+                                
+                                <!-- Superhost or Guest Favourite Badge (Screenshot 1) -->
+                                <% if (index % 2 === 0 || home.isGuestFavourite) { %>
+                                    <div class="card-badge-pill">Guest favourite</div>
+                                <% } else if (home.isSuperhost || index === 1) { %>
+                                    <div class="card-badge-pill card-badge-pill--superhost">Superhost</div>
+                                <% } %>
+
+                                <!-- Favourite Heart Button -->
+                                <button type="button" class="card-fav-btn" onclick="toggleCardFavourite('<%= home.id %>', event)" aria-label="Save stay">
+                                    <svg class="card-fav-icon" width="22" height="22" viewBox="0 0 24 24">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                </button>
+
+                                <!-- Dots Carousel Indicator -->
+                                <div class="card-dots-indicator">
+                                    <span class="card-dot active"></span>
+                                    <span class="card-dot"></span>
+                                    <span class="card-dot"></span>
+                                    <span class="card-dot"></span>
+                                    <span class="card-dot"></span>
+                                </div>
+                            </div>
+
+                            <!-- Card Body Information -->
+                            <div class="card-body" onclick="window.location.href='/homes/<%= home.id %>'">
+                                
+                                <!-- Line 1: Property Type & City + Rating -->
+                                <div class="card-title-row">
+                                    <span class="card-property-title">
+                                        <%= home.propertyType || 'Flat' %> in <%= home.city || displayDestination %>
+                                    </span>
+                                    <span class="card-rating-badge">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                        </svg>
+                                        <span><%= (index % 3 === 0) ? 'New' : (4.9 + (index % 10) * 0.01).toFixed(2) %></span>
+                                    </span>
+                                </div>
+
+                                <!-- Line 2: House Name / Subtitle -->
+                                <span class="card-house-name"><%= home.houseName %></span>
+
+                                <!-- Line 3: Rooms / Beds / Baths specs -->
+                                <span class="card-room-specs">
+                                    <%= home.bedrooms || 2 %> <%= (Number(home.bedrooms) === 1 ? 'bedroom' : 'bedrooms') %> &bull; 
+                                    <%= home.beds || 2 %> <%= (Number(home.beds) === 1 ? 'bed' : 'beds') %> &bull; 
+                                    <%= home.bathrooms || 1 %> <%= (Number(home.bathrooms) === 1 ? 'bathroom' : 'bathrooms') %>
+                                </span>
+
+                                <!-- Line 4: Dates -->
+                                <span class="card-date-range">
+                                    <%= (searchQuery.dates && searchQuery.dates.trim()) ? searchQuery.dates : '1–29 Sept' %>
+                                </span>
+
+                                <!-- Line 5: Pricing with monthly/nightly discount strikethrough -->
+                                <div class="card-price-row">
+                                    <% 
+                                        const numericPrice = Number(home.housePrice) || 25000;
+                                        const formattedCurrent = numericPrice.toLocaleString('en-IN');
+                                        const formattedOriginal = Math.round(numericPrice * 1.15).toLocaleString('en-IN');
+                                    %>
+                                    <span class="card-price-original">₹<%= formattedOriginal %></span>
+                                    <span class="card-price-bold">₹<%= formattedCurrent %></span>
+                                    <span class="card-price-period">monthly</span>
+                                </div>
+
+                                <!-- Line 6: Perks (Monthly discount, Free cancellation) -->
+                                <div class="card-perks-row">
+                                    <span class="badge-perk">Monthly discount</span>
+                                    <span class="badge-perk">Free cancellation</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <!-- Empty State with Reset Search button -->
+                    <div class="empty-search-box">
+                        <h3>No stays found in "<%= displayDestination %>"</h3>
+                        <p>Try searching for a different destination like "New Delhi", "Manali", "Agra", or "Gurugram".</p>
+                        <a href="/search?destination=New+Delhi" class="empty-reset-btn">View Homes in New Delhi</a>
+                    </div>
+                <% } %>
+
+            </div>
+
+        </div>
+
+        <!-- ── Right Column: Interactive Leaflet Map with Price Pills ── -->
+        <div class="search-map-pane" id="search-map-pane">
+            
+            <!-- Map Container -->
+            <div id="search-results-map"></div>
+
+            <!-- "Search as I move the map" pill overlay -->
+            <div class="map-floating-overlay" onclick="toggleMapMoveSearch(this)">
+                <input type="checkbox" id="chk-map-move" checked style="cursor: pointer;" />
+                <label for="chk-map-move" style="cursor: pointer;">Search as I move the map</label>
+            </div>
+
+            <!-- Fullscreen Toggle Button -->
+            <button type="button" class="map-fullscreen-btn" onclick="toggleMapFullscreen()" aria-label="Toggle Fullscreen Map">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Interactive Map Script & Linkage -->
+    <script>
+        // Server data for map
+        const mapCenter = <%- JSON.stringify(mapCenter) %>;
+        const rawHomes = <%- JSON.stringify(registeredHome) %>;
+        const markersMap = {};
+        let leafletMap = null;
+
+        function initMap() {
+            const mapContainer = document.getElementById('search-results-map');
+            if (!mapContainer) return;
+
+            // Initialize map with OpenStreetMap tiles
+            leafletMap = L.map('search-results-map', {
+                center: [mapCenter.lat, mapCenter.lng],
+                zoom: mapCenter.zoom || 12,
+                zoomControl: false, // Custom placement below
+                attributionControl: false // Removes bottom-right Leaflet & flag attribution
+            });
+
+            // Add OpenStreetMap tiles (clean, reliable, no watermark)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(leafletMap);
+
+            // Add Zoom Control on bottom-right or right
+            L.control.zoom({ position: 'bottomright' }).addTo(leafletMap);
+
+            const boundsGroup = [];
+
+            // Add Price Pill Markers for each listing
+            rawHomes.forEach(home => {
+                if (!home.mapLat || !home.mapLng) return;
+
+                const priceNum = Number(home.housePrice) || 25000;
+                const formattedPrice = priceNum.toLocaleString('en-IN');
+
+                // Custom DivIcon for Airbnb price pill
+                const priceIcon = L.divIcon({
+                    className: 'leaflet-price-pill-container',
+                    html: `<div class="map-price-pill" id="map-pill-${home.id}">₹${formattedPrice}</div>`,
+                    iconSize: [80, 32],
+                    iconAnchor: [40, 16]
+                });
+
+                const marker = L.marker([home.mapLat, home.mapLng], { icon: priceIcon }).addTo(leafletMap);
+                boundsGroup.push([home.mapLat, home.mapLng]);
+                markersMap[home.id] = marker;
+
+                // Popup with mini preview
+                const popupContent = `
+                    <div style="width: 220px; font-family: 'Inter', sans-serif;">
+                        <img src="${home.housePhoto}" style="width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin-bottom: 8px;" />
+                        <div style="font-weight: 700; font-size: 14px; margin-bottom: 3px; color: #111;">${home.houseName}</div>
+                        <div style="color: #717171; font-size: 12px; margin-bottom: 6px;">${home.city || 'India'}</div>
+                        <div style="font-weight: 700; font-size: 14px; color: #143528; display: flex; justify-content: space-between; align-items: center;">
+                            <span>₹${formattedPrice} <span style="font-weight: 400; font-size: 12px;">monthly</span></span>
+                            <a href="/homes/${home.id}" style="color: #E00B41; text-decoration: none; font-size: 12.5px; font-weight: 700;">View &rarr;</a>
+                        </div>
+                    </div>
+                `;
+                marker.bindPopup(popupContent, { offset: [0, -10] });
+
+                // Clicking the marker highlights and scrolls to the card in the list
+                marker.on('click', () => {
+                    highlightListingCard(home.id);
+                });
+            });
+
+            // Adjust bounds if multiple markers exist
+            if (boundsGroup.length > 1) {
+                leafletMap.fitBounds(boundsGroup, { padding: [50, 50], maxZoom: 14 });
+            }
+        }
+
+        // Highlight map marker when hovering a card on the left
+        function highlightMapMarker(homeId) {
+            const pillEl = document.getElementById(`map-pill-${homeId}`);
+            if (pillEl) {
+                pillEl.classList.add('is-active');
+            }
+            if (markersMap[homeId] && leafletMap) {
+                // Subtle pan if outside view
+                const latLng = markersMap[homeId].getLatLng();
+                if (!leafletMap.getBounds().contains(latLng)) {
+                    leafletMap.panTo(latLng);
+                }
+            }
+        }
+
+        function unhighlightMapMarker(homeId) {
+            const pillEl = document.getElementById(`map-pill-${homeId}`);
+            if (pillEl) {
+                pillEl.classList.remove('is-active');
+            }
+        }
+
+        // Scroll and highlight card when clicking a marker
+        function highlightListingCard(homeId) {
+            document.querySelectorAll('.search-stay-card').forEach(c => c.classList.remove('card-highlighted'));
+            const targetCard = document.getElementById(`stay-card-${homeId}`);
+            if (targetCard) {
+                targetCard.classList.add('card-highlighted');
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Toggle Favourite functionality
+        async function toggleCardFavourite(homeId, evt) {
+            if (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+            }
+            const btn = evt.currentTarget;
+            btn.classList.toggle('is-active');
+
+            try {
+                await fetch('/favourite', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: homeId })
+                });
+            } catch (err) {
+                console.error("Error toggling favourite:", err);
+            }
+        }
+
+        // Toggle map fullscreen on small screens
+        function toggleMapFullscreen() {
+            const mapPane = document.getElementById('search-map-pane');
+            if (!mapPane) return;
+            if (mapPane.style.display === 'block') {
+                mapPane.style.display = '';
+            } else {
+                mapPane.style.display = 'block';
+                mapPane.style.maxWidth = '100%';
+                if (leafletMap) leafletMap.invalidateSize();
+            }
+        }
+
+        function toggleMapMoveSearch(el) {
+            const chk = document.getElementById('chk-map-move');
+            if (chk) chk.checked = !chk.checked;
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+        });
+    </script>
+
+</body>
+</html>

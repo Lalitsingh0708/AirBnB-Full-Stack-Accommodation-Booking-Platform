@@ -39,6 +39,14 @@ const userSchema = new mongoose.Schema(
             trim: true,
             default: null,
         },
+        isPhoneVerified: {
+            type: Boolean,
+            default: false,
+        },
+        phoneOtp: {
+            code: { type: String, default: null },
+            expiresAt: { type: Date, default: null },
+        },
         profilePhoto: {
             type: String,
             default: null,

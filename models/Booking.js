@@ -3,14 +3,18 @@ import mongoose from "mongoose";
 const bookingSchema = new mongoose.Schema(
     {
         property: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Property",
+            type: String,
             required: true,
         },
         guest: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
+        },
+        host: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null,
         },
         checkIn: {
             type: Date,
@@ -33,6 +37,10 @@ const bookingSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+        serviceFee: {
+            type: Number,
+            default: 450,
+        },
         totalAmount: {
             type: Number,
             required: true,
@@ -42,8 +50,21 @@ const bookingSchema = new mongoose.Schema(
             enum: ["confirmed", "cancelled", "completed"],
             default: "confirmed",
         },
+        paymentMethod: {
+            type: String,
+            enum: ["upi", "card", "netbanking", "pay_on_arrival"],
+            default: "upi",
+        },
+        paymentStatus: {
+            type: String,
+            enum: ["pending", "paid", "refunded"],
+            default: "paid",
+        },
+        specialRequests: {
+            type: String,
+            default: "",
+        },
         // Snapshot of property title at time of booking
-        // (in case property is later deleted/renamed)
         propertyTitle: {
             type: String,
             required: true,
@@ -63,11 +84,10 @@ const bookingSchema = new mongoose.Schema(
 );
 
 // Validate checkout is after checkin
-bookingSchema.pre("save", function (next) {
+bookingSchema.pre("save", function () {
     if (this.checkOut <= this.checkIn) {
-        return next(new Error("Check-out date must be after check-in date"));
+        throw new Error("Check-out date must be after check-in date");
     }
-    next();
 });
 
 const Booking = mongoose.model("Booking", bookingSchema);

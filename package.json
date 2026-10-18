@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
     "build:css": "tailwindcss -i ./views/input.css -o ./public/output.css",
     "watch:css": "tailwindcss -i ./views/input.css -o ./public/output.css --watch",
     "start": "nodemon app.js & npm run tailwindcss -i ./views/input.css -o ./public/output.css --watch"
@@ -15,6 +16,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "body-parser": "^2.3.0",
+    "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.7",
     "dotenv": "^18.0.5",
     "ejs": "^6.0.1",
@@ -22,7 +24,8 @@
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.3",
-    "multer": "^2.4.0"
+    "multer": "^2.4.0",
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.5.4",

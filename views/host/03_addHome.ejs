@@ -1598,56 +1598,1389 @@
             margin-top: 4px;
         }
 
-        /* ── Step 5: Photo Preset & Preview ── */
-        .photo-step-wrap {
-            max-width: 700px;
-            margin: 0 auto;
+        /* ── Step 2.2: Airbnb Photo Stage ── */
+        .airbnb-photos-stage {
+            max-width: 640px;
             width: 100%;
+            margin: 0 auto;
+            text-align: left;
+            padding-bottom: 30px;
         }
 
-        .preset-photo-pills {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-            margin-bottom: 24px;
+        .airbnb-photos-header {
+            margin-bottom: 28px;
         }
 
-        .preset-btn {
+        .airbnb-photos-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222222;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .airbnb-photos-subtitle {
+            font-size: 16px;
+            color: #717171;
+            line-height: 1.4;
+        }
+
+        .airbnb-photos-dropzone {
+            width: 100%;
+            min-height: 410px;
+            border: 1px dashed #B0B0B0;
+            border-radius: 16px;
             background: #FFFFFF;
-            border: 1.5px solid var(--border-light);
-            padding: 8px 16px;
-            border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--emerald-mid);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 44px 24px;
+            position: relative;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
         }
 
-        .preset-btn:hover {
-            border-color: var(--gold-accent);
-            background: #FAF7F0;
+        .airbnb-photos-dropzone:hover {
+            border-color: #222222;
+            background: #FAFAFA;
+        }
+
+        .airbnb-photos-dropzone.drag-over {
+            border-color: #222222;
+            border-width: 2px;
+            background: #F4F4F4;
+        }
+
+        .camera-graphic-wrap {
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .airbnb-3d-camera-img {
+            width: 180px;
+            height: auto;
+            max-height: 160px;
+            object-fit: contain;
+            pointer-events: none;
+            filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.08));
+            transition: transform 0.25s ease;
+        }
+
+        .airbnb-photos-dropzone:hover .airbnb-3d-camera-img {
+            transform: scale(1.03) translateY(-2px);
+        }
+
+        .btn-add-photos-pill {
+            background: #F7F7F7;
+            border: 1px solid #DDDDDD;
+            border-radius: 8px;
+            color: #222222;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 11px 24px;
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-add-photos-pill:hover {
+            background: #EBEBEB;
+            border-color: #222222;
             transform: translateY(-1px);
         }
 
-        .photo-preview-card {
-            width: 100%;
-            height: 340px;
-            border-radius: 24px;
-            overflow: hidden;
-            background: #E8E2D5;
-            box-shadow: 0 16px 40px -10px rgba(18, 43, 32, 0.12);
-            border: 2px solid var(--border-light);
+        .photos-drop-hint {
+            font-size: 13px;
+            color: #717171;
+            margin-top: 10px;
         }
 
-        .photo-preview-card img {
+        /* Fast Curated Photo Sets */
+        .airbnb-photo-curations {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #F9F9F9;
+            border-radius: 12px;
+            border: 1px solid #EBEBEB;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .curations-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #484848;
+        }
+
+        .curations-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .curation-chip {
+            background: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            border-radius: 20px;
+            padding: 7px 15px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #222222;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .curation-chip:hover {
+            border-color: #222222;
+            background: #222222;
+            color: #FFFFFF;
+        }
+
+        /* Photo Grid / Gallery Preview when photos are present */
+        .airbnb-photos-grid-view {
+            margin-top: 24px;
+        }
+
+        .photos-grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .photos-count-badge {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        .btn-reupload-photos {
+            background: #F7F7F7;
+            border: 1px solid #DDDDDD;
+            border-radius: 8px;
+            padding: 7px 15px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #222222;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-reupload-photos:hover {
+            background: #EBEBEB;
+            border-color: #222222;
+        }
+
+        .airbnb-photo-tiles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .airbnb-photo-tile {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #EBEBEB;
+            background: #F0F0F0;
+        }
+
+        .airbnb-photo-tile.cover-tile {
+            grid-column: span 2;
+            grid-row: span 2;
+            aspect-ratio: 16 / 11;
+        }
+
+        .airbnb-photo-tile img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
 
-        /* ── Step 6: Title & Story ── */
+        .cover-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #FFFFFF;
+            color: #222222;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .tile-delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.65);
+            color: #FFFFFF;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .tile-delete-btn:hover {
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        /* ── Step 2.3: Airbnb Title Stage ── */
+        .airbnb-title-stage {
+            max-width: 640px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: left;
+            padding-bottom: 40px;
+        }
+
+        .airbnb-title-header {
+            margin-bottom: 32px;
+        }
+
+        .airbnb-title-main {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222222;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .airbnb-title-sub {
+            font-size: 16px;
+            color: #717171;
+            line-height: 1.4;
+        }
+
+        .airbnb-title-input-box {
+            width: 100%;
+            min-height: 190px;
+            border: 1px solid #B0B0B0;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: inherit;
+            font-size: 20px;
+            font-weight: 500;
+            color: #222222;
+            background: #FFFFFF;
+            outline: none;
+            resize: vertical;
+            line-height: 1.4;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .airbnb-title-input-box:focus {
+            border: 2px solid #222222;
+            padding: 15px;
+        }
+
+        .airbnb-title-meta-row {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 8px;
+        }
+
+        .airbnb-title-counter {
+            font-size: 13px;
+            font-weight: 600;
+            color: #717171;
+        }
+
+        /* ── Step 2.4: Airbnb Highlights & Describe Stage ── */
+        .airbnb-describe-stage {
+            max-width: 640px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: left;
+            padding-bottom: 40px;
+        }
+
+        .airbnb-describe-header {
+            margin-bottom: 32px;
+        }
+
+        .airbnb-describe-main {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222222;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .airbnb-describe-sub {
+            font-size: 16px;
+            color: #717171;
+            line-height: 1.4;
+        }
+
+        .airbnb-highlights-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .airbnb-highlight-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 9999px;
+            background: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            color: #222222;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .airbnb-highlight-pill:hover {
+            border-color: #222222;
+            transform: translateY(-1px);
+        }
+
+        .airbnb-highlight-pill.selected {
+            border: 2px solid #222222;
+            background: #F7F7F7;
+            padding: 11px 19px;
+        }
+
+        .highlight-icon-svg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #222222;
+        }
+
+        .airbnb-description-preview-box {
+            margin-top: 24px;
+            background: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .description-preview-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #222222;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .description-editable-textarea {
+            width: 100%;
+            min-height: 110px;
+            border: 1px solid #EBEBEB;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 14.5px;
+            color: #222222;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .description-editable-textarea:focus {
+            border-color: #222222;
+        }
+
+        /* ── Step 2.5: Airbnb Create Description Stage ── */
+        .airbnb-create-desc-stage {
+            max-width: 630px;
+            width: 100%;
+            margin: 40px auto 0 auto;
+            text-align: left;
+            padding-bottom: 40px;
+        }
+
+        .airbnb-create-desc-header {
+            margin-bottom: 32px;
+        }
+
+        .airbnb-create-desc-main {
+            font-size: 32px;
+            font-weight: 600;
+            color: #222222;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .airbnb-create-desc-sub {
+            font-size: 18px;
+            color: #717171;
+            line-height: 1.4;
+        }
+
+        .airbnb-desc-box-wrap {
+            width: 100%;
+        }
+
+        .airbnb-desc-textarea {
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 270px;
+            border: 1px solid #B0B0B0;
+            border-radius: 10px;
+            padding: 22px 20px;
+            font-family: inherit;
+            font-size: 18px;
+            color: #222222;
+            background: #FFFFFF;
+            outline: none;
+            resize: vertical;
+            line-height: 1.5;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .airbnb-desc-textarea:focus {
+            border: 2px solid #222222;
+            padding: 21px 19px;
+        }
+
+        .airbnb-desc-meta-row {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 10px;
+        }
+
+        .airbnb-desc-counter {
+            font-size: 13px;
+            font-weight: 600;
+            color: #717171;
+        }
+
+        /* ── Step 3 Intro: Finish Up and Publish ── */
+        .step3-hero-split {
+            min-height: calc(100vh - 220px);
+            align-items: center;
+        }
+
+        .house-completed-arena {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1200px;
+            user-select: none;
+        }
+
+        .house-finish-up-visual {
+            width: 100%;
+            max-width: 580px;
+            height: auto;
+            border-radius: 16px;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.09));
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ── Step 3.1: Booking Settings Stage ── */
+        .booking-settings-stage {
+            max-width: 630px;
+            width: 100%;
+            margin: 40px auto 0 auto;
+            text-align: left;
+            padding-bottom: 40px;
+        }
+
+        .booking-settings-header {
+            margin-bottom: 32px;
+        }
+
+        .booking-settings-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #222222;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .booking-settings-sub {
+            font-size: 18px;
+            color: #717171;
+            line-height: 1.4;
+        }
+
+        .booking-learn-more-link {
+            color: #222222;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 500;
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .booking-cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .booking-setting-card {
+            border: 1px solid #DDDDDD;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            cursor: pointer;
+            background: #FFFFFF;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            user-select: none;
+        }
+
+        .booking-setting-card:hover {
+            border-color: #222222;
+        }
+
+        .booking-setting-card.selected {
+            border: 2px solid #222222;
+            padding: 23px;
+        }
+
+        .booking-card-main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .booking-card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 2px;
+            line-height: 1.3;
+        }
+
+        .badge-recommended {
+            color: #008A05;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .booking-card-desc {
+            font-size: 14px;
+            color: #717171;
+            line-height: 1.45;
+            max-width: 480px;
+        }
+
+        .booking-card-icon-wrap {
+            color: #222222;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 2px;
+        }
+
+        /* ── Step 3.2: Airbnb Set Your Prices Stage ── */
+        .airbnb-set-prices-stage {
+            max-width: 630px;
+            width: 100%;
+            margin: 40px auto 0 auto;
+            text-align: left;
+            padding-bottom: 40px;
+        }
+
+        .airbnb-set-prices-header {
+            margin-bottom: 32px;
+        }
+
+        .airbnb-set-prices-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #222222;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .airbnb-set-prices-sub {
+            font-size: 18px;
+            color: #717171;
+            line-height: 1.4;
+        }
+
+        .pricing-learn-more-link {
+            color: #222222;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 500;
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .airbnb-price-cards-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .airbnb-price-card {
+            border: 1px solid #B0B0B0;
+            border-radius: 12px;
+            padding: 18px 24px 22px 24px;
+            background: #FFFFFF;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            cursor: text;
+        }
+
+        .airbnb-price-card:focus-within {
+            border: 2px solid #222222;
+            padding: 17px 23px 21px 23px;
+        }
+
+        .price-card-label {
+            display: block;
+            font-size: 13.5px;
+            color: #717171;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .price-input-row {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .price-currency-sign {
+            font-size: 36px;
+            font-weight: 700;
+            color: #222222;
+            line-height: 1;
+        }
+
+        .price-interactive-input {
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 36px;
+            font-weight: 700;
+            color: #222222;
+            background: transparent;
+            width: 100%;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .airbnb-price-card.weekend-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            cursor: pointer;
+            border-color: #DDDDDD;
+        }
+
+        .airbnb-price-card.weekend-card:hover {
+            border-color: #222222;
+        }
+
+        .weekend-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .weekend-percent-val {
+            font-size: 34px;
+            font-weight: 700;
+            color: #222222;
+            line-height: 1;
+        }
+
+        .weekend-right {
+            padding-bottom: 4px;
+        }
+
+        .weekend-calc-text {
+            font-size: 14px;
+            color: #717171;
+            font-weight: 400;
+        }
+
+        .btn-similar-listings {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            border-radius: 9999px;
+            padding: 12px 22px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #222222;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-similar-listings:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            border-color: #B0B0B0;
+        }
+
+        /* ── Base Price Breakdown Modal (Matching User Screenshot Exactly) ── */
+        .base-price-modal-card {
+            max-width: 500px !important;
+            border-radius: 32px !important;
+            padding: 24px 28px 26px 28px !important;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28) !important;
+        }
+
+        .base-price-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .btn-modal-help-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #222222;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease;
+            padding: 0;
+        }
+
+        .btn-modal-help-circle:hover {
+            background: #F7F7F7;
+        }
+
+        .base-price-modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #222222;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .btn-modal-close-static {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #222222;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease;
+            padding: 0;
+        }
+
+        .btn-modal-close-static:hover {
+            background: #F7F7F7;
+        }
+
+        .modal-price-hero-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 34px;
+        }
+
+        .modal-price-number-wrap {
+            display: inline-flex;
+            align-items: center;
+            font-size: 54px;
+            font-weight: 800;
+            color: #222222;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .modal-price-inline-input {
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 54px;
+            font-weight: 800;
+            color: #222222;
+            background: transparent;
+            padding: 0;
+            width: 175px;
+            letter-spacing: -1px;
+            line-height: 1;
+            text-align: left;
+        }
+
+        .btn-price-pencil-edit {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #DDDDDD;
+            background: #FFFFFF;
+            color: #222222;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .btn-price-pencil-edit:hover {
+            border-color: #222222;
+            background: #F7F7F7;
+            transform: scale(1.05);
+        }
+
+        .price-breakdown-rounded-card {
+            border: 1.5px solid #222222;
+            border-radius: 16px;
+            padding: 20px 22px;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15.5px;
+            color: #222222;
+            font-weight: 400;
+        }
+
+        .breakdown-divider-line {
+            height: 1px;
+            background: #EBEBEB;
+            margin: 4px 0;
+            width: 100%;
+        }
+
+        .breakdown-row.breakdown-total {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        .breakdown-toggle-center {
+            text-align: center;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+
+        .btn-toggle-show-less {
+            background: transparent;
+            border: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #222222;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.15s ease;
+        }
+
+        .btn-toggle-show-less:hover {
+            background: #F7F7F7;
+        }
+
+        .base-price-modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 32px;
+            padding-top: 16px;
+        }
+
+        .link-similar-listings-modal {
+            background: transparent;
+            border: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #222222;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .link-similar-listings-modal:hover {
+            color: #000000;
+        }
+
+        .btn-base-price-done {
+            background: #222222;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.1s ease;
+        }
+
+        .btn-base-price-done:hover {
+            background: #000000;
+            transform: scale(1.02);
+        }
+
+        /* ── Step 17: Add Discounts Stage (Matching User Screenshot Exactly) ── */
+        .discounts-stage-container {
+            max-width: 650px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 8px 16px 24px 16px;
+        }
+
+        .discounts-header {
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .discounts-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222222;
+            margin-bottom: 8px;
+            letter-spacing: -0.6px;
+        }
+
+        .discounts-sub {
+            font-size: 15.5px;
+            color: #717171;
+            line-height: 1.45;
+        }
+
+        .discounts-cards-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .discount-item-card {
+            border: 1px solid #DDDDDD;
+            border-radius: 14px;
+            padding: 20px 24px;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            user-select: none;
+        }
+
+        .discount-item-card:hover {
+            border-color: #222222;
+        }
+
+        .discount-item-card.selected {
+            border-color: #B0B0B0;
+        }
+
+        .discount-card-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .discount-pct-badge {
+            min-width: 54px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid #CCCCCC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: #222222;
+            background: #FFFFFF;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .discount-pct-badge.plain-text {
+            border: none;
+            background: transparent;
+            font-size: 17px;
+            font-weight: 700;
+            min-width: 54px;
+            text-align: center;
+        }
+
+        .discount-text-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            text-align: left;
+        }
+
+        .discount-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222222;
+        }
+
+        .discount-item-desc {
+            font-size: 14px;
+            color: #717171;
+            line-height: 1.35;
+        }
+
+        .discount-checkbox-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid #717171;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .discount-item-card.selected .discount-checkbox-box {
+            background: #000000;
+            border-color: #000000;
+            color: #FFFFFF;
+        }
+
+        .discounts-footnote {
+            text-align: center;
+            font-size: 12.5px;
+            color: #717171;
+            margin-top: 24px;
+        }
+
+        .discounts-learn-more-link {
+            background: none;
+            border: none;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #222222;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .discounts-learn-more-link:hover {
+            color: #000000;
+        }
+
+        /* ── Step 18: Share Safety Details Stage (Matching Screenshot Exactly) ── */
+        .safety-stage-container {
+            max-width: 650px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 30px 20px 60px 20px;
+            text-align: left;
+        }
+
+        .safety-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222222;
+            letter-spacing: -0.02em;
+            margin-bottom: 32px;
+            line-height: 1.25;
+        }
+
+        .safety-question-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .safety-question-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222222;
+        }
+
+        .safety-info-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #717171;
+            border-radius: 50%;
+            transition: color 0.2s ease;
+        }
+
+        .safety-info-btn:hover {
+            color: #222222;
+        }
+
+        .safety-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .safety-option-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s ease;
+        }
+
+        .safety-option-label {
+            font-size: 16px;
+            color: #222222;
+            font-weight: 400;
+        }
+
+        .safety-checkbox-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 1.5px solid #B0B0B0;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            color: transparent;
+            flex-shrink: 0;
+        }
+
+        .safety-option-item:hover .safety-checkbox-box {
+            border-color: #222222;
+        }
+
+        .safety-option-item.checked .safety-checkbox-box {
+            background: #222222;
+            border-color: #222222;
+            color: #FFFFFF;
+        }
+
+        .safety-divider {
+            border: none;
+            border-top: 1px solid #EBEBEB;
+            margin: 28px 0 28px 0;
+        }
+
+        .safety-important-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .safety-important-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 2px;
+        }
+
+        .safety-important-text {
+            font-size: 14px;
+            color: #717171;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .safety-policy-link {
+            background: none;
+            border: none;
+            font-size: inherit;
+            color: #222222;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+            font-weight: 500;
+        }
+
+        .safety-policy-link:hover {
+            color: #000000;
+        }
+
+        /* ── Step 19: Provide a few final details (Matching Screenshot Exactly) ── */
+        .final-details-container {
+            max-width: 650px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 30px 20px 60px 20px;
+            text-align: left;
+        }
+
+        .final-details-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222222;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        .final-details-sub {
+            font-size: 15px;
+            color: #717171;
+            line-height: 1.45;
+            margin-bottom: 32px;
+        }
+
+        .residential-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 4px;
+        }
+
+        .residential-section-sub {
+            font-size: 14px;
+            color: #717171;
+            margin-bottom: 22px;
+        }
+
+        .residential-country-box {
+            position: relative;
+            border: 1px solid #B0B0B0;
+            border-radius: 8px;
+            padding: 8px 16px 10px 16px;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .residential-country-box:focus-within {
+            border-color: #222222;
+            box-shadow: 0 0 0 1px #222222;
+        }
+
+        .residential-country-label {
+            display: block;
+            font-size: 11.5px;
+            color: #717171;
+            margin-bottom: 2px;
+        }
+
+        .residential-country-select {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 400;
+            color: #222222;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
+        }
+
+        .residential-chevron-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #222222;
+        }
+
+        .residential-stacked-inputs {
+            border: 1px solid #B0B0B0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 14px;
+            background: #FFFFFF;
+            transition: border-color 0.2s ease;
+        }
+
+        .residential-stacked-inputs:focus-within {
+            border-color: #222222;
+            box-shadow: 0 0 0 1px #222222;
+        }
+
+        .residential-input-row {
+            width: 100%;
+            border-bottom: 1px solid #EBEBEB;
+            position: relative;
+        }
+
+        .residential-input-row:last-child {
+            border-bottom: none;
+        }
+
+        .residential-text-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 16px;
+            font-size: 15px;
+            color: #222222;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .residential-text-input::placeholder {
+            color: #717171;
+            font-size: 15px;
+        }
+
+        /* ── Step 6: Title & Story Legacy ── */
         .story-step-wrap {
             max-width: 660px;
             margin: 0 auto;
@@ -1797,32 +3130,48 @@
             color: var(--emerald-dark);
         }
 
-        /* ── Bottom Floating Bar ── */
+        /* ── Bottom Floating Bar (Airbnb Authentic Styling) ── */
         .wizard-footer {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: #FAF7F0;
-            border-top: 1px solid var(--border-light);
-            padding: 16px 36px;
-            z-index: 50;
+            background: #FFFFFF;
+            border-top: 1px solid #DDDDDD;
+            padding: 16px 40px;
+            z-index: 900;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .progress-track {
             width: 100%;
+            display: flex;
+            gap: 8px;
             height: 4px;
-            background: var(--border-subtle);
-            border-radius: 4px;
+            background: transparent;
+        }
+
+        .progress-track-segment {
+            flex: 1;
+            height: 4px;
+            background: #EBEBEB;
+            border-radius: 2px;
             overflow: hidden;
+            position: relative;
+        }
+
+        .progress-segment-fill {
+            height: 100%;
+            background: #222222;
+            width: 0%;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .progress-fill {
             height: 100%;
-            background: var(--emerald-mid);
+            background: #222222;
             width: 14%;
             transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -1840,12 +3189,12 @@
             background: transparent;
             border: none;
             font-family: inherit;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
-            color: var(--text-dark);
+            color: #222222;
             text-decoration: underline;
             cursor: pointer;
-            padding: 8px 12px;
+            padding: 8px 4px;
             transition: opacity 0.2s ease;
         }
 
@@ -1856,26 +3205,34 @@
         }
 
         .btn-wizard-next {
-            background: var(--emerald-mid);
+            background: #222222;
             color: #FFFFFF;
             border: none;
-            border-radius: 9999px;
-            padding: 14px 34px;
+            border-radius: 8px;
+            padding: 14px 32px;
             font-family: inherit;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(20, 53, 40, 0.25);
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .btn-wizard-next:hover {
-            background: var(--emerald-dark);
-            transform: translateY(-1.5px);
-            box-shadow: 0 6px 20px rgba(20, 53, 40, 0.35);
+        .btn-wizard-next:hover:not(:disabled) {
+            background: #000000;
+        }
+
+        .btn-wizard-next:disabled,
+        .btn-wizard-next.disabled-state {
+            background: #F7F7F7 !important;
+            color: #BFBFBF !important;
+            cursor: not-allowed !important;
+            border: none !important;
+            box-shadow: none !important;
+            transform: none !important;
         }
 
         @media (max-width: 860px) {
@@ -1930,6 +3287,29 @@
         <input type="hidden" name="homeName" id="f-homeName" value="" />
         <input type="hidden" name="description" id="f-description" value="" />
         <input type="hidden" name="homePrice" id="f-homePrice" value="12500" />
+        <input type="hidden" name="highlights" id="f-highlights" value="" />
+        <input type="hidden" name="photos" id="f-photos" value="" />
+        <input type="hidden" name="bookingSettings" id="f-bookingSettings" value="approve_first_5" />
+        <input type="hidden" name="weekendPrice" id="f-weekendPrice" value="2460" />
+        <input type="hidden" name="weekendAdjustment" id="f-weekendAdjustment" value="6" />
+        <input type="hidden" name="discounts" id="f-discounts" value='{"newListingPromotion":true,"lastMinuteDiscount":7,"weeklyDiscount":10,"monthlyDiscount":20}' />
+        <input type="hidden" name="discountNewListing" id="f-discountNewListing" value="true" />
+        <input type="hidden" name="discountLastMinute" id="f-discountLastMinute" value="7" />
+        <input type="hidden" name="discountWeekly" id="f-discountWeekly" value="10" />
+        <input type="hidden" name="discountMonthly" id="f-discountMonthly" value="20" />
+        <input type="hidden" name="safetyDetails" id="f-safetyDetails" value='{"securityCameras":false,"noiseMonitors":false,"weapons":false}' />
+        <input type="hidden" name="securityCameras" id="f-securityCameras" value="false" />
+        <input type="hidden" name="noiseMonitors" id="f-noiseMonitors" value="false" />
+        <input type="hidden" name="weapons" id="f-weapons" value="false" />
+        <input type="hidden" name="residentialAddress" id="f-residentialAddress" value='{"country":"India","flat":"","street":"","landmark":"","district":"","city":"","state":"","pinCode":""}' />
+        <input type="hidden" name="residentialCountry" id="f-residentialCountry" value="India" />
+        <input type="hidden" name="residentialFlat" id="f-residentialFlat" value="" />
+        <input type="hidden" name="residentialStreet" id="f-residentialStreet" value="" />
+        <input type="hidden" name="residentialLandmark" id="f-residentialLandmark" value="" />
+        <input type="hidden" name="residentialDistrict" id="f-residentialDistrict" value="" />
+        <input type="hidden" name="residentialCity" id="f-residentialCity" value="" />
+        <input type="hidden" name="residentialState" id="f-residentialState" value="" />
+        <input type="hidden" name="residentialPinCode" id="f-residentialPinCode" value="" />
     </form>
 
     <!-- ── Main Multi-step Wizard Container ── -->
@@ -3201,114 +4581,571 @@
             </div>
         </div>
 
-<!-- ══ STEP 10: PHOTOS ══ -->
+<!-- ══ STEP 10: PHOTOS (Airbnb Authentic Stage) ══ -->
         <div class="step-container" id="step-10">
-            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
-                <span class="step-tag">Step 2.2 &bull; Visual Representation</span>
-                <h2 class="step-headline" style="font-size: 42px;">Add high-resolution photos of your <em>sanctuary.</em></h2>
-                <p class="step-sub" style="margin: 0 auto;">Provide a photography URL or click one of our curated architectural inspirations.</p>
+            <div class="airbnb-photos-stage">
+                <div class="airbnb-photos-header">
+                    <h1 class="airbnb-photos-title" id="photos-stage-title">Add some photos of your place</h1>
+                    <p class="airbnb-photos-subtitle">You’ll need 5 photos to get started. You can add more or make changes later.</p>
+                </div>
+
+                <!-- Dashed Dropzone with 3D Camera -->
+                <div class="airbnb-photos-dropzone" id="airbnb-photos-dropzone" onclick="triggerPhotoUpload(event)">
+                    <input type="file" id="airbnb-photos-input" multiple accept="image/*" style="display:none;" onchange="handleUserPhotoUpload(event)" />
+                    
+                    <div class="camera-graphic-wrap">
+                        <img src="/images/airbnb_camera_upload.jpg" alt="Upload camera" class="airbnb-3d-camera-img" />
+                    </div>
+
+                    <button type="button" class="btn-add-photos-pill" onclick="triggerPhotoUpload(event)">
+                        Add photos
+                    </button>
+                    <div class="photos-drop-hint">or drag and drop here</div>
+                </div>
+
+                <!-- Fast Curated 5-Photo Collections -->
+                <div class="airbnb-photo-curations">
+                    <span class="curations-label">⚡ Fast sample sets: Load 5 curated high-res photos:</span>
+                    <div class="curations-chips">
+                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('waterfront')">⛵ Boat &amp; Waterfront</button>
+                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('villa')">✨ Luxury Villa</button>
+                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('cottage')">🏡 Modern Cottage</button>
+                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('chalet')">🏔️ Alpine Chalet</button>
+                    </div>
+                </div>
+
+                <!-- 5-Photo Gallery Preview (displayed when photos exist) -->
+                <div class="airbnb-photos-grid-view" id="airbnb-photos-grid-view" style="display: none;">
+                    <div class="photos-grid-header">
+                        <div class="photos-count-badge" id="photos-count-badge">5 photos selected</div>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn-reupload-photos" onclick="triggerPhotoUpload(event)">+ Add more</button>
+                            <button type="button" class="btn-reupload-photos" onclick="clearAllPhotos()" style="color: #C13515;">Clear</button>
+                        </div>
+                    </div>
+                    <div class="airbnb-photo-tiles" id="airbnb-photo-tiles">
+                        <!-- Dynamically filled with tiles -->
+                    </div>
+                </div>
+
+                <!-- Hidden inputs for backward compatibility and form submission -->
+                <input type="hidden" id="input-photo" value="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" />
             </div>
+        </div>
 
-            <div class="photo-step-wrap">
-                <div class="standard-field-wrap">
-                    <label for="input-photo">Direct Image URL</label>
-                    <input 
-                        type="url" 
-                        id="input-photo" 
-                        class="standard-input" 
-                        value="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" 
-                        placeholder="https://images.unsplash.com/..." 
-                        oninput="onPhotoUrlChange(this.value)"
-                        required
-                    />
+<!-- ══ STEP 11: TITLE (Airbnb Authentic Stage) ══ -->
+        <div class="step-container" id="step-11">
+            <div class="airbnb-title-stage">
+                <div class="airbnb-title-header">
+                    <h1 class="airbnb-title-main" id="airbnb-title-heading">Now, let's give your boat a title</h1>
+                    <p class="airbnb-title-sub">Short titles work best. Have fun with it – you can always change it later.</p>
                 </div>
 
-                <div class="preset-photo-pills">
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); align-self: center;">Quick Curations:</span>
-                    <button type="button" class="preset-btn" onclick="applyPresetPhoto('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80')">Victorian Townhouse</button>
-                    <button type="button" class="preset-btn" onclick="applyPresetPhoto('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80')">Timber Forest Villa</button>
-                    <button type="button" class="preset-btn" onclick="applyPresetPhoto('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop&q=80')">Alpine Glass Chalet</button>
-                    <button type="button" class="preset-btn" onclick="applyPresetPhoto('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&fit=crop&q=80')">Modern Lutyens Estate</button>
-                </div>
-
-                <div class="photo-preview-card">
-                    <img id="live-photo-preview" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80" alt="Preview" />
+                <div class="airbnb-title-body">
+                    <textarea 
+                        id="input-title" 
+                        class="airbnb-title-input-box" 
+                        maxlength="50" 
+                        rows="5"
+                        oninput="onTitleInputChange(this.value)"
+                        placeholder=""
+                    ></textarea>
+                    
+                    <div class="airbnb-title-meta-row">
+                        <span class="airbnb-title-counter" id="title-char-counter">0/50</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-<!-- ══ STEP 11: TITLE & STORY ══ -->
-        <div class="step-container" id="step-11">
-            <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
-                <span class="step-tag">Step 2.3 &bull; Title &amp; Narrative</span>
-                <h2 class="step-headline" style="font-size: 42px;">Now, let's give your place a <em>title and story.</em></h2>
-                <p class="step-sub" style="margin: 0 auto;">Catchy titles highlight distinct design features or scenic landscapes. You can refine this anytime.</p>
-            </div>
-
-            <div class="story-step-wrap">
-                <div class="standard-field-wrap" style="margin-bottom: 22px;">
-                    <label for="input-title">Listing Title</label>
-                    <input 
-                        type="text" 
-                        id="input-title" 
-                        class="standard-input" 
-                        placeholder="e.g. The Cedar Forest Villa &amp; Alpine Spa" 
-                        maxlength="80"
-                        required
-                    />
+<!-- ══ STEP 12: DESCRIBE & HIGHLIGHTS (Airbnb Authentic Stage) ══ -->
+        <div class="step-container" id="step-12">
+            <div class="airbnb-describe-stage">
+                <div class="airbnb-describe-header">
+                    <h1 class="airbnb-describe-main" id="airbnb-describe-heading">Next, let's describe your boat</h1>
+                    <p class="airbnb-describe-sub">Choose up to 2 highlights. We'll use these to get your description started.</p>
                 </div>
 
-                <div class="standard-field-wrap">
-                    <label for="input-desc">Experience &amp; Description</label>
+                <!-- Highlights Pills Container -->
+                <div class="airbnb-highlights-wrap" id="airbnb-highlights-container">
+                    <!-- Core 6 Highlights matching Screenshot Exactly -->
+                    <div class="airbnb-highlight-pill" data-key="Rare" onclick="toggleHighlight('Rare', this)">
+                        <span class="highlight-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 3h12l4 6-10 12L2 9z"></path>
+                                <path d="M2 9h20"></path>
+                                <path d="M10 3l2 6 2-6"></path>
+                            </svg>
+                        </span>
+                        <span>Rare</span>
+                    </div>
+
+                    <div class="airbnb-highlight-pill" data-key="Rustic" onclick="toggleHighlight('Rustic', this)">
+                        <span class="highlight-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                                <path d="M8 20v-7a4 4 0 0 1 8 0v7"></path>
+                                <path d="M12 13a1.5 1.5 0 0 1 1.5 1.5c0 1-1.5 2-1.5 2s-1.5-1-1.5-2a1.5 1.5 0 0 1 1.5-1.5z"></path>
+                            </svg>
+                        </span>
+                        <span>Rustic</span>
+                    </div>
+
+                    <div class="airbnb-highlight-pill" data-key="In nature" onclick="toggleHighlight('In nature', this)">
+                        <span class="highlight-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2a9 9 0 0 1 9 9c0 4.97-4.03 9-9 9a9 9 0 0 1-9-9 9 9 0 0 1 9-9z"></path>
+                                <path d="M12 6v10"></path>
+                                <path d="M8 10c2-1 4-1 4 2"></path>
+                                <path d="M16 10c-2-1-4-1-4 2"></path>
+                            </svg>
+                        </span>
+                        <span>In nature</span>
+                    </div>
+
+                    <div class="airbnb-highlight-pill" data-key="Memorable" onclick="toggleHighlight('Memorable', this)">
+                        <span class="highlight-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </span>
+                        <span>Memorable</span>
+                    </div>
+
+                    <div class="airbnb-highlight-pill" data-key="Romantic" onclick="toggleHighlight('Romantic', this)">
+                        <span class="highlight-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                                <rect x="2" y="7" width="20" height="5"></rect>
+                                <line x1="12" y1="22" x2="12" y2="7"></line>
+                                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                            </svg>
+                        </span>
+                        <span>Romantic</span>
+                    </div>
+
+                    <div class="airbnb-highlight-pill" data-key="Historic" onclick="toggleHighlight('Historic', this)">
+                        <span class="highlight-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="3" y1="21" x2="21" y2="21"></line>
+                                <line x1="4" y1="3" x2="20" y2="3"></line>
+                                <path d="M6 3v18"></path>
+                                <path d="M10 3v18"></path>
+                                <path d="M14 3v18"></path>
+                                <path d="M18 3v18"></path>
+                            </svg>
+                        </span>
+                        <span>Historic</span>
+                    </div>
+
+                    <!-- Category Dynamic Highlight Pills -->
+                    <div id="dynamic-category-highlights" style="display: contents;"></div>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 13: CREATE YOUR DESCRIPTION (Airbnb Authentic Stage) ══ -->
+        <div class="step-container" id="step-13">
+            <div class="airbnb-create-desc-stage">
+                <div class="airbnb-create-desc-header">
+                    <h1 class="airbnb-create-desc-main">Create your description</h1>
+                    <p class="airbnb-create-desc-sub">Share what makes your place special.</p>
+                </div>
+
+                <div class="airbnb-desc-box-wrap">
                     <textarea 
                         id="input-desc" 
-                        class="story-textarea" 
-                        placeholder="Describe the architectural nuances, natural light, serene neighborhood, and mindful comforts your sanctuary provides travelers."
+                        class="airbnb-desc-textarea" 
+                        maxlength="500" 
+                        rows="8"
+                        oninput="onDescriptionInputChange(this.value)"
+                        placeholder="Share what makes your place special..."
                     ></textarea>
+                    
+                    <div class="airbnb-desc-meta-row">
+                        <span class="airbnb-desc-counter" id="desc-char-counter">0/500</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-<!-- ══ STEP 12: PRICING & FINAL REVIEW ══ -->
-        <div class="step-container" id="step-12">
-            <div style="text-align: center; max-width: 680px; margin: 0 auto 28px auto;">
-                <span class="step-tag">Step 3 &bull; Nightly Rate &amp; Confirmation</span>
-                <h2 class="step-headline" style="font-size: 42px;">Now, set your <em>nightly price.</em></h2>
-                <p class="step-sub" style="margin: 0 auto;">Set your standard rate. You can adjust prices for weekends or peak seasonal dates later.</p>
-            </div>
-
-            <div class="price-center-box">
-                <div class="price-giant-row">
-                    <span class="currency-symbol">₹</span>
-                    <input 
-                        type="number" 
-                        id="input-price" 
-                        class="price-giant-input" 
-                        value="12500" 
-                        min="500"
-                        step="100"
-                        oninput="updatePriceEstimate(this.value)"
-                    />
-                    <span style="font-size: 18px; color: var(--text-muted); font-weight: 500;">/ night</span>
+<!-- ══ STEP 14: FINISH UP AND PUBLISH (INTRO TO STEP 3 & COMPLETED 3D HOUSE) ══ -->
+        <div class="step-container" id="step-14">
+            <div class="intro-hero-split step3-hero-split">
+                <!-- Left: Headline & Context matching Airbnb Step 3 screenshot -->
+                <div class="intro-left-content">
+                    <span class="intro-step-pill" style="font-size: 18px; font-weight: 600; color: #222222; margin-bottom: 14px;">Step 3</span>
+                    <h1 class="intro-headline-airbnb" style="font-size: 46px; font-weight: 600; color: #222222; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 20px;">
+                        Finish up and publish
+                    </h1>
+                    <p class="intro-desc-airbnb" style="font-size: 18px; line-height: 1.45; color: #717171; max-width: 440px; margin-bottom: 0;">
+                        Finally, you’ll choose booking settings, set up pricing and publish your listing.
+                    </p>
                 </div>
 
-                <div class="price-breakdown-card">
-                    <span>Base guest price</span>
-                    <strong id="disp-base-price">₹12,500</strong>
-                </div>
-                <div class="price-breakdown-card" style="margin-top: 8px;">
-                    <span>Your estimated host payout (approx 97%)</span>
-                    <strong id="disp-payout-price" style="color: var(--emerald-mid);">₹12,125</strong>
+                <!-- Right: 3D Completed House Arena matching Screenshot -->
+                <div class="house-completed-arena" id="house-arena-step3" onmousemove="handleHouseArenaMouseMoveStep3(event)" onmouseleave="resetHouseArenaTiltStep3()">
+                    <div class="house-3d-stage" id="house-stage-step3">
+                        <img 
+                            src="/images/isometric-house-finish-up.jpg" 
+                            alt="Finished Modern Architectural House with Solar Panels" 
+                            class="house-finish-up-visual" 
+                            id="house-visual-img-step3"
+                        />
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Review Card Preview -->
-            <div class="review-summary-card">
-                <img id="review-thumb-img" class="review-thumb" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&auto=format&fit=crop&q=80" alt="Preview" />
-                <div>
-                    <h4 class="review-info-title" id="review-title-disp">The Cedar Forest Villa</h4>
-                    <p class="review-info-location" id="review-loc-disp">Manali, Himachal Pradesh</p>
-                    <span class="review-info-price" id="review-price-disp">₹12,500 <span style="font-size: 12px; font-weight: 400; color: var(--text-muted);">/ night</span></span>
+<!-- ══ STEP 15: PICK YOUR BOOKING SETTINGS ══ -->
+        <div class="step-container" id="step-15">
+            <div class="booking-settings-stage">
+                <div class="booking-settings-header">
+                    <h1 class="booking-settings-title">Pick your booking settings</h1>
+                    <p class="booking-settings-sub">
+                        You can change this at any time. <button type="button" class="booking-learn-more-link" onclick="openBookingSettingsModal()">Learn more</button>
+                    </p>
+                </div>
+
+                <div class="booking-cards-list">
+                    <!-- Option 1: Approve first 5 bookings (Recommended) -->
+                    <div 
+                        class="booking-setting-card selected" 
+                        id="card-booking-approve" 
+                        onclick="selectBookingSetting('approve_first_5')"
+                    >
+                        <div class="booking-card-main">
+                            <span class="booking-card-title">Approve your first 5 bookings</span>
+                            <span class="badge-recommended">Recommended</span>
+                            <span class="booking-card-desc">
+                                Start by reviewing reservation requests, then switch to Instant Book so guests can book automatically.
+                            </span>
+                        </div>
+                        <div class="booking-card-icon-wrap">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                <path d="m9 16 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Option 2: Use Instant Book -->
+                    <div 
+                        class="booking-setting-card" 
+                        id="card-booking-instant" 
+                        onclick="selectBookingSetting('instant_book')"
+                    >
+                        <div class="booking-card-main">
+                            <span class="booking-card-title">Use Instant Book</span>
+                            <span class="booking-card-desc">
+                                Let guests book automatically.
+                            </span>
+                        </div>
+                        <div class="booking-card-icon-wrap">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 16: NOW, SET YOUR PRICES (Airbnb Authentic Dual Price Cards) ══ -->
+        <div class="step-container" id="step-16">
+            <div class="airbnb-set-prices-stage">
+                <div class="airbnb-set-prices-header">
+                    <h1 class="airbnb-set-prices-title">Now, set your prices</h1>
+                    <p class="airbnb-set-prices-sub">
+                        These suggestions are based on guest demand for similar listings. 
+                        <button type="button" class="pricing-learn-more-link" onclick="openPricingAdviceModal()">Learn more</button>
+                    </p>
+                </div>
+
+                <div class="airbnb-price-cards-stack">
+                    <!-- Base Price Card matching screenshot (Click opens modal) -->
+                    <div class="airbnb-price-card" onclick="openBasePriceModal()" style="cursor: pointer;">
+                        <span class="price-card-label">Base price</span>
+                        <div class="price-input-row">
+                            <span class="price-currency-sign">₹</span>
+                            <span class="price-interactive-input" id="disp-card-base-price" style="display: inline-block; width: auto; cursor: pointer; user-select: none;">2,321</span>
+                        </div>
+                    </div>
+
+                    <!-- Weekend Adjustment Card matching screenshot -->
+                    <div class="airbnb-price-card weekend-card" onclick="openWeekendAdjustModal()">
+                        <div class="weekend-left">
+                            <span class="price-card-label">Weekend adjustment</span>
+                            <div class="weekend-percent-val" id="disp-weekend-percent">+6%</div>
+                        </div>
+                        <div class="weekend-right">
+                            <span class="weekend-calc-text" id="disp-weekend-calc">₹2,460 for Fri and Sat</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Pill: Show similar listings matching screenshot -->
+                <div style="text-align: center; margin-top: 32px;">
+                    <button type="button" class="btn-similar-listings" onclick="openSimilarListingsModal()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#FF385C" stroke="#FF385C" stroke-width="1.5">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3" fill="#FFFFFF"></circle>
+                        </svg>
+                        <span>Show similar listings</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 17: ADD DISCOUNTS (MATCHING USER SCREENSHOT EXACTLY) ══ -->
+        <div class="step-container" id="step-17">
+            <div class="discounts-stage-container">
+                <div class="discounts-header">
+                    <h1 class="discounts-title">Add discounts</h1>
+                    <p class="discounts-sub">Help your place stand out to get booked faster and earn your first reviews.</p>
+                </div>
+
+                <div class="discounts-cards-stack">
+                    <!-- Item 1: New listing promotion (20%) -->
+                    <div class="discount-item-card selected" id="card-discount-newlisting" onclick="toggleDiscount('newListingPromotion')">
+                        <div class="discount-card-left">
+                            <span class="discount-pct-badge plain-text">20%</span>
+                            <div class="discount-text-wrap">
+                                <span class="discount-item-title">New listing promotion</span>
+                                <span class="discount-item-desc">Offer 20% off your first 3 bookings</span>
+                            </div>
+                        </div>
+                        <div class="discount-checkbox-box" id="chk-discount-newlisting">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Last-minute discount (7%) -->
+                    <div class="discount-item-card selected" id="card-discount-lastminute" onclick="toggleDiscount('lastMinuteDiscount')">
+                        <div class="discount-card-left">
+                            <span class="discount-pct-badge" id="disp-badge-lastminute">7%</span>
+                            <div class="discount-text-wrap">
+                                <span class="discount-item-title">Last-minute discount</span>
+                                <span class="discount-item-desc">For stays booked 14 days or less before arrival</span>
+                            </div>
+                        </div>
+                        <div class="discount-checkbox-box" id="chk-discount-lastminute">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Item 3: Weekly discount (10%) -->
+                    <div class="discount-item-card selected" id="card-discount-weekly" onclick="toggleDiscount('weeklyDiscount')">
+                        <div class="discount-card-left">
+                            <span class="discount-pct-badge" id="disp-badge-weekly">10%</span>
+                            <div class="discount-text-wrap">
+                                <span class="discount-item-title">Weekly discount</span>
+                                <span class="discount-item-desc">For stays of 7 nights or more</span>
+                            </div>
+                        </div>
+                        <div class="discount-checkbox-box" id="chk-discount-weekly">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Item 4: Monthly discount (20%) -->
+                    <div class="discount-item-card selected" id="card-discount-monthly" onclick="toggleDiscount('monthlyDiscount')">
+                        <div class="discount-card-left">
+                            <span class="discount-pct-badge" id="disp-badge-monthly">20%</span>
+                            <div class="discount-text-wrap">
+                                <span class="discount-item-title">Monthly discount</span>
+                                <span class="discount-item-desc">For stays of 28 nights or more</span>
+                            </div>
+                        </div>
+                        <div class="discount-checkbox-box" id="chk-discount-monthly">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="discounts-footnote">
+                    Only one discount will be applied per stay. <button type="button" class="discounts-learn-more-link" onclick="openDiscountsInfoModal()">Learn more</button>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 18: SHARE SAFETY DETAILS (MATCHING USER SCREENSHOT EXACTLY) ══ -->
+        <div class="step-container" id="step-18">
+            <div class="safety-stage-container">
+                <h1 class="safety-title">Share safety details</h1>
+
+                <div class="safety-question-row">
+                    <span class="safety-question-title">Does your place have any of these?</span>
+                    <button type="button" class="safety-info-btn" onclick="openSafetyInfoModal()" title="Safety disclosure information" aria-label="Safety disclosure info">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="safety-options-list">
+                    <!-- Option 1: Exterior security camera present -->
+                    <div class="safety-option-item" id="opt-safety-securityCameras" onclick="toggleSafetyItem('securityCameras')">
+                        <span class="safety-option-label">Exterior security camera present</span>
+                        <div class="safety-checkbox-box" id="chk-safety-securityCameras">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Option 2: Noise decibel monitor present -->
+                    <div class="safety-option-item" id="opt-safety-noiseMonitors" onclick="toggleSafetyItem('noiseMonitors')">
+                        <span class="safety-option-label">Noise decibel monitor present</span>
+                        <div class="safety-checkbox-box" id="chk-safety-noiseMonitors">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Option 3: Weapon(s) on the property -->
+                    <div class="safety-option-item" id="opt-safety-weapons" onclick="toggleSafetyItem('weapons')">
+                        <span class="safety-option-label">Weapon(s) on the property</span>
+                        <div class="safety-checkbox-box" id="chk-safety-weapons">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="safety-divider"></div>
+
+                <div class="safety-important-section">
+                    <h3 class="safety-important-title">Important things to know</h3>
+                    <p class="safety-important-text">
+                        Security cameras that monitor indoor spaces are not allowed even if they're turned off. All exterior security cameras must be disclosed.
+                    </p>
+                    <p class="safety-important-text">
+                        Be sure to comply with your <button type="button" class="safety-policy-link" onclick="openLocalLawsModal()">local laws</button> and review Airbnb's <button type="button" class="safety-policy-link" onclick="openPolicyModal()">anti-discrimination policy</button> and guest and host fees.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+<!-- ══ STEP 19: PROVIDE A FEW FINAL DETAILS (MATCHING USER SCREENSHOT EXACTLY) ══ -->
+        <div class="step-container" id="step-19">
+            <div class="final-details-container">
+                <h1 class="final-details-title">Provide a few final details</h1>
+                <p class="final-details-sub">This is required to comply with financial regulations and helps us prevent fraud.</p>
+
+                <h2 class="residential-section-title">What's your residential address?</h2>
+                <p class="residential-section-sub">Guests won't see this information.</p>
+
+                <!-- Country/region custom field matching screenshot -->
+                <div class="residential-country-box">
+                    <label class="residential-country-label" for="res-input-country">Country/region</label>
+                    <select id="res-input-country" class="residential-country-select" onchange="onResidentialFieldChange()">
+                        <option value="India" selected>India</option>
+                        <option value="United States">United States</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="United Arab Emirates">United Arab Emirates</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Singapore">Singapore</option>
+                    </select>
+                    <div class="residential-chevron-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Airbnb Signature Stacked Residential Inputs Group -->
+                <div class="residential-stacked-inputs">
+                    <div class="residential-input-row">
+                        <input 
+                            type="text" 
+                            id="res-input-flat" 
+                            class="residential-text-input" 
+                            placeholder="Flat, house, etc. (if applicable)" 
+                            oninput="onResidentialFieldChange()" 
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="residential-input-row">
+                        <input 
+                            type="text" 
+                            id="res-input-street" 
+                            class="residential-text-input" 
+                            placeholder="Street address" 
+                            oninput="onResidentialFieldChange()" 
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="residential-input-row">
+                        <input 
+                            type="text" 
+                            id="res-input-landmark" 
+                            class="residential-text-input" 
+                            placeholder="Nearby landmark (if applicable)" 
+                            oninput="onResidentialFieldChange()" 
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="residential-input-row">
+                        <input 
+                            type="text" 
+                            id="res-input-district" 
+                            class="residential-text-input" 
+                            placeholder="District/locality (if applicable)" 
+                            oninput="onResidentialFieldChange()" 
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="residential-input-row">
+                        <input 
+                            type="text" 
+                            id="res-input-city" 
+                            class="residential-text-input" 
+                            placeholder="City/town" 
+                            oninput="onResidentialFieldChange()" 
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="residential-input-row">
+                        <input 
+                            type="text" 
+                            id="res-input-state" 
+                            class="residential-text-input" 
+                            placeholder="State/union territory" 
+                            oninput="onResidentialFieldChange()" 
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="residential-input-row">
+                        <input 
+                            type="text" 
+                            id="res-input-pincode" 
+                            class="residential-text-input" 
+                            placeholder="PIN code" 
+                            oninput="onResidentialFieldChange()" 
+                            autocomplete="off"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -3458,10 +5295,356 @@
         </div>
     </div>
 
-    <!-- ── Sticky Bottom Navigation Bar ── -->
+    <!-- ── Booking Settings Info Modal ("Learn more") ── -->
+    <div class="address-modal-overlay" id="booking-modal-overlay" onclick="closeBookingSettingsModal(event)">
+        <div class="address-modal-card" style="max-width: 520px; padding-top: 32px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closeBookingSettingsModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 8px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">Booking Settings</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">How guests reserve your accommodation</p>
+            </div>
+            <div style="padding: 24px; color: #484848; font-size: 14.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(0, 138, 5, 0.1); color: #008A05; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">Approve First 5 Bookings (Recommended)</strong>
+                        Gain confidence as a new host. You have 24 hours to review who is booking, check their past guest ratings, and ask questions before accepting.
+                    </div>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(20, 53, 40, 0.08); color: #143528; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">Use Instant Book</strong>
+                        Guests who meet your requirements can book immediately without waiting for manual confirmation.
+                    </div>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; margin-top: 8px; border: none; cursor: pointer;" onclick="closeBookingSettingsModal()">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Base Price Breakdown Modal (Matching User Screenshot Exactly) ── -->
+    <div class="address-modal-overlay" id="base-price-modal-overlay" onclick="closeBasePriceModal(event)">
+        <div class="address-modal-card base-price-modal-card" onclick="event.stopPropagation()">
+            <!-- Top Header: (?) on left, "Base price" in center, (✕) on right -->
+            <div class="base-price-modal-header">
+                <button type="button" class="btn-modal-help-circle" onclick="openPricingAdviceModal()" title="How pricing suggestions work">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </button>
+
+                <h3 class="base-price-modal-title">Base price</h3>
+
+                <button type="button" class="btn-modal-close-static" onclick="closeBasePriceModal()" aria-label="Close modal">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Big Price Display with Edit Pencil -->
+            <div class="modal-price-hero-row">
+                <div class="modal-price-number-wrap">
+                    <span>₹</span>
+                    <input 
+                        type="text" 
+                        id="modal-base-price-input" 
+                        class="modal-price-inline-input" 
+                        value="2,321" 
+                        oninput="onModalPriceInput(this.value)" 
+                        onblur="formatModalPriceOnBlur()"
+                        autocomplete="off"
+                    />
+                </div>
+                <button type="button" class="btn-price-pencil-edit" onclick="document.getElementById('modal-base-price-input').focus(); document.getElementById('modal-base-price-input').select();" title="Edit price">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Price Breakdown Rounded Card -->
+            <div class="price-breakdown-rounded-card" id="price-breakdown-box">
+                <div class="breakdown-row">
+                    <span class="breakdown-label">Guest price before taxes</span>
+                    <span class="breakdown-val" id="bd-guest-price">₹2,321</span>
+                </div>
+                <div class="breakdown-row">
+                    <span class="breakdown-label">Host service fee</span>
+                    <span class="breakdown-val" id="bd-service-fee">-₹360</span>
+                </div>
+                <div class="breakdown-divider-line"></div>
+                <div class="breakdown-row breakdown-total">
+                    <span class="breakdown-label">You earn</span>
+                    <span class="breakdown-val" id="bd-host-earn">₹1,961</span>
+                </div>
+            </div>
+
+            <!-- Toggle: Show less ⌃ / Show more ⌄ -->
+            <div class="breakdown-toggle-center">
+                <button type="button" class="btn-toggle-show-less" id="btn-toggle-breakdown" onclick="togglePriceBreakdown()">
+                    <span id="txt-toggle-breakdown">Show less</span>
+                    <svg id="icon-toggle-breakdown" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Footer: Show similar listings (left) & Done (right) -->
+            <div class="base-price-modal-footer">
+                <button type="button" class="link-similar-listings-modal" onclick="closeBasePriceModal(); openSimilarListingsModal();">
+                    Show similar listings
+                </button>
+                <button type="button" class="btn-base-price-done" onclick="closeBasePriceModal()">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Pricing Advice Modal ("Learn more") ── -->
+    <div class="address-modal-overlay" id="pricing-advice-modal-overlay" onclick="closePricingAdviceModal(event)">
+        <div class="address-modal-card" style="max-width: 520px; padding-top: 32px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closePricingAdviceModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 8px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">How pricing suggestions work</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">Market intelligence tailored to your area</p>
+            </div>
+            <div style="padding: 24px; color: #484848; font-size: 14.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
+                <p>Our algorithm compares similar properties in your city based on property type, number of bedrooms, guest capacity, and historical booking demand.</p>
+                <div style="background: #F7F7F7; border-radius: 12px; padding: 16px; border: 1px solid #EBEBEB;">
+                    <strong style="color: #222222; display: block; font-size: 14px; margin-bottom: 4px;">Smart Pricing Flexibility</strong>
+                    <span style="font-size: 13.5px; color: #717171;">Setting a competitive initial base price helps secure your first guest reviews faster. You can alter prices anytime.</span>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; margin-top: 8px; border: none; cursor: pointer;" onclick="closePricingAdviceModal()">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Similar Listings Modal ("Show similar listings") ── -->
+    <div class="address-modal-overlay" id="similar-listings-modal-overlay" onclick="closeSimilarListingsModal(event)">
+        <div class="address-modal-card" style="max-width: 600px; padding-top: 28px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closeSimilarListingsModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 16px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">Similar listings nearby</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">Based on guest bookings in your region</p>
+            </div>
+            <div style="padding: 0 24px 24px 24px; display: flex; flex-direction: column; gap: 14px;">
+                <div style="display: flex; gap: 14px; padding: 12px; border: 1px solid #EBEBEB; border-radius: 12px; align-items: center;">
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=200&auto=format&fit=crop&q=80" style="width: 72px; height: 72px; border-radius: 8px; object-fit: cover;" alt="Listing 1" />
+                    <div style="flex: 1; text-align: left;">
+                        <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: #222222;">Hillside Pine Chalet</h4>
+                        <span style="font-size: 13px; color: #717171;">2 bedrooms &bull; 4 guests</span>
+                        <div style="font-size: 14px; font-weight: 700; color: #222222; margin-top: 4px;">₹2,250 <span style="font-weight: 400; color: #717171;">/ night</span></div>
+                    </div>
+                    <span style="background: #FAF7F0; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; color: #143528;">★ 4.96</span>
+                </div>
+                <div style="display: flex; gap: 14px; padding: 12px; border: 1px solid #EBEBEB; border-radius: 12px; align-items: center;">
+                    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=200&auto=format&fit=crop&q=80" style="width: 72px; height: 72px; border-radius: 8px; object-fit: cover;" alt="Listing 2" />
+                    <div style="flex: 1; text-align: left;">
+                        <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: #222222;">Cedar Valley Heritage Villa</h4>
+                        <span style="font-size: 13px; color: #717171;">Entire place &bull; 4 guests</span>
+                        <div style="font-size: 14px; font-weight: 700; color: #222222; margin-top: 4px;">₹2,480 <span style="font-weight: 400; color: #717171;">/ night</span></div>
+                    </div>
+                    <span style="background: #FAF7F0; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; color: #143528;">★ 4.92</span>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; margin-top: 8px; border: none; cursor: pointer;" onclick="closeSimilarListingsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Weekend Adjustment Modal ── -->
+    <div class="address-modal-overlay" id="weekend-adjust-modal-overlay" onclick="closeWeekendAdjustModal(event)">
+        <div class="address-modal-card" style="max-width: 480px; padding-top: 28px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closeWeekendAdjustModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 12px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">Weekend adjustment</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">Choose premium rate for Friday and Saturday</p>
+            </div>
+            <div style="padding: 16px 24px 24px 24px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1px solid #DDDDDD; border-radius: 12px;">
+                    <span style="font-size: 16px; font-weight: 600; color: #222222;">Weekend markup</span>
+                    <select id="select-weekend-pct" style="font-size: 16px; font-weight: 600; padding: 6px 12px; border-radius: 8px; border: 1px solid #B0B0B0;" onchange="onWeekendPercentChange(this.value)">
+                        <option value="0">0% (Standard)</option>
+                        <option value="5">+5%</option>
+                        <option value="6" selected>+6% (Recommended)</option>
+                        <option value="10">+10%</option>
+                        <option value="15">+15%</option>
+                        <option value="20">+20%</option>
+                    </select>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; border: none; cursor: pointer;" onclick="closeWeekendAdjustModal()">Save adjustment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Discounts Info Modal ("Learn more") ── -->
+    <div class="address-modal-overlay" id="discounts-modal-overlay" onclick="closeDiscountsInfoModal(event)">
+        <div class="address-modal-card" style="max-width: 520px; padding-top: 32px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closeDiscountsInfoModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 8px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">How discounts work</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">Learn how discounts apply to guest reservations</p>
+            </div>
+            <div style="padding: 24px; color: #484848; font-size: 14.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(20, 53, 40, 0.08); color: #143528; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;">
+                        1
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">Only one discount per stay</strong>
+                        Discounts are never stacked together. StayNest automatically applies whichever single discount gives the guest the biggest saving for their trip duration.
+                    </div>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(212, 175, 106, 0.15); color: #9A7B38; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;">
+                        2
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">New listing promotion boost</strong>
+                        Offering 20% off for your first 3 bookings helps your listing climb faster in search rankings and secure valuable initial guest reviews.
+                    </div>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; margin-top: 8px; border: none; cursor: pointer;" onclick="closeDiscountsInfoModal()">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Safety Disclosure Info Modal ── -->
+    <div class="address-modal-overlay" id="safety-info-modal-overlay" onclick="closeSafetyInfoModal(event)">
+        <div class="address-modal-card" style="max-width: 520px; padding-top: 32px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closeSafetyInfoModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 8px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">Safety devices disclosure</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">Maintaining guest trust and safety across StayNest</p>
+            </div>
+            <div style="padding: 24px; color: #484848; font-size: 14.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(20, 53, 40, 0.08); color: #143528; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">Exterior security cameras</strong>
+                        Indoor cameras are strictly prohibited. Exterior cameras pointing at public/entry areas are allowed but must be disclosed to guests in advance.
+                    </div>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(20, 53, 40, 0.08); color: #143528; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">Noise decibel monitors</strong>
+                        Devices measuring volume levels without recording or transmitting audio are permitted only with disclosure.
+                    </div>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <div style="background: rgba(20, 53, 40, 0.08); color: #143528; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div>
+                        <strong style="color: #222222; display: block; font-size: 15px; margin-bottom: 2px;">Weapons on premises</strong>
+                        Any weapons or firearms must be properly secured in a locked safe according to local jurisdiction rules and disclosed.
+                    </div>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; margin-top: 8px; border: none; cursor: pointer;" onclick="closeSafetyInfoModal()">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Local Laws Info Modal ── -->
+    <div class="address-modal-overlay" id="local-laws-modal-overlay" onclick="closeLocalLawsModal(event)">
+        <div class="address-modal-card" style="max-width: 520px; padding-top: 32px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closeLocalLawsModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 8px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">Local laws & regulations</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">Short-term rental and hosting compliance</p>
+            </div>
+            <div style="padding: 24px; color: #484848; font-size: 14.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 14px;">
+                <p>Before hosting, please verify local ordinances, municipal registration requirements, housing society / HOA bylaws, and relevant hospitality tax regulations in your region.</p>
+                <div style="background: #F7F7F7; border-radius: 12px; padding: 14px 16px; border: 1px solid #EBEBEB;">
+                    <strong style="color: #222222; display: block; font-size: 14px; margin-bottom: 4px;">Host Responsibility</strong>
+                    <span style="font-size: 13.5px; color: #717171;">Hosts are responsible for understanding and adhering to local legal guidelines governing short-term accommodations.</span>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; margin-top: 8px; border: none; cursor: pointer;" onclick="closeLocalLawsModal()">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Anti-Discrimination Policy Modal ── -->
+    <div class="address-modal-overlay" id="policy-modal-overlay" onclick="closePolicyModal(event)">
+        <div class="address-modal-card" style="max-width: 520px; padding-top: 32px;" onclick="event.stopPropagation()">
+            <button type="button" class="btn-modal-close" onclick="closePolicyModal()" aria-label="Close modal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: left; padding: 0 24px; margin-bottom: 8px;">
+                <h3 style="font-size: 22px; font-weight: 700; color: #143528; margin: 0 0 4px 0;">Our community commitment</h3>
+                <p style="font-size: 14px; color: #717171; margin: 0;">Inclusion, belonging, and respect for all guests</p>
+            </div>
+            <div style="padding: 24px; color: #484848; font-size: 14.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 14px;">
+                <p>StayNest is built on a foundation of trust, inclusion, and open hospitality. Every host commits to welcoming guests regardless of background, identity, or beliefs.</p>
+                <div style="background: rgba(20, 53, 40, 0.05); border-radius: 12px; padding: 14px 16px; border: 1px solid rgba(20, 53, 40, 0.12);">
+                    <strong style="color: #143528; display: block; font-size: 14px; margin-bottom: 4px;">Zero Tolerance Policy</strong>
+                    <span style="font-size: 13.5px; color: #484848;">We strictly prohibit discrimination, prejudice, or differential treatment of guests based on race, ethnicity, religion, or gender identity.</span>
+                </div>
+                <button type="button" class="btn-stepper" style="width: 100%; border-radius: 12px; height: 46px; background: #143528; color: #FAF7F0; font-weight: 600; font-size: 15px; margin-top: 8px; border: none; cursor: pointer;" onclick="closePolicyModal()">I agree &amp; continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Sticky Bottom Navigation Bar (Airbnb 3-Segment Progress) ── -->
     <footer class="wizard-footer">
-        <div class="progress-track">
-            <div class="progress-fill" id="progress-bar-fill"></div>
+        <div class="progress-track" id="progress-track">
+            <div class="progress-track-segment"><div class="progress-segment-fill" id="seg-fill-1"></div></div>
+            <div class="progress-track-segment"><div class="progress-segment-fill" id="seg-fill-2"></div></div>
+            <div class="progress-track-segment"><div class="progress-segment-fill" id="seg-fill-3"></div></div>
+            <div class="progress-fill" id="progress-bar-fill" style="display:none;"></div>
         </div>
         <div class="footer-nav-row">
             <button type="button" class="btn-wizard-back" id="btn-back" onclick="navigateStep(-1)" disabled>
@@ -3470,7 +5653,6 @@
 
             <button type="button" class="btn-wizard-next" id="btn-next" onclick="navigateStep(1)">
                 <span>Next</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
         </div>
     </footer>
@@ -3481,7 +5663,7 @@
     <!-- ── Wizard JavaScript Controller ── -->
     <script>
         let currentStep = 1;
-        const totalSteps = 12;
+        const totalSteps = 19;
 
         // State holder
         const wizardState = {
@@ -3498,10 +5680,36 @@
             beds: 2,
             bathrooms: 2,
             amenities: ['wifi', 'ac', 'parking', 'hotWater', 'essentials', 'kitchen'],
+            photos: [],
             housePhoto: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80',
             homeName: '',
+            highlights: [],
             description: '',
-            homePrice: 12500
+            bookingSettings: 'approve_first_5',
+            homePrice: 2321,
+            weekendAdjustment: 6,
+            weekendPrice: 2460,
+            discounts: {
+                newListingPromotion: true,
+                lastMinuteDiscount: 7,
+                weeklyDiscount: 10,
+                monthlyDiscount: 20
+            },
+            safetyDetails: {
+                securityCameras: false,
+                noiseMonitors: false,
+                weapons: false
+            },
+            residentialAddress: {
+                country: 'India',
+                flat: '',
+                street: '',
+                landmark: '',
+                district: '',
+                city: '',
+                state: '',
+                pinCode: ''
+            }
         };
 
         // ── Dynamic & Unbiased Location Detection Engine ──
@@ -3622,10 +5830,12 @@
         // Close on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                const overlay = document.getElementById('address-modal-overlay');
-                if (overlay && overlay.classList.contains('open')) {
-                    closeAddressModal();
-                }
+                ['base-price-modal-overlay', 'address-modal-overlay', 'privacy-modal-overlay', 'booking-modal-overlay', 'pricing-advice-modal-overlay', 'similar-listings-modal-overlay', 'weekend-adjust-modal-overlay', 'discounts-modal-overlay', 'safety-info-modal-overlay', 'local-laws-modal-overlay', 'policy-modal-overlay'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && el.classList.contains('open')) {
+                        el.classList.remove('open');
+                    }
+                });
             }
         });
 
@@ -4187,6 +6397,7 @@
             if (hiddenInput) hiddenInput.value = type;
             document.querySelectorAll('.category-card').forEach(c => c.classList.remove('selected'));
             cardEl.classList.add('selected');
+            syncCategoryToAllSteps();
         }
 
         // ── 5. Stepper Counters ──
@@ -4208,27 +6419,384 @@
             }
         }
 
-        // ── 7. Photos ──
-        function onPhotoUrlChange(url) {
-            if (url && url.startsWith('http')) {
-                wizardState.housePhoto = url;
-                document.getElementById('live-photo-preview').src = url;
-                document.getElementById('review-thumb-img').src = url;
+        // ── 7. Photos (Airbnb Authentic Flow) ──
+        function updatePhotosStepTitle() {
+            const prop = wizardState.propertyType ? wizardState.propertyType.toLowerCase() : 'place';
+            const titleEl = document.getElementById('photos-stage-title');
+            if (titleEl) {
+                titleEl.textContent = `Add some photos of your ${prop}`;
             }
         }
 
-        function applyPresetPhoto(url) {
-            document.getElementById('input-photo').value = url;
-            onPhotoUrlChange(url);
+        function triggerPhotoUpload(e) {
+            if (e) e.stopPropagation();
+            const fileInput = document.getElementById('airbnb-photos-input');
+            if (fileInput) fileInput.click();
+        }
+
+        function compressPhotoFile(file, callback) {
+            if (!file || !file.type.match(/image.*/)) {
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxDim = 1400;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > height) {
+                        if (width > maxDim) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        }
+                    } else {
+                        if (height > maxDim) {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+                    callback(compressedDataUrl);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleUserPhotoUpload(event) {
+            const files = event.target.files;
+            if (!files || !files.length) return;
+
+            Array.from(files).forEach(file => {
+                compressPhotoFile(file, function(compressedUrl) {
+                    addPhotoToGallery(compressedUrl);
+                });
+            });
+            event.target.value = '';
+        }
+
+        function addPhotoToGallery(url) {
+            if (!wizardState.photos) wizardState.photos = [];
+            wizardState.photos.push(url);
+            wizardState.housePhoto = wizardState.photos[0];
+            const inp = document.getElementById('input-photo');
+            if (inp) inp.value = wizardState.housePhoto;
+            renderPhotoGallery();
+        }
+
+        function deletePhoto(idx, event) {
+            if (event) event.stopPropagation();
+            if (!wizardState.photos) return;
+            wizardState.photos.splice(idx, 1);
+            if (wizardState.photos.length > 0) {
+                wizardState.housePhoto = wizardState.photos[0];
+                const inp = document.getElementById('input-photo');
+                if (inp) inp.value = wizardState.housePhoto;
+            } else {
+                wizardState.housePhoto = '';
+                const inp = document.getElementById('input-photo');
+                if (inp) inp.value = '';
+            }
+            renderPhotoGallery();
+        }
+
+        function clearAllPhotos() {
+            wizardState.photos = [];
+            wizardState.housePhoto = '';
+            const inp = document.getElementById('input-photo');
+            if (inp) inp.value = '';
+            renderPhotoGallery();
+        }
+
+        const CURATED_SETS = {
+            waterfront: [
+                'https://images.unsplash.com/photo-1569263979104-865ab7cd8d17?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&auto=format&fit=crop&q=80'
+            ],
+            villa: [
+                'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&auto=format&fit=crop&q=80'
+            ],
+            cottage: [
+                'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1502005229762-ee1b2b8ab98f?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&fit=crop&q=80'
+            ],
+            chalet: [
+                'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&auto=format&fit=crop&q=80',
+                'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&auto=format&fit=crop&q=80'
+            ]
+        };
+
+        function applyCurated5PhotoSet(theme) {
+            const list = CURATED_SETS[theme] || CURATED_SETS.villa;
+            wizardState.photos = [...list];
+            wizardState.housePhoto = wizardState.photos[0];
+            const inp = document.getElementById('input-photo');
+            if (inp) inp.value = wizardState.housePhoto;
+            renderPhotoGallery();
+        }
+
+        function renderPhotoGallery() {
+            const dropzone = document.getElementById('airbnb-photos-dropzone');
+            const galleryView = document.getElementById('airbnb-photos-grid-view');
+            const tilesContainer = document.getElementById('airbnb-photo-tiles');
+            const badge = document.getElementById('photos-count-badge');
+            const photos = wizardState.photos || [];
+
+            if (photos.length > 0) {
+                if (dropzone) dropzone.style.display = 'none';
+                if (galleryView) galleryView.style.display = 'block';
+                if (badge) badge.textContent = `${photos.length} photo${photos.length > 1 ? 's' : ''} added`;
+
+                let html = '';
+                photos.forEach((photoUrl, idx) => {
+                    const isCover = (idx === 0);
+                    html += `
+                        <div class="airbnb-photo-tile ${isCover ? 'cover-tile' : ''}">
+                            <img src="${photoUrl}" alt="Photo ${idx + 1}" />
+                            ${isCover ? '<span class="cover-badge">Cover photo</span>' : ''}
+                            <button type="button" class="tile-delete-btn" onclick="deletePhoto(${idx}, event)" title="Remove photo">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </div>
+                    `;
+                });
+                if (tilesContainer) tilesContainer.innerHTML = html;
+            } else {
+                if (dropzone) dropzone.style.display = 'flex';
+                if (galleryView) galleryView.style.display = 'none';
+                if (tilesContainer) tilesContainer.innerHTML = '';
+            }
+
+            // Sync review card preview
+            const revImg = document.getElementById('review-thumb-img');
+            if (revImg && wizardState.housePhoto) revImg.src = wizardState.housePhoto;
+
+            updateFooterBar();
+        }
+
+        function setupDropzoneEvents() {
+            const dz = document.getElementById('airbnb-photos-dropzone');
+            if (!dz || dz.__hasEvents) return;
+            dz.__hasEvents = true;
+
+            ['dragenter', 'dragover'].forEach(name => {
+                dz.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dz.classList.add('drag-over');
+                }, false);
+            });
+            ['dragleave', 'drop'].forEach(name => {
+                dz.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dz.classList.remove('drag-over');
+                }, false);
+            });
+            dz.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt && dt.files;
+                if (files && files.length) {
+                    Array.from(files).forEach(file => {
+                        compressPhotoFile(file, function(compressedUrl) {
+                            addPhotoToGallery(compressedUrl);
+                        });
+                    });
+                }
+            }, false);
+        }
+
+        // ── 7.1 Title Input Helpers (Airbnb Flow) ──
+        function updateTitleStepHeading() {
+            const prop = wizardState.propertyType ? wizardState.propertyType.toLowerCase() : 'place';
+            const headingEl = document.getElementById('airbnb-title-heading');
+            if (headingEl) {
+                headingEl.textContent = `Now, let's give your ${prop} a title`;
+            }
+        }
+
+        function onTitleInputChange(val) {
+            const trimmed = val ? val.trim() : '';
+            wizardState.homeName = trimmed;
+            const counter = document.getElementById('title-char-counter');
+            if (counter) counter.textContent = `${(val || '').length}/50`;
+            updateFooterBar();
+        }
+
+        // ── 7.2 Describe & Highlights Helpers (Airbnb Flow) ──
+        const CATEGORY_CUSTOM_HIGHLIGHTS = {
+            'Boat': [
+                { key: 'Waterfront', label: 'Waterfront', icon: '<path d="M2 12c3-2 6-2 9 0s6 2 9 0M2 17c3-2 6-2 9 0s6 2 9 0"></path>' },
+                { key: 'Scenic views', label: 'Scenic views', icon: '<circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>' }
+            ],
+            'Houseboat': [
+                { key: 'Waterfront', label: 'Waterfront', icon: '<path d="M2 12c3-2 6-2 9 0s6 2 9 0M2 17c3-2 6-2 9 0s6 2 9 0"></path>' },
+                { key: 'Peaceful', label: 'Peaceful', icon: '<circle cx="12" cy="12" r="9"></circle><path d="M12 3v18M3 12h18"></path>' }
+            ],
+            'Villa': [
+                { key: 'Luxury', label: 'Luxury', icon: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>' },
+                { key: 'Spacious', label: 'Spacious', icon: '<rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 3v18M15 3v18M3 9h18M3 15h18"></path>' },
+                { key: 'Stylish', label: 'Stylish', icon: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>' }
+            ],
+            'Apartment': [
+                { key: 'Central', label: 'Central', icon: '<circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle>' },
+                { key: 'Stylish', label: 'Stylish', icon: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>' },
+                { key: 'Modern', label: 'Modern', icon: '<rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>' }
+            ],
+            'Cabin': [
+                { key: 'Cozy', label: 'Cozy', icon: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>' },
+                { key: 'Secluded', label: 'Secluded', icon: '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>' }
+            ],
+            'Tree house': [
+                { key: 'Canopy views', label: 'Canopy views', icon: '<circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line>' }
+            ]
+        };
+
+        function renderDynamicCategoryHighlights() {
+            const container = document.getElementById('dynamic-category-highlights');
+            if (!container) return;
+            const cat = wizardState.propertyType || 'House';
+            const items = CATEGORY_CUSTOM_HIGHLIGHTS[cat] || [
+                { key: 'Peaceful', label: 'Peaceful', icon: '<circle cx="12" cy="12" r="9"></circle><path d="M12 3v18M3 12h18"></path>' },
+                { key: 'Spacious', label: 'Spacious', icon: '<rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 3v18M15 3v18M3 9h18M3 15h18"></path>' }
+            ];
+
+            let html = '';
+            items.forEach(item => {
+                const isSelected = wizardState.highlights && wizardState.highlights.includes(item.key);
+                html += `
+                    <div class="airbnb-highlight-pill ${isSelected ? 'selected' : ''}" data-key="${item.key}" onclick="toggleHighlight('${item.key}', this)">
+                        <span class="highlight-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                ${item.icon}
+                            </svg>
+                        </span>
+                        <span>${item.label}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function toggleHighlight(key, el) {
+            if (!wizardState.highlights) wizardState.highlights = [];
+            const idx = wizardState.highlights.indexOf(key);
+            if (idx > -1) {
+                wizardState.highlights.splice(idx, 1);
+                el.classList.remove('selected');
+            } else {
+                if (wizardState.highlights.length >= 2) {
+                    const oldest = wizardState.highlights.shift();
+                    const oldEl = document.querySelector(`.airbnb-highlight-pill[data-key="${oldest}"]`);
+                    if (oldEl) oldEl.classList.remove('selected');
+                }
+                wizardState.highlights.push(key);
+                el.classList.add('selected');
+            }
+            generateDynamicDescription();
+        }
+
+        function generateDynamicDescription() {
+            const prop = wizardState.propertyType ? wizardState.propertyType.toLowerCase() : 'place';
+            const highlights = wizardState.highlights || [];
+            
+            let starter = '';
+            if (highlights.length === 2) {
+                starter = `You'll always remember your time at this ${highlights[0].toLowerCase()} and ${highlights[1].toLowerCase()} ${prop} to stay.`;
+            } else if (highlights.length === 1) {
+                starter = `You'll always remember your time at this ${highlights[0].toLowerCase()} ${prop} to stay.`;
+            } else {
+                starter = `You'll always remember your time at this unique place to stay.`;
+            }
+
+            wizardState.description = starter;
+            const descEl = document.getElementById('input-desc');
+            if (descEl) {
+                descEl.value = starter;
+            }
+            const counter = document.getElementById('desc-char-counter');
+            if (counter) {
+                counter.textContent = `${starter.length}/500`;
+            }
+            const fDesc = document.getElementById('f-description');
+            if (fDesc) fDesc.value = starter;
+        }
+
+        function initCreateDescStep() {
+            const descEl = document.getElementById('input-desc');
+            const counter = document.getElementById('desc-char-counter');
+            if (!wizardState.description || !wizardState.description.trim()) {
+                generateDynamicDescription();
+            } else {
+                if (descEl) descEl.value = wizardState.description;
+                if (counter) counter.textContent = `${wizardState.description.length}/500`;
+            }
+        }
+
+        function onDescriptionInputChange(val) {
+            wizardState.description = val;
+            const counter = document.getElementById('desc-char-counter');
+            if (counter) counter.textContent = `${(val || '').length}/500`;
+            const fDesc = document.getElementById('f-description');
+            if (fDesc) fDesc.value = val;
+            updateFooterBar();
+        }
+
+        function onDescriptionTextChange(val) {
+            onDescriptionInputChange(val);
+        }
+
+        function updateDescribeStep() {
+            const prop = wizardState.propertyType ? wizardState.propertyType.toLowerCase() : 'place';
+            const heading = document.getElementById('airbnb-describe-heading');
+            if (heading) heading.textContent = `Next, let's describe your ${prop}`;
+
+            const titleText = document.getElementById('description-preview-title-text');
+            if (titleText) titleText.textContent = `Crafted description for your ${prop}`;
+
+            renderDynamicCategoryHighlights();
+            if (!wizardState.description) {
+                generateDynamicDescription();
+            }
+        }
+
+        function syncCategoryToAllSteps() {
+            updatePhotosStepTitle();
+            updateTitleStepHeading();
+            updateDescribeStep();
         }
 
         // ── 8. Price Estimate ──
         function updatePriceEstimate(val) {
             const price = Number(val) || 0;
             wizardState.homePrice = price;
-            document.getElementById('disp-base-price').textContent = '₹' + price.toLocaleString('en-IN');
-            document.getElementById('disp-payout-price').textContent = '₹' + Math.round(price * 0.97).toLocaleString('en-IN');
-            document.getElementById('review-price-disp').innerHTML = '₹' + price.toLocaleString('en-IN') + ' <span style="font-size: 12px; font-weight: 400; color: #6B7770;">/ night</span>';
+            const dispBase = document.getElementById('disp-base-price');
+            if (dispBase) dispBase.textContent = '₹' + price.toLocaleString('en-IN');
+            const dispPayout = document.getElementById('disp-payout-price');
+            if (dispPayout) dispPayout.textContent = '₹' + Math.round(price * 0.97).toLocaleString('en-IN');
+            const revPrice = document.getElementById('review-price-disp');
+            if (revPrice) revPrice.innerHTML = '₹' + price.toLocaleString('en-IN') + ' <span style="font-size: 12px; font-weight: 400; color: #6B7770;">/ night</span>';
+            const cardPrice = document.getElementById('disp-card-base-price');
+            if (cardPrice) cardPrice.textContent = price.toLocaleString('en-IN');
         }
 
         // ── 9. Step 5 Leaflet Privacy Map & Precision Toggle ──
@@ -4354,16 +6922,17 @@
                         return;
                     }
                 } else if (currentStep === 10) {
-                    // Step 10 is Photo input (previously step 9)
-                    const photo = document.getElementById('input-photo').value.trim();
-                    if (!photo) {
-                        alert('Please provide a photo URL or choose a preset.');
-                        document.getElementById('input-photo').focus();
+                    // Step 10 is Photo input (Step 2.2)
+                    const count = (wizardState.photos && wizardState.photos.length) || 0;
+                    if (count < 5) {
+                        alert("You’ll need 5 photos to get started. You can upload photos or pick one of our instant curated collections.");
                         return;
                     }
-                    wizardState.housePhoto = photo;
+                    wizardState.housePhoto = wizardState.photos[0];
+                    const inp = document.getElementById('input-photo');
+                    if (inp) inp.value = wizardState.housePhoto;
                 } else if (currentStep === 11) {
-                    // Step 11 is Title input (previously step 10)
+                    // Step 11 is Title input
                     const title = document.getElementById('input-title').value.trim();
                     if (!title) {
                         alert('Please provide a title for your sanctuary.');
@@ -4371,9 +6940,57 @@
                         return;
                     }
                     wizardState.homeName = title;
-                    wizardState.description = document.getElementById('input-desc').value.trim();
                 } else if (currentStep === 12) {
-                    // Step 12 is Final submission!
+                    // Step 12 is Describe & Highlights
+                    initCreateDescStep();
+                } else if (currentStep === 13) {
+                    // Step 13 is Create your description
+                    const descEl = document.getElementById('input-desc');
+                    const descVal = descEl ? descEl.value.trim() : '';
+                    if (!descVal) {
+                        alert('Please share a short description of what makes your place special.');
+                        if (descEl) descEl.focus();
+                        return;
+                    }
+                    wizardState.description = descVal;
+                    const fDesc = document.getElementById('f-description');
+                    if (fDesc) fDesc.value = descVal;
+                } else if (currentStep === 14) {
+                    // Step 14 is Step 3 Intro: Finish up and publish
+                } else if (currentStep === 15) {
+                    // Step 15 is Pick your booking settings
+                    const fBook = document.getElementById('f-bookingSettings');
+                    if (fBook) fBook.value = wizardState.bookingSettings || 'approve_first_5';
+                } else if (currentStep === 16) {
+                    // Step 16 is "Now, set your prices"
+                    let val = Number(wizardState.homePrice) || 0;
+                    const modalInput = document.getElementById('modal-base-price-input');
+                    if (modalInput && modalInput.value) {
+                        const parsed = parseInt(modalInput.value.replace(/[^\d]/g, ''), 10);
+                        if (parsed > 0) val = parsed;
+                    }
+                    if (!val || val <= 0) {
+                        val = 2321;
+                    }
+                    wizardState.homePrice = val;
+                    const pct = wizardState.weekendAdjustment !== undefined ? wizardState.weekendAdjustment : 6;
+                    wizardState.weekendPrice = Math.round(val * (1 + pct / 100));
+                    updatePriceEstimate(val);
+                    const dispW = document.getElementById('disp-final-weekend-price');
+                    if (dispW) dispW.textContent = '₹' + wizardState.weekendPrice.toLocaleString('en-IN') + ' / night';
+                    const fPrice = document.getElementById('f-homePrice'); if (fPrice) fPrice.value = val;
+                    const fWPrice = document.getElementById('f-weekendPrice'); if (fWPrice) fWPrice.value = wizardState.weekendPrice;
+                    const fWAdj = document.getElementById('f-weekendAdjustment'); if (fWAdj) fWAdj.value = pct;
+                } else if (currentStep === 17) {
+                    // Step 17 is Add discounts
+                    syncDiscountInputs();
+                } else if (currentStep === 18) {
+                    // Step 18 is Share safety details
+                    syncSafetyInputs();
+                } else if (currentStep === 19) {
+                    // Step 19 is Provide a few final details -> Submit listing!
+                    onResidentialFieldChange();
+                    syncResidentialInputs();
                     submitListingForm();
                     return;
                 }
@@ -4393,6 +7010,63 @@
                 initOrUpdatePrivacyMap();
             } else if (currentStep === 8) {
                 triggerHouseFurnishAnimation();
+            } else if (currentStep === 10) {
+                updatePhotosStepTitle();
+                setupDropzoneEvents();
+            } else if (currentStep === 11) {
+                updateTitleStepHeading();
+                setTimeout(() => {
+                    const t = document.getElementById('input-title');
+                    if (t) t.focus();
+                }, 100);
+            } else if (currentStep === 12) {
+                updateDescribeStep();
+            } else if (currentStep === 13) {
+                initCreateDescStep();
+                setTimeout(() => {
+                    const d = document.getElementById('input-desc');
+                    if (d) {
+                        d.focus();
+                        d.setSelectionRange(d.value.length, d.value.length);
+                    }
+                }, 100);
+            } else if (currentStep === 16) {
+                const cardDisp = document.getElementById('disp-card-base-price');
+                if (cardDisp) {
+                    cardDisp.textContent = Number(wizardState.homePrice || 2321).toLocaleString('en-IN');
+                }
+                const calcDisp = document.getElementById('disp-weekend-calc');
+                if (calcDisp) {
+                    calcDisp.textContent = `₹${(wizardState.weekendPrice || 2460).toLocaleString('en-IN')} for Fri and Sat`;
+                }
+            } else if (currentStep === 17) {
+                syncDiscountInputs();
+            } else if (currentStep === 18) {
+                syncSafetyInputs();
+                const saf = wizardState.safetyDetails || {};
+                const cCam = document.getElementById('opt-safety-securityCameras');
+                if (cCam) cCam.classList.toggle('checked', !!saf.securityCameras);
+                const cNoise = document.getElementById('opt-safety-noiseMonitors');
+                if (cNoise) cNoise.classList.toggle('checked', !!saf.noiseMonitors);
+                const cWeap = document.getElementById('opt-safety-weapons');
+                if (cWeap) cWeap.classList.toggle('checked', !!saf.weapons);
+            } else if (currentStep === 19) {
+                // Populate Step 19 residential address inputs with defaults if empty
+                if (wizardState.residentialAddress) {
+                    if (!wizardState.residentialAddress.city && wizardState.city) {
+                        wizardState.residentialAddress.city = wizardState.city;
+                    }
+                    if (!wizardState.residentialAddress.state && wizardState.state) {
+                        wizardState.residentialAddress.state = wizardState.state;
+                    }
+                    const cityEl = document.getElementById('res-input-city');
+                    if (cityEl && !cityEl.value) cityEl.value = wizardState.residentialAddress.city;
+                    const stateEl = document.getElementById('res-input-state');
+                    if (stateEl && !stateEl.value) stateEl.value = wizardState.residentialAddress.state;
+                    const countryEl = document.getElementById('res-input-country');
+                    if (countryEl) countryEl.value = wizardState.residentialAddress.country || 'India';
+                }
+                syncResidentialInputs();
             }
 
             // Scroll to top of stage
@@ -4444,41 +7118,482 @@
             stage.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
         }
 
+        // ── Step 3 Completed House Arena Controllers ──
+        function handleHouseArenaMouseMoveStep3(e) {
+            const arena = document.getElementById('house-arena-step3');
+            const stage = document.getElementById('house-stage-step3');
+            if (!arena || !stage) return;
+
+            const rect = arena.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((centerY - y) / centerY) * 10;
+            const rotateY = ((x - centerX) / centerX) * 12;
+
+            stage.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+
+        function resetHouseArenaTiltStep3() {
+            const stage = document.getElementById('house-stage-step3');
+            if (!stage) return;
+            stage.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        }
+
+        // ── Step 3.1 Booking Settings Controller ──
+        function selectBookingSetting(setting) {
+            wizardState.bookingSettings = setting;
+            const cApprove = document.getElementById('card-booking-approve');
+            const cInstant = document.getElementById('card-booking-instant');
+            if (cApprove && cInstant) {
+                if (setting === 'approve_first_5') {
+                    cApprove.classList.add('selected');
+                    cInstant.classList.remove('selected');
+                } else {
+                    cInstant.classList.add('selected');
+                    cApprove.classList.remove('selected');
+                }
+            }
+            const fBook = document.getElementById('f-bookingSettings');
+            if (fBook) fBook.value = setting;
+        }
+
+        function openBookingSettingsModal() {
+            const overlay = document.getElementById('booking-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closeBookingSettingsModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('booking-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        // ── Step 3.2 Dynamic Pricing & Weekend Markup Controllers ──
+        function openBasePriceModal() {
+            const price = wizardState.homePrice || 2321;
+            const modalInput = document.getElementById('modal-base-price-input');
+            if (modalInput) {
+                modalInput.value = price.toLocaleString('en-IN');
+            }
+            adjustPriceInputWidth();
+            updateModalBreakdown(price);
+            const overlay = document.getElementById('base-price-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closeBasePriceModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('base-price-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        function adjustPriceInputWidth() {
+            const inp = document.getElementById('modal-base-price-input');
+            if (!inp) return;
+            const len = Math.max(1, (inp.value || '').length);
+            inp.style.width = Math.max(70, len * 32) + 'px';
+        }
+
+        function updateModalBreakdown(price) {
+            const num = Math.max(0, Number(price) || 0);
+            // 15.51% host service fee matching the ₹360 fee on ₹2,321 screenshot
+            const serviceFee = Math.round(num * 0.1551);
+            const earn = Math.max(0, num - serviceFee);
+
+            const guestEl = document.getElementById('bd-guest-price');
+            const feeEl = document.getElementById('bd-service-fee');
+            const earnEl = document.getElementById('bd-host-earn');
+
+            if (guestEl) guestEl.textContent = '₹' + num.toLocaleString('en-IN');
+            if (feeEl) feeEl.textContent = '-₹' + serviceFee.toLocaleString('en-IN');
+            if (earnEl) earnEl.textContent = '₹' + earn.toLocaleString('en-IN');
+        }
+
+        function onModalPriceInput(val) {
+            const num = parseInt(val.replace(/[^\d]/g, ''), 10) || 0;
+            wizardState.homePrice = num;
+            adjustPriceInputWidth();
+            updateModalBreakdown(num);
+
+            // Update main page card display
+            const cardPrice = document.getElementById('disp-card-base-price');
+            if (cardPrice) cardPrice.textContent = num.toLocaleString('en-IN');
+
+            // Update weekend price calculation
+            const pct = wizardState.weekendAdjustment !== undefined ? wizardState.weekendAdjustment : 6;
+            wizardState.weekendPrice = Math.round(num * (1 + pct / 100));
+            const calcDisp = document.getElementById('disp-weekend-calc');
+            if (calcDisp) {
+                calcDisp.textContent = `₹${wizardState.weekendPrice.toLocaleString('en-IN')} for Fri and Sat`;
+            }
+
+            // Sync hidden inputs & review estimate
+            const fPrice = document.getElementById('f-homePrice'); if (fPrice) fPrice.value = num;
+            const fWPrice = document.getElementById('f-weekendPrice'); if (fWPrice) fWPrice.value = wizardState.weekendPrice;
+            updatePriceEstimate(num);
+            const dispW = document.getElementById('disp-final-weekend-price');
+            if (dispW) dispW.textContent = '₹' + wizardState.weekendPrice.toLocaleString('en-IN') + ' / night';
+            updateFooterBar();
+        }
+
+        function formatModalPriceOnBlur() {
+            const inp = document.getElementById('modal-base-price-input');
+            if (!inp) return;
+            const num = parseInt(inp.value.replace(/[^\d]/g, ''), 10) || 0;
+            inp.value = num.toLocaleString('en-IN');
+            adjustPriceInputWidth();
+        }
+
+        let isBreakdownCollapsed = false;
+        function togglePriceBreakdown() {
+            isBreakdownCollapsed = !isBreakdownCollapsed;
+            const box = document.getElementById('price-breakdown-box');
+            const txt = document.getElementById('txt-toggle-breakdown');
+            const icon = document.getElementById('icon-toggle-breakdown');
+
+            if (isBreakdownCollapsed) {
+                if (box) box.style.display = 'none';
+                if (txt) txt.textContent = 'Show more';
+                if (icon) icon.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
+            } else {
+                if (box) box.style.display = 'flex';
+                if (txt) txt.textContent = 'Show less';
+                if (icon) icon.innerHTML = '<polyline points="18 15 12 9 6 15"></polyline>';
+            }
+        }
+
+        function onBasePriceInputChange(val) {
+            onModalPriceInput(val);
+        }
+
+        function onWeekendPercentChange(val) {
+            const pct = parseInt(val, 10) || 0;
+            wizardState.weekendAdjustment = pct;
+            wizardState.weekendPrice = Math.round(wizardState.homePrice * (1 + pct / 100));
+
+            const pctDisp = document.getElementById('disp-weekend-percent');
+            if (pctDisp) {
+                pctDisp.textContent = pct > 0 ? `+${pct}%` : `${pct}%`;
+            }
+            const calcDisp = document.getElementById('disp-weekend-calc');
+            if (calcDisp) {
+                calcDisp.textContent = `₹${wizardState.weekendPrice.toLocaleString('en-IN')} for Fri and Sat`;
+            }
+            const dispW = document.getElementById('disp-final-weekend-price');
+            if (dispW) dispW.textContent = '₹' + wizardState.weekendPrice.toLocaleString('en-IN') + ' / night';
+            const fWAdj = document.getElementById('f-weekendAdjustment'); if (fWAdj) fWAdj.value = pct;
+            const fWPrice = document.getElementById('f-weekendPrice'); if (fWPrice) fWPrice.value = wizardState.weekendPrice;
+        }
+
+        function openPricingAdviceModal() {
+            const overlay = document.getElementById('pricing-advice-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closePricingAdviceModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('pricing-advice-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        function openSimilarListingsModal() {
+            const overlay = document.getElementById('similar-listings-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closeSimilarListingsModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('similar-listings-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        function openWeekendAdjustModal() {
+            const overlay = document.getElementById('weekend-adjust-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closeWeekendAdjustModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('weekend-adjust-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        function openDiscountsInfoModal() {
+            const overlay = document.getElementById('discounts-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closeDiscountsInfoModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('discounts-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        function toggleDiscount(type) {
+            if (!wizardState.discounts) {
+                wizardState.discounts = {
+                    newListingPromotion: true,
+                    lastMinuteDiscount: 7,
+                    weeklyDiscount: 10,
+                    monthlyDiscount: 20
+                };
+            }
+
+            if (type === 'newListingPromotion') {
+                wizardState.discounts.newListingPromotion = !wizardState.discounts.newListingPromotion;
+                const card = document.getElementById('card-discount-newlisting');
+                if (card) card.classList.toggle('selected', wizardState.discounts.newListingPromotion);
+            } else if (type === 'lastMinuteDiscount') {
+                const isActive = (wizardState.discounts.lastMinuteDiscount && wizardState.discounts.lastMinuteDiscount > 0);
+                wizardState.discounts.lastMinuteDiscount = isActive ? 0 : 7;
+                const card = document.getElementById('card-discount-lastminute');
+                if (card) card.classList.toggle('selected', !isActive);
+            } else if (type === 'weeklyDiscount') {
+                const isActive = (wizardState.discounts.weeklyDiscount && wizardState.discounts.weeklyDiscount > 0);
+                wizardState.discounts.weeklyDiscount = isActive ? 0 : 10;
+                const card = document.getElementById('card-discount-weekly');
+                if (card) card.classList.toggle('selected', !isActive);
+            } else if (type === 'monthlyDiscount') {
+                const isActive = (wizardState.discounts.monthlyDiscount && wizardState.discounts.monthlyDiscount > 0);
+                wizardState.discounts.monthlyDiscount = isActive ? 0 : 20;
+                const card = document.getElementById('card-discount-monthly');
+                if (card) card.classList.toggle('selected', !isActive);
+            }
+
+            syncDiscountInputs();
+        }
+
+        function syncDiscountInputs() {
+            if (!wizardState.discounts) return;
+            const fDiscounts = document.getElementById('f-discounts');
+            if (fDiscounts) fDiscounts.value = JSON.stringify(wizardState.discounts);
+            const fDiscNew = document.getElementById('f-discountNewListing');
+            if (fDiscNew) fDiscNew.value = wizardState.discounts.newListingPromotion ? 'true' : 'false';
+            const fDiscLast = document.getElementById('f-discountLastMinute');
+            if (fDiscLast) fDiscLast.value = wizardState.discounts.lastMinuteDiscount || 0;
+            const fDiscWeekly = document.getElementById('f-discountWeekly');
+            if (fDiscWeekly) fDiscWeekly.value = wizardState.discounts.weeklyDiscount || 0;
+            const fDiscMonthly = document.getElementById('f-discountMonthly');
+            if (fDiscMonthly) fDiscMonthly.value = wizardState.discounts.monthlyDiscount || 0;
+        }
+
+        function openSafetyInfoModal() {
+            const overlay = document.getElementById('safety-info-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closeSafetyInfoModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('safety-info-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        function openLocalLawsModal() {
+            const overlay = document.getElementById('local-laws-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closeLocalLawsModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('local-laws-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        function openPolicyModal() {
+            const overlay = document.getElementById('policy-modal-overlay');
+            if (overlay) overlay.classList.add('open');
+        }
+
+        function closePolicyModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('policy-modal-overlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+
+        function toggleSafetyItem(key) {
+            if (!wizardState.safetyDetails) {
+                wizardState.safetyDetails = {
+                    securityCameras: false,
+                    noiseMonitors: false,
+                    weapons: false
+                };
+            }
+            wizardState.safetyDetails[key] = !wizardState.safetyDetails[key];
+            const opt = document.getElementById('opt-safety-' + key);
+            if (opt) opt.classList.toggle('checked', !!wizardState.safetyDetails[key]);
+            syncSafetyInputs();
+        }
+
+        function syncSafetyInputs() {
+            if (!wizardState.safetyDetails) return;
+            const fSafety = document.getElementById('f-safetyDetails');
+            if (fSafety) fSafety.value = JSON.stringify(wizardState.safetyDetails);
+            const fCam = document.getElementById('f-securityCameras');
+            if (fCam) fCam.value = wizardState.safetyDetails.securityCameras ? 'true' : 'false';
+            const fNoise = document.getElementById('f-noiseMonitors');
+            if (fNoise) fNoise.value = wizardState.safetyDetails.noiseMonitors ? 'true' : 'false';
+            const fWeap = document.getElementById('f-weapons');
+            if (fWeap) fWeap.value = wizardState.safetyDetails.weapons ? 'true' : 'false';
+        }
+
+        function onResidentialFieldChange() {
+            const countryEl = document.getElementById('res-input-country');
+            const flatEl = document.getElementById('res-input-flat');
+            const streetEl = document.getElementById('res-input-street');
+            const landmarkEl = document.getElementById('res-input-landmark');
+            const districtEl = document.getElementById('res-input-district');
+            const cityEl = document.getElementById('res-input-city');
+            const stateEl = document.getElementById('res-input-state');
+            const pinEl = document.getElementById('res-input-pincode');
+
+            if (!wizardState.residentialAddress) {
+                wizardState.residentialAddress = {};
+            }
+
+            wizardState.residentialAddress.country = countryEl ? countryEl.value : 'India';
+            wizardState.residentialAddress.flat = flatEl ? flatEl.value.trim() : '';
+            wizardState.residentialAddress.street = streetEl ? streetEl.value.trim() : '';
+            wizardState.residentialAddress.landmark = landmarkEl ? landmarkEl.value.trim() : '';
+            wizardState.residentialAddress.district = districtEl ? districtEl.value.trim() : '';
+            wizardState.residentialAddress.city = cityEl ? cityEl.value.trim() : '';
+            wizardState.residentialAddress.state = stateEl ? stateEl.value.trim() : '';
+            wizardState.residentialAddress.pinCode = pinEl ? pinEl.value.trim() : '';
+
+            syncResidentialInputs();
+        }
+
+        function syncResidentialInputs() {
+            if (!wizardState.residentialAddress) return;
+            const res = wizardState.residentialAddress;
+            const fRes = document.getElementById('f-residentialAddress');
+            if (fRes) fRes.value = JSON.stringify(res);
+            const fC = document.getElementById('f-residentialCountry'); if (fC) fC.value = res.country || 'India';
+            const fF = document.getElementById('f-residentialFlat'); if (fF) fF.value = res.flat || '';
+            const fS = document.getElementById('f-residentialStreet'); if (fS) fS.value = res.street || '';
+            const fL = document.getElementById('f-residentialLandmark'); if (fL) fL.value = res.landmark || '';
+            const fD = document.getElementById('f-residentialDistrict'); if (fD) fD.value = res.district || '';
+            const fCi = document.getElementById('f-residentialCity'); if (fCi) fCi.value = res.city || '';
+            const fSt = document.getElementById('f-residentialState'); if (fSt) fSt.value = res.state || '';
+            const fP = document.getElementById('f-residentialPinCode'); if (fP) fP.value = res.pinCode || '';
+        }
+
         function updateFooterBar() {
-            // Progress bar
-            const pct = Math.round((currentStep / totalSteps) * 100);
-            document.getElementById('progress-bar-fill').style.width = pct + '%';
+            // 3-Segment Airbnb Progress Calculation
+            let seg1 = 0, seg2 = 0, seg3 = 0;
+            if (currentStep <= 7) {
+                seg1 = Math.round((currentStep / 7) * 100);
+                seg2 = 0;
+                seg3 = 0;
+            } else if (currentStep <= 13) {
+                seg1 = 100;
+                seg2 = Math.round(((currentStep - 7) / 6) * 100);
+                seg3 = 0;
+            } else if (currentStep === 14) {
+                // Step 3 Intro (Finish up and publish) matching screenshot
+                seg1 = 100;
+                seg2 = 100;
+                seg3 = 0;
+            } else if (currentStep === 15) {
+                // Step 15: Booking Settings matching screenshot
+                seg1 = 100;
+                seg2 = 100;
+                seg3 = 35;
+            } else if (currentStep === 16) {
+                // Step 16: Now, set your prices matching screenshot
+                seg1 = 100;
+                seg2 = 100;
+                seg3 = 68;
+            } else if (currentStep === 17) {
+                // Step 17: Add discounts matching screenshot
+                seg1 = 100;
+                seg2 = 100;
+                seg3 = 85;
+            } else if (currentStep === 18) {
+                // Step 18: Share safety details matching screenshot
+                seg1 = 100;
+                seg2 = 100;
+                seg3 = 93;
+            } else {
+                // Final Step 19: Provide a few final details (Matching screenshot: 100% full!)
+                seg1 = 100;
+                seg2 = 100;
+                seg3 = 100;
+            }
+
+            const s1 = document.getElementById('seg-fill-1'); if (s1) s1.style.width = seg1 + '%';
+            const s2 = document.getElementById('seg-fill-2'); if (s2) s2.style.width = seg2 + '%';
+            const s3 = document.getElementById('seg-fill-3'); if (s3) s3.style.width = seg3 + '%';
+            const pbf = document.getElementById('progress-bar-fill'); if (pbf) pbf.style.width = Math.round((currentStep / totalSteps) * 100) + '%';
 
             // Back button
             const backBtn = document.getElementById('btn-back');
-            backBtn.disabled = (currentStep === 1);
+            if (backBtn) backBtn.disabled = (currentStep === 1);
 
             // Next button text & styling
             const nextBtn = document.getElementById('btn-next');
-            if (currentStep === totalSteps) {
-                nextBtn.innerHTML = `
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    <span>Publish Accommodation</span>
-                `;
-                nextBtn.style.background = '#1D4333';
-                nextBtn.style.padding = '14px 40px';
+            if (!nextBtn) return;
 
-                // Populate Step 10 review card
-                document.getElementById('review-title-disp').textContent = wizardState.homeName || 'Untitled Sanctuary';
-                document.getElementById('review-loc-disp').textContent = (wizardState.city ? wizardState.city + ', ' : '') + (wizardState.state || 'India');
-                document.getElementById('review-thumb-img').src = wizardState.housePhoto;
+            if (currentStep === totalSteps) {
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('disabled-state');
+                nextBtn.innerHTML = `<span>Create listing</span>`;
+                nextBtn.style.padding = '14px 36px';
             } else {
-                nextBtn.innerHTML = `
-                    <span>Next</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                `;
-                nextBtn.style.background = '#143528';
+                nextBtn.innerHTML = `<span>Next</span>`;
                 nextBtn.style.padding = '14px 34px';
+
+                if (currentStep === 10) {
+                    const count = (wizardState.photos && wizardState.photos.length) || 0;
+                    if (count < 5) {
+                        nextBtn.disabled = true;
+                        nextBtn.classList.add('disabled-state');
+                    } else {
+                        nextBtn.disabled = false;
+                        nextBtn.classList.remove('disabled-state');
+                    }
+                } else if (currentStep === 11) {
+                    const name = (wizardState.homeName && wizardState.homeName.trim()) || '';
+                    if (!name) {
+                        nextBtn.disabled = true;
+                        nextBtn.classList.add('disabled-state');
+                    } else {
+                        nextBtn.disabled = false;
+                        nextBtn.classList.remove('disabled-state');
+                    }
+                } else if (currentStep === 13) {
+                    const desc = (wizardState.description && wizardState.description.trim()) || '';
+                    if (!desc) {
+                        nextBtn.disabled = true;
+                        nextBtn.classList.add('disabled-state');
+                    } else {
+                        nextBtn.disabled = false;
+                        nextBtn.classList.remove('disabled-state');
+                    }
+                } else if (currentStep === 16) {
+                    const price = wizardState.homePrice || 0;
+                    if (price <= 0) {
+                        nextBtn.disabled = true;
+                        nextBtn.classList.add('disabled-state');
+                    } else {
+                        nextBtn.disabled = false;
+                        nextBtn.classList.remove('disabled-state');
+                    }
+                } else {
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('disabled-state');
+                }
             }
         }
 
         // ── 11. Form Submission ──
         function submitListingForm() {
+            syncDiscountInputs();
+            syncSafetyInputs();
+            syncResidentialInputs();
             document.getElementById('f-propertyType').value = wizardState.propertyType;
             const fPlace = document.getElementById('f-placeType'); if (fPlace) fPlace.value = wizardState.placeType;
             const fLat = document.getElementById('f-latitude'); if (fLat) fLat.value = wizardState.latitude;
@@ -4496,10 +7611,25 @@
             document.getElementById('f-homeName').value = wizardState.homeName;
             document.getElementById('f-description').value = wizardState.description;
             document.getElementById('f-homePrice').value = wizardState.homePrice;
+            const fHigh = document.getElementById('f-highlights'); if (fHigh) fHigh.value = (wizardState.highlights || []).join(',');
+            const fPhotos = document.getElementById('f-photos'); if (fPhotos) fPhotos.value = JSON.stringify(wizardState.photos || []);
+            const fBook = document.getElementById('f-bookingSettings'); if (fBook) fBook.value = wizardState.bookingSettings || 'approve_first_5';
+            const fWPrice = document.getElementById('f-weekendPrice'); if (fWPrice) fWPrice.value = wizardState.weekendPrice || 2460;
+            const fWAdj = document.getElementById('f-weekendAdjustment'); if (fWAdj) fWAdj.value = wizardState.weekendAdjustment !== undefined ? wizardState.weekendAdjustment : 6;
 
             // Submit form
             document.getElementById('airbnb-listing-form').submit();
         }
+
+        // ── 12. Page Initializer ──
+        window.addEventListener('DOMContentLoaded', () => {
+            updateFooterBar();
+            updatePhotosStepTitle();
+            updateTitleStepHeading();
+            updateDescribeStep();
+            initCreateDescStep();
+            setupDropzoneEvents();
+        });
     </script>
 </body>
 </html>

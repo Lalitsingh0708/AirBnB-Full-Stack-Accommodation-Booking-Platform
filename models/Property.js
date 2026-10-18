@@ -93,6 +93,51 @@ const propertySchema = new mongoose.Schema(
             },
         ],
 
+        highlights: [
+            {
+                type: String,
+            },
+        ],
+
+        bookingSettings: {
+            type: String,
+            enum: ["approve_first_5", "instant_book"],
+            default: "approve_first_5",
+        },
+
+        weekendPrice: {
+            type: Number,
+            default: 2460,
+        },
+        weekendAdjustment: {
+            type: Number,
+            default: 6,
+        },
+
+        discounts: {
+            newListingPromotion: { type: Boolean, default: true },
+            lastMinuteDiscount: { type: Number, default: 7 },
+            weeklyDiscount: { type: Number, default: 10 },
+            monthlyDiscount: { type: Number, default: 20 },
+        },
+
+        safetyDetails: {
+            securityCameras: { type: Boolean, default: false },
+            noiseMonitors: { type: Boolean, default: false },
+            weapons: { type: Boolean, default: false },
+        },
+
+        residentialAddress: {
+            country: { type: String, default: "India" },
+            flat: { type: String, default: "" },
+            street: { type: String, default: "" },
+            landmark: { type: String, default: "" },
+            district: { type: String, default: "" },
+            city: { type: String, default: "" },
+            state: { type: String, default: "" },
+            pinCode: { type: String, default: "" },
+        },
+
         // Host reference
         host: {
             type: mongoose.Schema.Types.ObjectId,

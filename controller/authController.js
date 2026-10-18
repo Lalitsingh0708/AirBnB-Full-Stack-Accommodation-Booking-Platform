@@ -3,29 +3,33 @@ import { generateToken } from "../middleware/auth.js";
 
 // GET /auth/register
 export const getRegister = (req, res) => {
-    if (req.cookies?.staynest_token) return res.redirect("/");
+    const returnUrl = req.query.returnUrl || "";
+    if (req.cookies?.staynest_token) return res.redirect(returnUrl || "/");
     res.render("auth/auth", {
         title: "Create Account | StayNest",
         mode: "register",
         error: null,
         formData: {},
+        returnUrl: returnUrl,
     });
 };
 
 // GET /auth/login
 export const getLogin = (req, res) => {
-    if (req.cookies?.staynest_token) return res.redirect("/");
+    const returnUrl = req.query.returnUrl || "";
+    if (req.cookies?.staynest_token) return res.redirect(returnUrl || "/");
     res.render("auth/auth", {
         title: "Sign In | StayNest",
         mode: "login",
         error: null,
         formData: {},
+        returnUrl: returnUrl,
     });
 };
 
 // POST /auth/register
 export const postRegister = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, returnUrl } = req.body;
 
     if (!name || !email || !password) {
         return res.render("auth/auth", {
@@ -33,6 +37,7 @@ export const postRegister = async (req, res) => {
             mode: "register",
             error: "All fields are required.",
             formData: { name, email, role },
+            returnUrl: returnUrl || "",
         });
     }
 
@@ -42,6 +47,7 @@ export const postRegister = async (req, res) => {
             mode: "register",
             error: "Password must be at least 6 characters.",
             formData: { name, email, role },
+            returnUrl: returnUrl || "",
         });
     }
 
@@ -53,6 +59,7 @@ export const postRegister = async (req, res) => {
                 mode: "register",
                 error: "An account with this email already exists.",
                 formData: { name, email, role },
+                returnUrl: returnUrl || "",
             });
         }
 
@@ -68,6 +75,10 @@ export const postRegister = async (req, res) => {
 
         generateToken(user._id, res);
 
+        if (returnUrl && returnUrl.startsWith("/") && !returnUrl.startsWith("//")) {
+            return res.redirect(returnUrl);
+        }
+
         if (allowedRole === "host") return res.redirect("/host");
         return res.redirect("/");
     } catch (err) {
@@ -77,13 +88,14 @@ export const postRegister = async (req, res) => {
             mode: "register",
             error: "Something went wrong. Please try again.",
             formData: { name, email, role },
+            returnUrl: returnUrl || "",
         });
     }
 };
 
 // POST /auth/login
 export const postLogin = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, returnUrl } = req.body;
 
     if (!email || !password) {
         return res.render("auth/auth", {
@@ -91,6 +103,7 @@ export const postLogin = async (req, res) => {
             mode: "login",
             error: "Email and password are required.",
             formData: { email },
+            returnUrl: returnUrl || "",
         });
     }
 
@@ -103,10 +116,15 @@ export const postLogin = async (req, res) => {
                 mode: "login",
                 error: "Incorrect email or password.",
                 formData: { email },
+                returnUrl: returnUrl || "",
             });
         }
 
         generateToken(user._id, res);
+
+        if (returnUrl && returnUrl.startsWith("/") && !returnUrl.startsWith("//")) {
+            return res.redirect(returnUrl);
+        }
 
         if (user.role === "admin")  return res.redirect("/admin");
         if (user.role === "host")   return user.isApproved ? res.redirect("/host") : res.redirect("/host/pending");
@@ -118,6 +136,7 @@ export const postLogin = async (req, res) => {
             mode: "login",
             error: "Something went wrong. Please try again.",
             formData: { email },
+            returnUrl: returnUrl || "",
         });
     }
 };

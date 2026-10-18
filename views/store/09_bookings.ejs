@@ -19,6 +19,10 @@
             --text-dark: #121A16;
             --text-muted: #6B7770;
             --border-light: #E8E2D5;
+            --border-subtle: #EBEBEB;
+            --radius-xl: 20px;
+            --radius-lg: 14px;
+            --radius-sm: 8px;
         }
 
         *, *::before, *::after {
@@ -37,7 +41,7 @@
         }
 
         .hero-banner-wrap {
-            max-width: 1320px;
+            max-width: 1240px;
             margin: 24px auto 0 auto;
             padding: 0 20px;
             width: 100%;
@@ -46,7 +50,7 @@
         .hero-banner {
             background: radial-gradient(ellipse 110% 100% at 75% 20%, #1D4333 0%, #132E22 55%, #0B1C14 100%);
             border-radius: 28px;
-            padding: 44px 44px;
+            padding: 40px 44px;
             color: #FFFFFF;
             box-shadow: 0 20px 50px -15px rgba(11, 28, 20, 0.45);
         }
@@ -80,13 +84,218 @@
             line-height: 1.6;
         }
 
-        .bookings-container {
-            max-width: 1320px;
-            margin: 28px auto 48px auto;
+        /* Success & Alert Notices */
+        .notice-container {
+            max-width: 1240px;
+            margin: 20px auto 0 auto;
             padding: 0 20px;
             width: 100%;
         }
 
+        .alert-banner-success {
+            background: #EBF7EE;
+            border: 1px solid #BFE3C7;
+            color: #14532D;
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14.5px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(20, 83, 45, 0.08);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .alert-banner-cancelled {
+            background: #FFF7ED;
+            border: 1px solid #FFEDD5;
+            color: #C2410C;
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            font-size: 14.5px;
+            font-weight: 500;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bookings-container {
+            max-width: 1240px;
+            margin: 28px auto 60px auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Trips Grid */
+        .trips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 28px;
+        }
+
+        .trip-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(18, 43, 32, 0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .trip-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(18, 43, 32, 0.12);
+        }
+
+        .trip-card-thumb-wrap {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: #EFE9DC;
+            overflow: hidden;
+        }
+
+        .trip-card-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .trip-status-pill {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .trip-status-pill.confirmed {
+            background: #0B1C14;
+            color: #FFFFFF;
+            border: 1px solid var(--gold-accent);
+        }
+
+        .trip-status-pill.cancelled {
+            background: #EEEEEE;
+            color: #717171;
+        }
+
+        .trip-card-body {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .trip-property-city {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 4px;
+        }
+
+        .trip-property-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .trip-meta-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 13.5px;
+            color: #444444;
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .trip-spec-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trip-spec-icon {
+            color: var(--emerald-mid);
+            flex-shrink: 0;
+        }
+
+        .trip-pricing-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-top: auto;
+            margin-bottom: 18px;
+        }
+
+        .trip-price-label {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .trip-price-val {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--emerald-dark);
+        }
+
+        .trip-actions-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-trip-action {
+            flex: 1;
+            padding: 9px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-trip-primary {
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .btn-trip-primary:hover {
+            background: #0B1C14;
+        }
+
+        .btn-trip-secondary {
+            background: #FAF7F0;
+            border: 1px solid var(--border-light);
+            color: var(--text-dark);
+        }
+
+        .btn-trip-secondary:hover {
+            border-color: #222222;
+        }
+
+        /* Empty State */
         .empty-bookings-box {
             text-align: center;
             padding: 80px 24px;
@@ -143,6 +352,12 @@
             background: #0B1C14;
             transform: translateY(-1px);
         }
+
+        @media (max-width: 768px) {
+            .trips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -156,20 +371,108 @@
         </div>
     </section>
 
-    <main class="bookings-container">
-        <div class="empty-bookings-box">
-            <div class="empty-icon-circle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
+    <!-- Success & Alert Notices -->
+    <div class="notice-container">
+        <% if (typeof isBookedNotice !== 'undefined' && isBookedNotice) { %>
+            <div class="alert-banner-success">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 20px;">🎉</span>
+                    <span><strong>Reservation Confirmed!</strong> Your sanctuary is booked. Check-in details and your receipt are ready below.</span>
+                </div>
             </div>
-            <h2 class="empty-title">No upcoming trips booked</h2>
-            <p class="empty-desc">Time to dust off your bags and plan your next peaceful retreat or weekend getaway.</p>
-            <a href="/" class="btn-action-primary">Explore Stays</a>
-        </div>
+        <% } %>
+
+        <% if (typeof isCancelledNotice !== 'undefined' && isCancelledNotice) { %>
+            <div class="alert-banner-cancelled">
+                <span>Your reservation has been cancelled. As per the policy, eligible refunds are processed back to your payment method within 3-5 business days.</span>
+            </div>
+        <% } %>
+    </div>
+
+    <main class="bookings-container">
+        <% if (typeof bookings !== 'undefined' && bookings && bookings.length > 0) { %>
+            <div class="trips-grid">
+                <% bookings.forEach(booking => { 
+                    const checkInDate = new Date(booking.checkIn);
+                    const checkOutDate = new Date(booking.checkOut);
+                    const dateOpt = { day: 'numeric', month: 'short', year: 'numeric' };
+                    const formattedDates = `${checkInDate.toLocaleDateString('en-GB', dateOpt)} &ndash; ${checkOutDate.toLocaleDateString('en-GB', dateOpt)}`;
+                    const isCancelled = booking.status === 'cancelled';
+                %>
+                    <div class="trip-card">
+                        <div class="trip-card-thumb-wrap">
+                            <img 
+                                src="<%= booking.propertyPhoto || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=80' %>" 
+                                alt="<%= booking.propertyTitle %>" 
+                                class="trip-card-thumb"
+                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=80';"
+                            />
+                            <span class="trip-status-pill <%= isCancelled ? 'cancelled' : 'confirmed' %>">
+                                <%= isCancelled ? 'Cancelled' : 'Confirmed' %>
+                            </span>
+                        </div>
+
+                        <div class="trip-card-body">
+                            <p class="trip-property-city"><%= booking.propertyCity %></p>
+                            <h3 class="trip-property-title"><%= booking.propertyTitle %></h3>
+
+                            <div class="trip-meta-specs">
+                                <div class="trip-spec-row">
+                                    <svg class="trip-spec-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    <span><%- formattedDates %> &bull; <%= booking.totalNights %> <%= booking.totalNights === 1 ? 'night' : 'nights' %></span>
+                                </div>
+
+                                <div class="trip-spec-row">
+                                    <svg class="trip-spec-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                    </svg>
+                                    <span><%= booking.guests %> <%= booking.guests === 1 ? 'guest' : 'guests' %> &bull; Paid via <%= (booking.paymentMethod || 'UPI').toUpperCase() %></span>
+                                </div>
+                            </div>
+
+                            <div class="trip-pricing-row">
+                                <span class="trip-price-label">Total amount paid</span>
+                                <span class="trip-price-val">₹<%= Number(booking.totalAmount).toLocaleString('en-IN') %></span>
+                            </div>
+
+                            <div class="trip-actions-row">
+                                <a href="/homes/<%= booking.property %>" class="btn-trip-action btn-trip-primary">
+                                    View Stay
+                                </a>
+
+                                <% if (!isCancelled) { %>
+                                    <form action="/bookings/cancel/<%= booking._id %>" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking? Eligible refunds will be processed within 3-5 days.');" style="flex: 1; display: flex;">
+                                        <button type="submit" class="btn-trip-action btn-trip-secondary" style="width: 100%; border: none;">
+                                            Cancel
+                                        </button>
+                                    </form>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="empty-bookings-box">
+                <div class="empty-icon-circle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <h2 class="empty-title">No upcoming trips booked</h2>
+                <p class="empty-desc">Time to dust off your bags and plan your next peaceful retreat or weekend getaway.</p>
+                <a href="/" class="btn-action-primary">Explore Stays</a>
+            </div>
+        <% } %>
     </main>
 </body>
 </html>

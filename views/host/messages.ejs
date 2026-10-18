@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages &bull; StayNest Host</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-color: #FFFFFF;
+            --text-main: #222222;
+            --text-sub: #717171;
+            --border-color: #EBEBEB;
+            --emerald-mid: #143528;
+            --emerald-light: #EBF2ED;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Empty State ── */
+        .empty-messages-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+            text-align: center;
+        }
+
+        .empty-messages-card {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .empty-messages-img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            margin: 0 auto 24px auto;
+            display: block;
+            border-radius: 20px;
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.05));
+        }
+
+        .empty-messages-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .empty-messages-sub {
+            font-size: 15px;
+            color: var(--text-sub);
+            line-height: 1.55;
+            margin-bottom: 30px;
+        }
+
+        .empty-action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-action-primary {
+            background: #222222;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14.5px;
+            font-weight: 600;
+            transition: background 0.15s ease;
+        }
+
+        .btn-action-primary:hover {
+            background: #000000;
+        }
+
+        .btn-action-secondary {
+            background: #F7F7F7;
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14.5px;
+            font-weight: 600;
+            transition: background 0.15s ease;
+        }
+
+        .btn-action-secondary:hover {
+            background: #EBEBEB;
+        }
+
+        /* ── Active Inbox Layout (When real conversations exist) ── */
+        .inbox-wrapper {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            height: calc(100vh - 82px);
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .threads-sidebar {
+            width: 380px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            background: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .threads-header {
+            padding: 20px 20px 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .threads-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .thread-search-input {
+            width: 100%;
+            background: #F7F7F7;
+            border: 1px solid transparent;
+            border-radius: 9999px;
+            padding: 9px 16px;
+            font-size: 13.5px;
+            font-family: inherit;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .threads-scrollable {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .thread-item {
+            padding: 16px 20px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            border-bottom: 1px solid #F5F5F5;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .thread-item:hover {
+            background: #FAF7F0;
+        }
+
+        .thread-item.active {
+            background: #F0F5F2;
+            border-left: 3px solid var(--emerald-mid);
+        }
+
+        .guest-avatar-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .guest-avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thread-content-wrap {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .thread-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .thread-guest-name {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .thread-timestamp {
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        .thread-listing-title {
+            font-size: 12.5px;
+            color: var(--text-sub);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 3px;
+        }
+
+        .thread-snippet {
+            font-size: 13px;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ── Right Chat Panel ── */
+        .chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #FAF9F6;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-guest-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .chat-guest-meta {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .chat-messages-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .bubble-row {
+            display: flex;
+            gap: 12px;
+            max-width: 70%;
+        }
+
+        .bubble-row.guest-bubble-row {
+            align-self: flex-start;
+        }
+
+        .bubble-row.host-bubble-row {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .bubble-box {
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .guest-bubble-row .bubble-box {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-bottom-left-radius: 4px;
+        }
+
+        .host-bubble-row .bubble-box {
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bubble-time {
+            font-size: 11px;
+            color: #A0A0A0;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .chat-composer {
+            padding: 16px 24px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .composer-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .composer-input:focus {
+            border-color: #222222;
+        }
+
+        .btn-send-message {
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 9999px;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .btn-send-message:hover {
+            background: #0B1C14;
+        }
+    </style>
+</head>
+<body>
+    <%- include("../partials/01_header.ejs") %>
+
+    <% if (!conversations || conversations.length === 0) { %>
+        <!-- ══ 1. REAL EMPTY STATE (When no guest has messaged yet) ══ -->
+        <main class="empty-messages-container">
+            <div class="empty-messages-card">
+                <img 
+                    src="/images/messages_empty.jpg" 
+                    alt="No messages" 
+                    class="empty-messages-img" 
+                />
+                <h1 class="empty-messages-title">You don’t have any messages yet</h1>
+                <p class="empty-messages-sub">
+                    When guests book or contact you about your accommodations, your real-time conversations and reservation inquiries will appear here.
+                </p>
+                <div class="empty-action-buttons">
+                    <a href="/host/listings" class="btn-action-primary">View your listings</a>
+                    <a href="/host/calendar" class="btn-action-secondary">Check calendar</a>
+                </div>
+            </div>
+        </main>
+    <% } else { %>
+        <!-- ══ 2. REAL CONVERSATION INBOX (When real guest messages exist) ══ -->
+        <div class="inbox-wrapper">
+            <!-- Left Thread List -->
+            <aside class="threads-sidebar">
+                <div class="threads-header">
+                    <h1>Messages</h1>
+                    <input type="text" class="thread-search-input" placeholder="Search conversations..." id="search-threads-input" oninput="filterThreads(this.value)" />
+                </div>
+
+                <div class="threads-scrollable" id="threads-container">
+                    <% conversations.forEach(conv => { %>
+                        <% const isSelected = activeConversation && String(activeConversation._id) === String(conv._id); %>
+                        <a href="/host/messages?c=<%= conv._id %>" class="thread-item <%= isSelected ? 'active' : '' %>">
+                            <div class="guest-avatar-circle">
+                                <% if (conv.guest && conv.guest.profilePhoto) { %>
+                                    <img src="<%= conv.guest.profilePhoto %>" alt="<%= conv.guest.name %>" />
+                                <% } else { %>
+                                    <%= (conv.guest && conv.guest.name) ? conv.guest.name.substring(0, 2).toUpperCase() : 'G' %>
+                                <% } %>
+                            </div>
+                            <div class="thread-content-wrap">
+                                <div class="thread-top-row">
+                                    <span class="thread-guest-name"><%= (conv.guest && conv.guest.name) ? conv.guest.name : 'Guest' %></span>
+                                    <span class="thread-timestamp">
+                                        <%= conv.lastMessageAt ? new Date(conv.lastMessageAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : '' %>
+                                    </span>
+                                </div>
+                                <p class="thread-listing-title"><%= conv.propertyTitle || 'Listing' %></p>
+                                <p class="thread-snippet"><%= conv.lastMessage || 'Reservation inquiry' %></p>
+                            </div>
+                        </a>
+                    <% }) %>
+                </div>
+            </aside>
+
+            <!-- Right Active Chat Window -->
+            <% if (activeConversation) { %>
+                <section class="chat-panel">
+                    <div class="chat-header">
+                        <div>
+                            <h2 class="chat-guest-title"><%= (activeConversation.guest && activeConversation.guest.name) ? activeConversation.guest.name : 'Guest' %></h2>
+                            <p class="chat-guest-meta"><%= activeConversation.propertyTitle || 'StayNest Listing' %></p>
+                        </div>
+                        <a href="/host/listings" class="host-switch-travelling-link" style="border: 1px solid var(--border-color); font-size: 13px;">View listing</a>
+                    </div>
+
+                    <div class="chat-messages-scroll" id="chat-messages-box">
+                        <% if (activeConversation.messages && activeConversation.messages.length > 0) { %>
+                            <% activeConversation.messages.forEach(msg => { %>
+                                <div class="bubble-row <%= msg.senderRole === 'host' ? 'host-bubble-row' : 'guest-bubble-row' %>">
+                                    <div class="bubble-box">
+                                        <%= msg.text %>
+                                        <span class="bubble-time">
+                                            <%= new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+                                        </span>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <p style="text-align: center; color: var(--text-sub); margin: auto;">No messages in this conversation yet. Send a greeting to start chatting!</p>
+                        <% } %>
+                    </div>
+
+                    <!-- Real Reply Form -->
+                    <form class="chat-composer" action="/host/messages/reply" method="POST">
+                        <input type="hidden" name="conversationId" value="<%= activeConversation._id %>" />
+                        <input 
+                            type="text" 
+                            name="messageText" 
+                            class="composer-input" 
+                            placeholder="Write a message to <%= (activeConversation.guest && activeConversation.guest.name) ? activeConversation.guest.name : 'guest' %>..." 
+                            required 
+                            autocomplete="off" 
+                        />
+                        <button type="submit" class="btn-send-message">Send</button>
+                    </form>
+                </section>
+            <% } else { %>
+                <section class="chat-panel" style="align-items: center; justify-content: center;">
+                    <p style="color: var(--text-sub);">Select a conversation from the left to read messages.</p>
+                </section>
+            <% } %>
+        </div>
+
+        <script>
+            // Scroll chat to bottom
+            const chatBox = document.getElementById('chat-messages-box');
+            if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+            function filterThreads(query) {
+                const term = (query || '').toLowerCase().trim();
+                const items = document.querySelectorAll('.thread-item');
+                items.forEach(item => {
+                    const name = item.querySelector('.thread-guest-name')?.textContent?.toLowerCase() || '';
+                    const title = item.querySelector('.thread-listing-title')?.textContent?.toLowerCase() || '';
+                    item.style.display = (name.includes(term) || title.includes(term)) ? 'flex' : 'none';
+                });
+            }
+        </script>
+    <% } %>
+</body>
+</html>

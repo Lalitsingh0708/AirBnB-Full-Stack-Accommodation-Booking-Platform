@@ -643,6 +643,7 @@
                 <% } %>
 
                 <form action="/auth/login" method="POST" id="form-login" novalidate>
+                    <input type="hidden" name="returnUrl" value="<%= (typeof returnUrl !== 'undefined' && returnUrl) ? returnUrl : '' %>" />
                     <!-- Username / Email -->
                     <div class="input-group">
                         <div class="input-wrap">
@@ -726,6 +727,7 @@
                 <% } %>
 
                 <form action="/auth/register" method="POST" id="form-register" novalidate>
+                    <input type="hidden" name="returnUrl" value="<%= (typeof returnUrl !== 'undefined' && returnUrl) ? returnUrl : '' %>" />
                     <!-- Full Name -->
                     <div class="input-group">
                         <div class="input-wrap">

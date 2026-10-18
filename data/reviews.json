@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1792301796661",
+    "propertyId": "102",
+    "guestId": null,
+    "guestName": "Aarav Sharma",
+    "guestAvatar": "",
+    "guestTenure": "New to StayNest",
+    "rating": 5,
+    "comment": "all good",
+    "tag": "Hospitality",
+    "createdAt": "2026-10-18T05:36:36.661Z"
+  },
+  {
+    "id": "1792268012246",
+    "propertyId": "102",
+    "guestId": null,
+    "guestName": "Aarav Sharma",
+    "guestAvatar": "",
+    "guestTenure": "New to StayNest",
+    "rating": 5,
+    "comment": "Exceptional hospitality and peaceful mountain views! Highly recommended.",
+    "tag": "Hospitality",
+    "createdAt": "2026-10-17T20:13:32.246Z"
+  }
+]

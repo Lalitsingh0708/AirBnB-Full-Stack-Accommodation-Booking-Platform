@@ -4,21 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= home.houseName %> &bull; StayNest</title>
-    <meta name="description" content="Book <%= home.houseName %> located in <%= home.houseAddress %> on StayNest." />
+    <meta name="description" content="Book <%= home.houseName %> in <%= home.city || home.houseAddress %> on StayNest. Handpicked sanctuary with premium amenities." />
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+
+    <!-- Leaflet CSS for Map Integration -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
     <style>
         :root {
             --bg-beige: #FAF7F0;
             --surface-card: #FFFFFF;
-            --emerald-dark: #0f261b;
+            --surface-subtle: #F6F3EC;
+            --emerald-dark: #0B1C14;
             --emerald-mid: #143528;
+            --emerald-accent: #1D4333;
+            --emerald-light: #EBF2ED;
             --gold-accent: #D4AF6A;
-            --text-dark: #121A16;
-            --text-muted: #6B7770;
-            --border-light: #E8E2D5;
+            --gold-glow: #F3E6CD;
+            --gold-deep: #B88E3E;
+            --coral-brand: #E00B41;
+            --text-dark: #222222;
+            --text-muted: #717171;
+            --border-light: #DDDDDD;
+            --border-subtle: #EBEBEB;
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-sm: 8px;
+            --shadow-subtle: 0 4px 18px rgba(0, 0, 0, 0.06);
+            --shadow-float: 0 12px 32px rgba(18, 43, 32, 0.12);
         }
 
         *, *::before, *::after {
@@ -27,285 +44,1752 @@
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background-color: var(--bg-beige);
+            background-color: #FFFFFF;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .details-container {
-            max-width: 1140px;
-            margin: 28px auto 60px auto;
-            padding: 0 20px;
+        .details-wrapper {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 24px 24px 80px 24px;
         }
 
-        .back-nav-link {
+        /* ── Top Header Section (Title, Share, Save) ── */
+        .listing-header-row {
+            margin-bottom: 20px;
+        }
+
+        .listing-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #222222;
+            line-height: 1.25;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-actions-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-location-breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .header-action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .action-pill-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 13.5px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            transition: color 0.15s ease;
+            background: transparent;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: #222222;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: background 0.15s ease;
         }
 
-        .back-nav-link:hover {
-            color: var(--emerald-dark);
+        .action-pill-btn:hover {
+            background: #F7F7F7;
         }
 
-        /* Title Area */
-        .property-title-group {
+        /* ── 5-Photo Gallery Grid (Matching Screenshot 1) ── */
+        .gallery-collage-grid {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            height: 440px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
             margin-bottom: 24px;
         }
 
-        .property-title {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 36px;
-            font-weight: 600;
-            color: var(--emerald-dark);
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-            margin-bottom: 8px;
-        }
-
-        .property-location {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            font-size: 14.5px;
-        }
-
-        .loc-icon {
-            color: var(--emerald-mid);
-        }
-
-        /* Image Hero */
-        .property-image-hero-wrap {
+        .gallery-tile-main {
             width: 100%;
-            height: 480px;
-            border-radius: 24px;
+            height: 100%;
             overflow: hidden;
-            margin-bottom: 36px;
-            box-shadow: 0 16px 40px -10px rgba(18, 43, 32, 0.12);
-            background: #EFE9DC;
+            position: relative;
+            cursor: pointer;
         }
 
-        .property-image-hero {
+        .gallery-tile-main img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease, filter 0.25s ease;
         }
 
-        /* Split Grid Layout */
-        .content-split-grid {
+        .gallery-tile-main:hover img {
+            transform: scale(1.025);
+            filter: brightness(0.96);
+        }
+
+        .gallery-subgrid {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 52px;
-            align-items: start;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 8px;
+            height: 100%;
         }
 
-        /* Left Side */
-        .left-info-area {
+        .gallery-subtile {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+        }
+
+        .gallery-subtile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease, filter 0.25s ease;
+        }
+
+        .gallery-subtile:hover img {
+            transform: scale(1.03);
+            filter: brightness(0.96);
+        }
+
+        /* Floating "Show all photos" Button (Screenshot 1) */
+        .btn-show-all-photos {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #FFFFFF;
+            border: 1px solid #222222;
+            border-radius: 8px;
+            color: #222222;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transition: all 0.15s ease;
+        }
+
+        .btn-show-all-photos:hover {
+            background: #F7F7F7;
+            transform: scale(1.02);
+        }
+
+        /* ── Sticky Sub-Navigation Bar (Matching Screenshot 2) ── */
+        .sticky-subnav {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            padding: 14px 0;
+            margin-bottom: 28px;
+        }
+
+        .sticky-subnav-link {
+            text-decoration: none;
+            color: #222222;
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            padding: 4px 0;
+            transition: color 0.15s ease;
+        }
+
+        .sticky-subnav-link:hover {
+            color: var(--emerald-mid);
+        }
+
+        .sticky-subnav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #222222;
+            border-radius: 2px;
+        }
+
+        /* ── Main Two-Column Split Layout ── */
+        .details-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 370px;
+            gap: 64px;
+            align-items: start;
+            position: relative;
+        }
+
+        /* ── Left Column ── */
+        .left-content-area {
             display: flex;
             flex-direction: column;
             gap: 32px;
         }
 
-        .host-summary-card {
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border-light);
+        .section-divider {
+            height: 1px;
+            background-color: var(--border-subtle);
+            width: 100%;
         }
 
-        .host-title {
-            font-size: 21px;
-            font-weight: 700;
-            color: var(--text-dark);
+        /* Property Headline */
+        .property-headline-group h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #222222;
             margin-bottom: 6px;
         }
 
-        .host-meta {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .section-heading {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 12px;
-        }
-
-        .property-desc-text {
-            color: #374151;
+        .property-specs-line {
             font-size: 15px;
-            line-height: 1.7;
+            color: #222222;
             font-weight: 400;
         }
 
-        /* Amenities Grid */
-        .amenities-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            list-style: none;
-            margin-top: 12px;
+        /* ── Guest Favourite Laurel Banner (Screenshots 1 & 2) ── */
+        .guest-favourite-card {
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #FFFFFF;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
         }
 
-        .amenity-item {
+        .laurel-left-badge {
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+
+        .laurel-icon-wrap {
+            color: var(--gold-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .laurel-title-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #222222;
+            letter-spacing: -0.2px;
+        }
+
+        .laurel-middle-desc {
+            flex: 1;
+            padding: 0 28px;
+            text-align: center;
             font-size: 14px;
-            color: var(--text-dark);
+            line-height: 1.4;
+            color: #222222;
             font-weight: 500;
         }
 
-        .amenity-icon-box {
-            width: 36px;
-            height: 36px;
+        .laurel-right-score {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-left: 1px solid var(--border-subtle);
+            padding-left: 24px;
+            text-align: right;
+        }
+
+        .score-number {
+            font-size: 22px;
+            font-weight: 700;
+            color: #222222;
+            line-height: 1;
+        }
+
+        .score-stars-row {
+            display: flex;
+            gap: 2px;
+            margin-top: 4px;
+            color: #222222;
+        }
+
+        .reviews-count-badge {
+            font-size: 14px;
+            font-weight: 700;
+            color: #222222;
+            text-decoration: underline;
+            line-height: 1.2;
+        }
+
+        /* ── Host Profile Row & Direct Chat Button (Screenshot 2) ── */
+        .host-summary-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 8px 0;
+        }
+
+        .host-avatar-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .host-avatar-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--emerald-mid) 0%, var(--emerald-dark) 100%);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(20, 53, 40, 0.15);
+        }
+
+        .host-avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .host-name-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 2px;
+        }
+
+        .host-tenure-text {
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        .host-direct-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-message-host-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 9999px;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            font-size: 13.5px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(20, 53, 40, 0.2);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-message-host-pill:hover {
+            background: #0B1C14;
+            transform: translateY(-1px);
+        }
+
+        .btn-phone-call-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: 9999px;
+            background: #FAF7F0;
+            border: 1px solid var(--gold-accent);
+            color: var(--emerald-dark);
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-phone-call-pill:hover {
+            background: var(--emerald-mid);
+            color: #FAF7F0;
+        }
+
+        /* ── Highlights List (Screenshot 2) ── */
+        .highlights-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .highlight-item {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .highlight-icon-box {
+            width: 24px;
+            height: 24px;
+            color: #222222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .highlight-title {
+            font-size: 15.5px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 3px;
+        }
+
+        .highlight-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Translation Info Notice */
+        .translation-banner {
+            background: #F7F7F7;
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            font-size: 14.5px;
+            color: #222222;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .btn-show-original {
+            background: none;
+            border: none;
+            font-weight: 600;
+            text-decoration: underline;
+            color: #222222;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        /* Description Area */
+        .description-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 14px;
+        }
+
+        .description-paragraph {
+            font-size: 15px;
+            line-height: 1.65;
+            color: #222222;
+            white-space: pre-line;
+        }
+
+        /* ── Where You'll Sleep (Bedrooms) ── */
+        .bedroom-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .bedroom-card {
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            background: #FFFFFF;
+        }
+
+        .bedroom-card-icon {
+            margin-bottom: 16px;
+            color: #222222;
+        }
+
+        .bedroom-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .bedroom-beds {
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        /* ── Amenities Grid (Full Host Input Data) ── */
+        .amenities-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 16px;
+        }
+
+        .amenities-display-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            list-style: none;
+        }
+
+        .amenity-row-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 15px;
+            color: #222222;
+            font-weight: 400;
+        }
+
+        .amenity-svg-icon {
+            width: 24px;
+            height: 24px;
+            color: #222222;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── Two-Month Interactive Calendar (Screenshot 3) ── */
+        .calendar-section-header {
+            margin-bottom: 18px;
+        }
+
+        .calendar-section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 4px;
+        }
+
+        .calendar-section-dates {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .calendar-double-month-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+            background: #FFFFFF;
+            padding: 8px 0;
+        }
+
+        .month-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .month-header-row th {
+            padding: 8px 0;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .month-title-bar {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 16px;
+        }
+
+        .calendar-day-cell {
+            height: 40px;
+            width: 40px;
+            margin: 0 auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #222222;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .calendar-day-cell:hover:not(.empty-day):not(.disabled-day) {
+            border: 1px solid #222222;
+        }
+
+        .calendar-day-cell.selected-day {
+            background: #222222;
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        .calendar-day-cell.range-day {
+            background: #F2F2F2;
+            border-radius: 0;
+        }
+
+        .calendar-day-cell.disabled-day {
+            color: #DDDDDD;
+            text-decoration: line-through;
+            cursor: not-allowed;
+        }
+
+        .calendar-footer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 18px;
+            padding-top: 12px;
+        }
+
+        .btn-clear-dates {
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: underline;
+            color: #222222;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* ── Grand Reviews Section with 3D Laurel (Screenshot 3) ── */
+        .reviews-grand-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 36px 0;
+            text-align: center;
+        }
+
+        .laurel-wreath-grand-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .laurel-branch-svg {
+            width: 68px;
+            height: 80px;
+            color: var(--gold-deep);
+        }
+
+        .laurel-grand-number {
+            font-size: 72px;
+            font-weight: 800;
+            color: #222222;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .grand-review-subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222222;
+            margin-top: 12px;
+        }
+
+        .grand-review-note {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ── Guests Mention & Reviews Section (Matching Screenshot) ── */
+        .guests-mention-header-wrap {
+            margin-top: 24px;
+            margin-bottom: 20px;
+        }
+
+        .guests-mention-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #222222;
+            margin-bottom: 14px;
+        }
+
+        .guests-mention-pills-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+
+        .guests-mention-pills-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .mention-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            border-radius: 9999px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #222222;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .mention-pill:hover {
+            border-color: #222222;
+            background: #F7F7F7;
+        }
+
+        .mention-pill.active {
+            background: #222222;
+            color: #FFFFFF;
+            border-color: #222222;
+        }
+
+        .mention-pill-icon {
+            font-size: 15px;
+        }
+
+        .mention-pill-count {
+            color: #717171;
+            font-weight: 400;
+            margin-left: 2px;
+        }
+
+        .mention-pill.active .mention-pill-count {
+            color: #CCCCCC;
+        }
+
+        .mention-scroll-next-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #DDDDDD;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            color: #222222;
+            transition: all 0.15s ease;
+        }
+
+        .mention-scroll-next-btn:hover {
+            border-color: #222222;
+            transform: scale(1.05);
+        }
+
+        /* ── Reviews Grid (2 Columns Exact Match to Screenshot) ── */
+        .reviews-feed-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 36px 48px;
+            margin-top: 24px;
+            margin-bottom: 32px;
+        }
+
+        .review-card-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .reviewer-info-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .reviewer-avatar-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #E8F5E9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #2E7D32;
+        }
+
+        .reviewer-avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviewer-avatar-wrap.avatar-tint-blue {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        .reviewer-avatar-wrap.avatar-tint-amber {
+            background: #FFF8E1;
+            color: #F57F17;
+        }
+
+        .reviewer-avatar-wrap.avatar-tint-purple {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+
+        .reviewer-text-col {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .reviewer-name-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .reviewer-name {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        .reviewer-verified-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #0E7044;
+            background: #EBF7EE;
+            border: 1px solid #C3E9CD;
+            padding: 2px 7px;
+            border-radius: 9999px;
+            letter-spacing: 0.02em;
+        }
+
+        .reviewer-tenure {
+            font-size: 13.5px;
+            color: #717171;
+            font-weight: 400;
+        }
+
+        .review-rating-time-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            color: #222222;
+        }
+
+        .review-stars-visual {
+            color: #111111;
+            letter-spacing: 2px;
+            font-size: 13px;
+        }
+
+        .review-time-sep {
+            color: #717171;
+        }
+
+        .review-time-text {
+            font-size: 13.5px;
+            color: #717171;
+        }
+
+        .review-comment-body {
+            font-size: 14.5px;
+            line-height: 1.6;
+            color: #222222;
+        }
+
+        .review-show-more-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: underline;
+            color: #222222;
+            cursor: pointer;
+            margin-top: 2px;
+            display: inline-block;
+            font-family: inherit;
+        }
+
+        /* ── Add Review Section / Form ── */
+        .add-review-container {
+            background: #FAF7F0;
+            border: 1px solid #E8E2D5;
+            border-radius: 20px;
+            padding: 24px 28px;
+            margin-top: 18px;
+            margin-bottom: 28px;
+        }
+
+        .add-review-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #143528;
+            margin-bottom: 4px;
+        }
+
+        .add-review-subtitle {
+            font-size: 14px;
+            color: #6B7770;
+            margin-bottom: 18px;
+        }
+
+        .rating-stars-picker {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .star-pick-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 26px;
+            color: #D4AF6A;
+            transition: transform 0.1s ease;
+            padding: 0;
+        }
+
+        .star-pick-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .review-tag-select-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .review-tag-radio {
+            display: none;
+        }
+
+        .review-tag-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            border: 1px solid #D4AF6A;
+            background: #FFFFFF;
+            font-size: 13px;
+            font-weight: 500;
+            color: #143528;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .review-tag-radio:checked + .review-tag-label {
+            background: #143528;
+            color: #FFFFFF;
+            border-color: #143528;
+            font-weight: 600;
+        }
+
+        .review-guest-name-input {
+            width: 100%;
+            max-width: 320px;
+            padding: 10px 14px;
             border-radius: 10px;
+            border: 1px solid #D8D2C4;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 12px;
+            outline: none;
+            display: block;
+        }
+
+        .review-textarea {
+            width: 100%;
+            min-height: 95px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #D8D2C4;
+            font-family: inherit;
+            font-size: 14.5px;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            margin-bottom: 14px;
+            background: #FFFFFF;
+            transition: border-color 0.15s ease;
+        }
+
+        /* ── Logged-in User and Verified Badges ── */
+        .review-logged-in-user-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E8E2D5;
+        }
+
+        .logged-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #143528;
+            color: #FAF7F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .logged-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logged-user-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .logged-user-name {
+            font-size: 14px;
+            color: #222222;
+        }
+
+        .badge-user-verified-booking {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #0E7044;
+            background: #EBF7EE;
+            border: 1px solid #C3E9CD;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            width: fit-content;
+        }
+
+        .badge-user-member {
+            font-size: 12px;
+            color: #6B7770;
+            font-weight: 500;
+        }
+
+        /* ── Login Required Card (Only logged in verified users can review) ── */
+        .review-auth-card {
+            background: #FAF7F0;
+            border: 1px dashed #D4AF6A;
+            border-radius: 20px;
+            padding: 24px 28px;
+            margin-top: 18px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .review-auth-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             background: #EBF2ED;
-            color: var(--emerald-mid);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
         }
 
-        /* Sticky Booking Widget */
-        .booking-widget-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 16px 45px -10px rgba(18, 43, 32, 0.12);
-            position: sticky;
-            top: 110px;
+        .review-auth-content {
+            flex: 1;
+            min-width: 240px;
         }
 
-        .widget-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 22px;
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 18px;
+        .review-auth-heading {
+            font-size: 16.5px;
+            font-weight: 700;
+            color: #143528;
+            margin-bottom: 4px;
         }
 
-        .widget-price {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--emerald-dark);
-            letter-spacing: -0.5px;
+        .review-auth-sub {
+            font-size: 13.5px;
+            color: #6B7770;
+            line-height: 1.5;
         }
 
-        .widget-night {
+        .btn-review-login-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #143528;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 11px 24px;
+            border-radius: 9999px;
             font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .btn-review-login-action:hover {
+            background: #0B1C14;
+            transform: translateY(-1px);
+        }
+            border: 1px solid #D8D2C4;
+            font-family: inherit;
+            font-size: 14.5px;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            margin-bottom: 14px;
+            background: #FFFFFF;
+            transition: border-color 0.15s ease;
+        }
+
+        .review-textarea:focus {
+            border-color: #143528;
+            box-shadow: 0 0 0 3px rgba(20, 53, 40, 0.1);
+        }
+
+        .btn-submit-review {
+            background: #143528;
+            color: #FFFFFF;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 9999px;
+            font-size: 14.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .btn-submit-review:hover {
+            background: #0B1C14;
+            transform: translateY(-1px);
+        }
+
+        .review-success-toast {
+            background: #EBF7EE;
+            border: 1px solid #A6E3B8;
+            color: #1B5E20;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .reviews-feed-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        /* ── Interactive Map Section ("Where you'll be") ── */
+        .map-section-wrap {
+            margin-top: 8px;
+        }
+
+        .map-section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 8px;
+        }
+
+        .map-location-sub {
+            font-size: 15px;
+            color: #222222;
+            margin-bottom: 20px;
+        }
+
+        #leaflet-property-map {
+            width: 100%;
+            height: 420px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-subtle);
+            z-index: 10;
+        }
+
+        .leaflet-control-attribution {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        .map-neighborhood-details {
+            margin-top: 20px;
+            font-size: 14.5px;
+            line-height: 1.6;
+            color: #484848;
+        }
+
+        /* ── Right Column: Sticky Reservation Box (Screenshots 1, 2, 3) ── */
+        .sticky-booking-column {
+            position: sticky;
+            top: 90px;
+            z-index: 20;
+        }
+
+        .reservation-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        .fee-included-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 14px;
+        }
+
+        .price-header-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .price-strikethrough {
+            font-size: 18px;
             color: var(--text-muted);
+            text-decoration: line-through;
+            font-weight: 500;
+        }
+
+        .price-current {
+            font-size: 24px;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        .price-unit {
+            font-size: 15px;
+            color: #222222;
             font-weight: 400;
         }
 
-        .widget-rating-tag {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--emerald-dark);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .star-icon {
-            color: var(--gold-accent);
-        }
-
-        .booking-dates-box {
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
+        /* Combined Date & Guests Box */
+        .booking-picker-box {
+            border: 1px solid #B0B0B0;
+            border-radius: var(--radius-sm);
             overflow: hidden;
             margin-bottom: 18px;
         }
 
-        .date-input-row {
-            display: flex;
+        .picker-dates-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid #B0B0B0;
         }
 
-        .date-field {
-            flex: 1;
-            padding: 10px 12px;
-            background: #FAF7F0;
+        .picker-cell {
+            padding: 8px 12px;
+            background: #FFFFFF;
         }
 
-        .date-field:first-child {
-            border-right: 1px solid var(--border-light);
+        .picker-cell:first-child {
+            border-right: 1px solid #B0B0B0;
         }
 
-        .date-label {
-            display: block;
+        .picker-cell-label {
             font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
+            font-weight: 800;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 4px;
+            color: #222222;
+            display: block;
+            margin-bottom: 2px;
         }
 
-        .date-input {
+        .picker-date-input {
             width: 100%;
             border: none;
             background: transparent;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 13.5px;
             font-weight: 500;
-            color: var(--text-dark);
+            color: #222222;
             outline: none;
+            cursor: pointer;
         }
 
-        .btn-reserve-action {
+        .picker-guests-row {
+            padding: 8px 12px;
+            background: #FFFFFF;
+            position: relative;
+        }
+
+        .picker-guest-select {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: #222222;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Reserve Button (Vibrant Pill matching Screenshot 1 & 2) */
+        .btn-reserve-vibrant {
             width: 100%;
             height: 48px;
-            background: var(--emerald-mid);
+            background: radial-gradient(circle, rgba(235,87,87,1) 0%, rgba(224,11,65,1) 100%);
             color: #FFFFFF;
             border: none;
-            border-radius: 9999px;
-            font-size: 15px;
-            font-weight: 600;
+            border-radius: 8px;
             font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            box-shadow: 0 4px 14px rgba(224, 11, 65, 0.35);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 18px rgba(20, 53, 40, 0.28);
-            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-            margin-bottom: 14px;
+            text-decoration: none;
+            margin-bottom: 12px;
         }
 
-        .btn-reserve-action:hover {
-            background: #0B1C14;
+        .btn-reserve-vibrant:hover {
+            background: #D90038;
             transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(20, 53, 40, 0.38);
+            box-shadow: 0 6px 18px rgba(224, 11, 65, 0.45);
         }
 
-        .widget-sub-note {
+        .wont-charge-note {
             text-align: center;
+            font-size: 13.5px;
             color: var(--text-muted);
-            font-size: 12.5px;
+            margin-bottom: 20px;
         }
 
-        @media (max-width: 860px) {
-            .content-split-grid {
+        /* Calculation Breakdown */
+        .price-breakdown-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 18px;
+        }
+
+        .breakdown-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14.5px;
+            color: #222222;
+        }
+
+        .breakdown-row.total-row {
+            font-size: 16px;
+            font-weight: 700;
+            padding-top: 4px;
+        }
+
+        /* Host Chat & Direct Action in Booking Box */
+        .widget-chat-box {
+            background: #FAF7F0;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .widget-chat-prompt {
+            font-size: 13px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .btn-widget-chat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 9px 14px;
+            background: #FFFFFF;
+            border: 1.5px solid var(--emerald-mid);
+            border-radius: 8px;
+            color: var(--emerald-mid);
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-widget-chat:hover {
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+        }
+
+        .report-listing-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: underline;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 18px;
+            cursor: pointer;
+        }
+
+        /* ── Fullscreen Photo Gallery Modal ── */
+        .photo-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(8px);
+        }
+
+        .photo-modal-overlay.open {
+            display: block;
+        }
+
+        .photo-modal-header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 36px;
+            color: #FFFFFF;
+            z-index: 20;
+        }
+
+        .btn-close-modal {
+            background: none;
+            border: none;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-photo-list {
+            max-width: 900px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding: 0 20px 60px 20px;
+        }
+
+        .modal-photo-item img {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #111111;
+        }
+
+        .modal-photo-caption {
+            color: #CCCCCC;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* ── Live Guest Chat Drawer / Modal ── */
+        .chat-drawer-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 1100;
+            justify-content: flex-end;
+        }
+
+        .chat-drawer-overlay.open {
+            display: flex;
+        }
+
+        .chat-drawer-content {
+            width: 440px;
+            max-width: 100vw;
+            height: 100vh;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -6px 0 24px rgba(0,0,0,0.2);
+            animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .chat-drawer-header {
+            padding: 18px 24px;
+            background: var(--emerald-dark);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold-accent);
+            color: var(--emerald-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .chat-messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            background: #FAF7F0;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .chat-bubble {
+            max-width: 82%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.45;
+            word-wrap: break-word;
+        }
+
+        .chat-bubble.guest {
+            align-self: flex-end;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-bubble.host {
+            align-self: flex-start;
+            background: #FFFFFF;
+            color: var(--text-dark);
+            border: 1px solid var(--border-subtle);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .chat-bubble-time {
+            font-size: 11px;
+            margin-top: 4px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .chat-quick-starters {
+            padding: 8px 16px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .quick-tag-btn {
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            border: 1px solid var(--border-light);
+            background: #FAF7F0;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .quick-tag-btn:hover {
+            border-color: var(--emerald-mid);
+            background: #FFFFFF;
+        }
+
+        .chat-composer-box {
+            padding: 16px 20px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input-field {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input-field:focus {
+            border-color: var(--emerald-mid);
+        }
+
+        .btn-send-chat {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .btn-send-chat:hover {
+            transform: scale(1.05);
+        }
+
+        /* ── Responsive Styling ── */
+        @media (max-width: 990px) {
+            .details-content-grid {
                 grid-template-columns: 1fr;
+                gap: 40px;
             }
 
-            .property-image-hero-wrap {
-                height: 320px;
-            }
-
-            .booking-widget-card {
+            .sticky-booking-column {
                 position: static;
+                order: 2;
+            }
+
+            .calendar-double-month-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-collage-grid {
+                grid-template-columns: 1fr;
+                height: 300px;
+            }
+
+            .gallery-subgrid {
+                display: none;
+            }
+
+            .guest-favourite-card {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .laurel-middle-desc {
+                padding: 0;
+            }
+
+            .laurel-right-score {
+                border-left: none;
+                padding-left: 0;
+                justify-content: center;
+            }
+
+            .amenities-display-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -314,142 +1798,1200 @@
     <!-- 1. Global Navigation Header -->
     <%- include("../partials/01_header.ejs") %>
 
-    <main class="details-container">
-        <!-- Back Navigation -->
-        <a href="/" class="back-nav-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            <span>Back to All Stays</span>
-        </a>
+    <%
+        // Normalize photos array (Must guarantee at least 5 photos for 5-photo grid)
+        const curatedFallbacks = [
+            'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80',
+            'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80',
+            'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&auto=format&fit=crop&q=80',
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80',
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop&q=80',
+            'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&auto=format&fit=crop&q=80'
+        ];
 
-        <!-- Title & Location -->
-        <div class="property-title-group">
-            <h1 class="property-title"><%= home.houseName %></h1>
-            <p class="property-location">
-                <svg class="loc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-                <span><%= home.houseAddress %></span>
-            </p>
-        </div>
+        let displayPhotos = [];
+        if (Array.isArray(home.photos) && home.photos.length > 0) {
+            displayPhotos = [...home.photos];
+        } else if (home.housePhoto) {
+            displayPhotos = [home.housePhoto];
+        }
+        
+        // Fill up to at least 5 items with high-res curated interiors so grid never breaks
+        while (displayPhotos.length < 5) {
+            displayPhotos.push(curatedFallbacks[displayPhotos.length % curatedFallbacks.length]);
+        }
 
-        <!-- Main Banner Image -->
-        <div class="property-image-hero-wrap">
-            <img 
-                src="<%= home.housePhoto %>" 
-                alt="<%= home.houseName %>" 
-                class="property-image-hero"
-                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&auto=format&fit=crop&q=80';"
-            />
-        </div>
+        const basePrice = Number(home.housePrice) || 2620;
+        const discountPrice = Math.round(basePrice * 0.85); // 15% discount demonstration matching Screenshot 1
+        const formattedPrice = Number(home.housePrice).toLocaleString('en-IN');
+        const formattedStrikethrough = Math.round(Number(home.housePrice) * 1.2).toLocaleString('en-IN');
 
-        <!-- Split Grid (Left Details, Right Reserve Box) -->
-        <div class="content-split-grid">
+        const propertyCity = home.city || (home.houseAddress ? home.houseAddress.split(',').pop().trim() : 'India');
+        const hostDisplayName = (typeof hostUser !== 'undefined' && hostUser && hostUser.name) ? hostUser.name : (home.hostName || 'StayNest Host');
+    %>
+
+    <main class="details-wrapper">
+        
+        <!-- Header: Title, Share, Save (Matching Screenshot 1) -->
+        <header class="listing-header-row" id="photos">
+            <h1 class="listing-title"><%= home.houseName %></h1>
             
-            <!-- Left Info Area -->
-            <div class="left-info-area">
-                <div class="host-summary-card">
-                    <h2 class="host-title">Architectural Stay on StayNest</h2>
-                    <p class="host-meta">4 guests &bull; 2 bedrooms &bull; 2 king beds &bull; 2 private baths</p>
+            <div class="header-actions-bar">
+                <div class="header-location-breadcrumbs">
+                    <span><%= home.placeType || 'Entire home' %> in <%= home.houseAddress %></span>
                 </div>
 
-                <div>
-                    <h3 class="section-heading">About this Sanctuary</h3>
-                    <p class="property-desc-text">
-                        Experience bespoke luxury and restorative calm at <%= home.houseName %>. Situated in <%= home.houseAddress %>, this private sanctuary pairs natural light and curated architectural finishes with warm hospitality. Designed for mindful travelers, weekend retreats, and extended remote work.
-                    </p>
-                </div>
+                <div class="header-action-buttons">
+                    <!-- Share Button with Toast Copy -->
+                    <button type="button" class="action-pill-btn" id="btn-share-trigger" title="Share this stay">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                            <polyline points="16 6 12 2 8 6"></polyline>
+                            <line x1="12" y1="2" x2="12" y2="15"></line>
+                        </svg>
+                        <span>Share</span>
+                    </button>
 
-                <!-- Amenities with Clean SVGs -->
-                <div>
-                    <h3 class="section-heading">What this place offers</h3>
-                    <ul class="amenities-grid">
-                        <li class="amenity-item">
-                            <div class="amenity-icon-box">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
-                            </div>
-                            <span>High-speed Fiber WiFi</span>
-                        </li>
-                        <li class="amenity-item">
-                            <div class="amenity-icon-box">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
-                            </div>
-                            <span>Climate Control / AC</span>
-                        </li>
-                        <li class="amenity-item">
-                            <div class="amenity-icon-box">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                            </div>
-                            <span>Free On-Premise Parking</span>
-                        </li>
-                        <li class="amenity-item">
-                            <div class="amenity-icon-box">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><path d="M6 12V4h12v8"></path></svg>
-                            </div>
-                            <span>Fully Equipped Kitchen</span>
-                        </li>
-                        <li class="amenity-item">
-                            <div class="amenity-icon-box">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
-                            </div>
-                            <span>4K Smart Entertainment</span>
-                        </li>
-                        <li class="amenity-item">
-                            <div class="amenity-icon-box">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                            </div>
-                            <span>Continuous Hot Water</span>
-                        </li>
-                    </ul>
+                    <!-- Save / Favourite Button -->
+                    <div style="display: inline-block;">
+                        <%- include("../partials/02_favourite", { home: home }) %>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 5-Photo Collage Grid (Matching Screenshot 1) -->
+        <section class="gallery-collage-grid" aria-label="Property Photos Collage">
+            <!-- 1. Large Main Hero Photo (Left) -->
+            <div class="gallery-tile-main" onclick="openPhotoModal(0)">
+                <img 
+                    src="<%= displayPhotos[0] %>" 
+                    alt="<%= home.houseName %> Main Photo" 
+                    onerror="this.onerror=null; this.src='<%= curatedFallbacks[0] %>';"
+                />
+            </div>
+
+            <!-- 2. Four Smaller Photos in 2x2 Grid (Right) -->
+            <div class="gallery-subgrid">
+                <div class="gallery-subtile" onclick="openPhotoModal(1)">
+                    <img 
+                        src="<%= displayPhotos[1] %>" 
+                        alt="<%= home.houseName %> Photo 2" 
+                        onerror="this.onerror=null; this.src='<%= curatedFallbacks[1] %>';"
+                    />
+                </div>
+                <div class="gallery-subtile" onclick="openPhotoModal(2)">
+                    <img 
+                        src="<%= displayPhotos[2] %>" 
+                        alt="<%= home.houseName %> Photo 3" 
+                        onerror="this.onerror=null; this.src='<%= curatedFallbacks[2] %>';"
+                    />
+                </div>
+                <div class="gallery-subtile" onclick="openPhotoModal(3)">
+                    <img 
+                        src="<%= displayPhotos[3] %>" 
+                        alt="<%= home.houseName %> Photo 4" 
+                        onerror="this.onerror=null; this.src='<%= curatedFallbacks[3] %>';"
+                    />
+                </div>
+                <div class="gallery-subtile" onclick="openPhotoModal(4)">
+                    <img 
+                        src="<%= displayPhotos[4] %>" 
+                        alt="<%= home.houseName %> Photo 5" 
+                        onerror="this.onerror=null; this.src='<%= curatedFallbacks[4] %>';"
+                    />
                 </div>
             </div>
 
-            <!-- Right Side Reserve Widget -->
-            <aside class="booking-widget-card" aria-label="Reservation summary">
-                <div class="widget-header-row">
-                    <div>
-                        <span class="widget-price">₹<%= Number(home.housePrice).toLocaleString('en-IN') %></span>
-                        <span class="widget-night">/ night</span>
+            <!-- Floating "Show all photos" Button (Screenshot 1) -->
+            <button type="button" class="btn-show-all-photos" onclick="openPhotoModal(0)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Show all <%= displayPhotos.length %> photos</span>
+            </button>
+        </section>
+
+        <!-- Sticky Sub-Navigation Bar (Matching Screenshot 2) -->
+        <nav class="sticky-subnav" aria-label="Property section navigation">
+            <a href="#photos" class="sticky-subnav-link">Photos</a>
+            <a href="#amenities" class="sticky-subnav-link">Amenities</a>
+            <a href="#reviews" class="sticky-subnav-link">Reviews</a>
+            <a href="#location" class="sticky-subnav-link">Location</a>
+        </nav>
+
+        <!-- Split Grid: Left Details & Right Reserve Widget -->
+        <div class="details-content-grid">
+            
+            <!-- LEFT COLUMN -->
+            <div class="left-content-area">
+                
+                <!-- Headline & Capacity Specs (Screenshot 1) -->
+                <div class="property-headline-group">
+                    <h2><%= home.placeType || 'Entire home' %> in <%= propertyCity %>, India</h2>
+                    <p class="property-specs-line">
+                        <%= home.maxGuests || 6 %> guests &bull; 
+                        <%= home.bedrooms || 2 %> bedrooms &bull; 
+                        <%= home.beds || 2 %> beds &bull; 
+                        <%= home.bathrooms || 2 %> bathrooms
+                    </p>
+                </div>
+
+                <!-- "Guest favourite" Laurel Banner (Screenshots 1 & 2) -->
+                <div class="guest-favourite-card" role="region" aria-label="Guest favourite badge">
+                    <div class="laurel-left-badge">
+                        <div class="laurel-icon-wrap">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="laurel-title-text">Guest<br/>favourite</span>
+                        </div>
                     </div>
-                    <span class="widget-rating-tag">
-                        <svg class="star-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+
+                    <div class="laurel-middle-desc">
+                        One of the most loved homes on StayNest, according to guests
+                    </div>
+
+                    <div class="laurel-right-score">
+                        <div>
+                            <div class="score-number">5.0</div>
+                            <div class="score-stars-row">
+                                <% for (let i = 0; i < 5; i++) { %>
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                    </svg>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="reviews-count-badge">19<br/>Reviews</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- Host Profile Row & Direct Message/Call (Screenshot 2) -->
+                <div class="host-summary-row">
+                    <div class="host-avatar-info">
+                        <div class="host-avatar-circle">
+                            <% if (typeof hostUser !== 'undefined' && hostUser && hostUser.profilePhoto) { %>
+                                <img src="<%= hostUser.profilePhoto %>" alt="<%= hostDisplayName %>" />
+                            <% } else { %>
+                                <span><%= hostDisplayName.substring(0, 2).toUpperCase() %></span>
+                            <% } %>
+                        </div>
+                        <div>
+                            <h3 class="host-name-text">Hosted by <%= hostDisplayName %></h3>
+                            <p class="host-tenure-text">Verified Host &bull; 2 months hosting</p>
+                        </div>
+                    </div>
+
+                    <!-- Direct Chat Trigger Button (Guest can chat with Host) -->
+                    <div class="host-direct-actions">
+                        <button type="button" class="btn-message-host-pill" onclick="openChatDrawer()" title="Chat with host">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>Message Host</span>
+                        </button>
+
+                        <% if (typeof hostUser !== 'undefined' && hostUser && hostUser.phone) { %>
+                            <a href="tel:<%= hostUser.phone.replace(/\s+/g, '') %>" class="btn-phone-call-pill" title="Call host">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                <span>Call</span>
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- Highlights List (Matching Screenshot 2) -->
+                <div class="highlights-list">
+                    <div class="highlight-item">
+                        <div class="highlight-icon-box">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="highlight-title">Top 5% of homes</h4>
+                            <p class="highlight-subtitle">This home is highly ranked based on ratings, reviews, and reliability.</p>
+                        </div>
+                    </div>
+
+                    <div class="highlight-item">
+                        <div class="highlight-icon-box">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="highlight-title">Self check-in</h4>
+                            <p class="highlight-subtitle">Check yourself in effortlessly with the lockbox or smart keypad.</p>
+                        </div>
+                    </div>
+
+                    <div class="highlight-item">
+                        <div class="highlight-icon-box">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 2a10 10 0 1 0 10 10"></path>
+                                <path d="M12 6a6 6 0 0 0-6 6"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="highlight-title">Designed for staying cool</h4>
+                            <p class="highlight-subtitle">Beat the heat with modern A/C, ceiling fans, and airy ventilation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Translation Notice Banner (Screenshot 2) -->
+                <div class="translation-banner">
+                    <span>Some info has been automatically translated.</span>
+                    <button type="button" class="btn-show-original">Show original</button>
+                </div>
+
+                <!-- Description ("About this space") -->
+                <div class="description-section">
+                    <h3>About this sanctuary</h3>
+                    <p class="description-paragraph"><%= home.description || "Welcome to our private and spacious home, perfect for families, couples, business travelers, and small groups. Enjoy comfortable bedrooms, a cozy living room, fully equipped kitchen, sparkling clean bathrooms, high-speed Wi-Fi, air conditioning, and TV. Located in a peaceful neighborhood with easy access to shops, restaurants, public transport, and popular attractions." %></p>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- Where You'll Sleep Section -->
+                <div>
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px;">Where you'll sleep</h3>
+                    <div class="bedroom-cards-grid">
+                        <div class="bedroom-card">
+                            <div class="bedroom-card-icon">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 4v16"></path><path d="M2 8h18a2 2 0 0 1 2 2v10"></path><path d="M2 17h20"></path><path d="M6 8v9"></path>
+                                </svg>
+                            </div>
+                            <h4 class="bedroom-title">Bedroom 1</h4>
+                            <p class="bedroom-beds">1 king bed &bull; Attached bath</p>
+                        </div>
+
+                        <div class="bedroom-card">
+                            <div class="bedroom-card-icon">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 4v16"></path><path d="M2 8h18a2 2 0 0 1 2 2v10"></path><path d="M2 17h20"></path><path d="M6 8v9"></path>
+                                </svg>
+                            </div>
+                            <h4 class="bedroom-title">Bedroom 2</h4>
+                            <p class="bedroom-beds">1 queen bed &bull; Window view</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- Amenities Display (All Host Entered Data) -->
+                <div class="amenities-section" id="amenities">
+                    <h3>What this place offers</h3>
+                    
+                    <%
+                        // Full Amenities Icon Mapping
+                        const amenityLabels = {
+                            'wifi': { label: 'High-speed Fiber WiFi', icon: '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line>' },
+                            'ac': { label: 'Air conditioning & Climate Control', icon: '<path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>' },
+                            'parking': { label: 'Free on-premise parking', icon: '<rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle>' },
+                            'pool': { label: 'Private outdoor swimming pool', icon: '<path d="M2 20a6 6 0 0 0 10 0 6 6 0 0 0 10 0"></path><path d="M2 14a6 6 0 0 0 10 0 6 6 0 0 0 10 0"></path>' },
+                            'kitchen': { label: 'Fully equipped chef kitchen', icon: '<path d="M2 12h20"></path><path d="M20 12v8H4v-8"></path><path d="M6 12V4h12v8"></path>' },
+                            'tv': { label: '55" 4K Smart TV with OTT streaming', icon: '<rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline>' },
+                            'hotWater': { label: '24/7 Continuous hot water', icon: '<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>' },
+                            'workspace': { label: 'Dedicated ergonomic workspace', icon: '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>' },
+                            'view': { label: 'Scenic courtyard & mountain views', icon: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>' },
+                            'washer': { label: 'In-unit washing machine', icon: '<rect x="4" y="2" width="16" height="20" rx="2"></rect><circle cx="12" cy="13" r="5"></circle>' },
+                            'patio': { label: 'Private patio / balcony', icon: '<path d="M3 21h18M5 21V7l7-4 7 4v14"></path>' },
+                            'smoke_alarm': { label: 'Smoke alarm installed', icon: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14h-2v-2h2zm0-4h-2V7h2z"></path>' },
+                            'first_aid': { label: 'First aid emergency kit', icon: '<rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line>' }
+                        };
+
+                        const selectedAmenities = Array.isArray(home.amenities) && home.amenities.length > 0 
+                            ? home.amenities 
+                            : ['wifi', 'ac', 'parking', 'kitchen', 'tv', 'hotWater'];
+                    %>
+
+                    <ul class="amenities-display-grid">
+                        <% selectedAmenities.forEach(amenityKey => { 
+                            const item = amenityLabels[amenityKey] || { label: amenityKey.charAt(0).toUpperCase() + amenityKey.slice(1).replace(/_/g, ' '), icon: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>' };
+                        %>
+                            <li class="amenity-row-item">
+                                <div class="amenity-svg-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <%- item.icon %>
+                                    </svg>
+                                </div>
+                                <span><%= item.label %></span>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- Two-Month Interactive Calendar (Matching Screenshot 3) -->
+                <div class="calendar-section-wrap">
+                    <div class="calendar-section-header">
+                        <h3 class="calendar-section-title">1 night in <%= propertyCity %></h3>
+                        <p class="calendar-section-dates" id="calendar-date-display">6 Oct 2026 – 7 Oct 2026</p>
+                    </div>
+
+                    <div class="calendar-double-month-container">
+                        <!-- Month 1: October 2026 -->
+                        <div>
+                            <div class="month-title-bar">October 2026</div>
+                            <table class="month-table">
+                                <thead>
+                                    <tr class="month-header-row">
+                                        <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td><td></td><td></td><td></td><td><div class="calendar-day-cell">1</div></td><td><div class="calendar-day-cell">2</div></td><td><div class="calendar-day-cell">3</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="calendar-day-cell">4</div></td><td><div class="calendar-day-cell">5</div></td>
+                                        <td><div class="calendar-day-cell selected-day" id="cal-day-6">6</div></td>
+                                        <td><div class="calendar-day-cell selected-day" id="cal-day-7">7</div></td>
+                                        <td><div class="calendar-day-cell">8</div></td><td><div class="calendar-day-cell">9</div></td><td><div class="calendar-day-cell">10</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="calendar-day-cell">11</div></td><td><div class="calendar-day-cell">12</div></td><td><div class="calendar-day-cell">13</div></td><td><div class="calendar-day-cell">14</div></td><td><div class="calendar-day-cell">15</div></td><td><div class="calendar-day-cell">16</div></td><td><div class="calendar-day-cell">17</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="calendar-day-cell disabled-day">18</div></td><td><div class="calendar-day-cell disabled-day">19</div></td><td><div class="calendar-day-cell disabled-day">20</div></td><td><div class="calendar-day-cell disabled-day">21</div></td><td><div class="calendar-day-cell disabled-day">22</div></td><td><div class="calendar-day-cell">23</div></td><td><div class="calendar-day-cell">24</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="calendar-day-cell">25</div></td><td><div class="calendar-day-cell">26</div></td><td><div class="calendar-day-cell">27</div></td><td><div class="calendar-day-cell">28</div></td><td><div class="calendar-day-cell">29</div></td><td><div class="calendar-day-cell">30</div></td><td><div class="calendar-day-cell">31</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Month 2: November 2026 -->
+                        <div>
+                            <div class="month-title-bar">November 2026</div>
+                            <table class="month-table">
+                                <thead>
+                                    <tr class="month-header-row">
+                                        <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><div class="calendar-day-cell">1</div></td><td><div class="calendar-day-cell">2</div></td><td><div class="calendar-day-cell">3</div></td><td><div class="calendar-day-cell">4</div></td><td><div class="calendar-day-cell">5</div></td><td><div class="calendar-day-cell">6</div></td><td><div class="calendar-day-cell">7</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="calendar-day-cell">8</div></td><td><div class="calendar-day-cell">9</div></td><td><div class="calendar-day-cell">10</div></td><td><div class="calendar-day-cell">11</div></td><td><div class="calendar-day-cell">12</div></td><td><div class="calendar-day-cell">13</div></td><td><div class="calendar-day-cell">14</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="calendar-day-cell">15</div></td><td><div class="calendar-day-cell">16</div></td><td><div class="calendar-day-cell">17</div></td><td><div class="calendar-day-cell">18</div></td><td><div class="calendar-day-cell">19</div></td><td><div class="calendar-day-cell">20</div></td><td><div class="calendar-day-cell">21</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="calendar-day-cell">22</div></td><td><div class="calendar-day-cell">23</div></td><td><div class="calendar-day-cell">24</div></td><td><div class="calendar-day-cell">25</div></td><td><div class="calendar-day-cell">26</div></td><td><div class="calendar-day-cell">27</div></td><td><div class="calendar-day-cell">28</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="calendar-day-cell">29</div></td><td><div class="calendar-day-cell">30</div></td><td></td><td></td><td></td><td></td><td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="calendar-footer-bar">
+                        <button type="button" class="btn-clear-dates" onclick="clearSelectedDates()">Clear dates</button>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- Grand Reviews Badge with 3D Laurel (Screenshot 3) -->
+                <div class="reviews-grand-badge" id="reviews">
+                    <div class="laurel-wreath-grand-row">
+                        <!-- Left Golden Laurel Branch -->
+                        <svg class="laurel-branch-svg" viewBox="0 0 50 100" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M45 95 C 20 80, 5 50, 20 15 C 22 10, 25 5, 30 2" stroke-linecap="round"></path>
+                            <path d="M22 25 Q 10 20 18 35 Q 26 25 22 25 Z" fill="var(--gold-deep)"></path>
+                            <path d="M15 45 Q 3 40 10 55 Q 20 45 15 45 Z" fill="var(--gold-deep)"></path>
+                            <path d="M18 65 Q 8 62 14 75 Q 24 67 18 65 Z" fill="var(--gold-deep)"></path>
+                            <path d="M27 82 Q 18 80 24 92 Q 33 85 27 82 Z" fill="var(--gold-deep)"></path>
                         </svg>
-                        <span>4.95 &bull; 28 reviews</span>
-                    </span>
+
+                        <div class="laurel-grand-number">
+                            <%= (typeof averageRating !== 'undefined' ? averageRating : 5.0).toFixed(1) %>
+                        </div>
+
+                        <!-- Right Golden Laurel Branch -->
+                        <svg class="laurel-branch-svg" viewBox="0 0 50 100" fill="none" stroke="currentColor" stroke-width="2.5" style="transform: scaleX(-1);">
+                            <path d="M45 95 C 20 80, 5 50, 20 15 C 22 10, 25 5, 30 2" stroke-linecap="round"></path>
+                            <path d="M22 25 Q 10 20 18 35 Q 26 25 22 25 Z" fill="var(--gold-deep)"></path>
+                            <path d="M15 45 Q 3 40 10 55 Q 20 45 15 45 Z" fill="var(--gold-deep)"></path>
+                            <path d="M18 65 Q 8 62 14 75 Q 24 67 18 65 Z" fill="var(--gold-deep)"></path>
+                            <path d="M27 82 Q 18 80 24 92 Q 33 85 27 82 Z" fill="var(--gold-deep)"></path>
+                        </svg>
+                    </div>
+
+                    <h3 class="grand-review-subtitle">Guest favourite</h3>
+                    <p class="grand-review-note">
+                        One of the most loved homes on StayNest based on <%= (typeof totalReviews !== 'undefined' ? totalReviews : (reviews ? reviews.length : 6)) %> verified guest reviews and reliability
+                    </p>
                 </div>
 
-                <!-- Booking Dates -->
-                <div class="booking-dates-box">
-                    <div class="date-input-row">
-                        <div class="date-field">
-                            <label class="date-label" for="check-in-date">Check-in</label>
-                            <input type="date" id="check-in-date" class="date-input" value="2026-10-15" />
-                        </div>
-                        <div class="date-field">
-                            <label class="date-label" for="check-out-date">Checkout</label>
-                            <input type="date" id="check-out-date" class="date-input" value="2026-10-18" />
-                        </div>
+                <!-- ═══════════════════════════════════════════════════════════
+                     GUESTS MENTION TAGS & REVIEWS FEED (Exact Match to Screenshot)
+                ═══════════════════════════════════════════════════════════ -->
+                <div class="guests-mention-header-wrap">
+                    <h3 class="guests-mention-title">Guests mention</h3>
+                    
+                    <!-- Horizontal Mentions Tags Carousel matching screenshot -->
+                    <div class="guests-mention-pills-row" id="mention-pills-row">
+                        <button type="button" class="mention-pill active" onclick="filterReviewsByTag('all', this)">
+                            <span>✨ All</span>
+                            <span class="mention-pill-count"><%= (typeof reviews !== 'undefined' ? reviews.length : 6) %></span>
+                        </button>
+                        <button type="button" class="mention-pill" onclick="filterReviewsByTag('River', this)">
+                            <span class="mention-pill-icon">🛶</span>
+                            <span>River</span>
+                            <span class="mention-pill-count">7</span>
+                        </button>
+                        <button type="button" class="mention-pill" onclick="filterReviewsByTag('Hospitality', this)">
+                            <span class="mention-pill-icon">🎁</span>
+                            <span>Hospitality</span>
+                            <span class="mention-pill-count">17</span>
+                        </button>
+                        <button type="button" class="mention-pill" onclick="filterReviewsByTag('Comfort', this)">
+                            <span class="mention-pill-icon">🛋️</span>
+                            <span>Comfort</span>
+                            <span class="mention-pill-count">7</span>
+                        </button>
+                        <button type="button" class="mention-pill" onclick="filterReviewsByTag('Cleanliness', this)">
+                            <span class="mention-pill-icon">🧼</span>
+                            <span>Cleanliness</span>
+                            <span class="mention-pill-count">5</span>
+                        </button>
+                        <button type="button" class="mention-pill" onclick="filterReviewsByTag('Location', this)">
+                            <span class="mention-pill-icon">📍</span>
+                            <span>Location</span>
+                            <span class="mention-pill-count">5</span>
+                        </button>
+                        <button type="button" class="mention-pill" onclick="filterReviewsByTag('Breakfast', this)">
+                            <span class="mention-pill-icon">🍳</span>
+                            <span>Breakfast</span>
+                            <span class="mention-pill-count">3</span>
+                        </button>
+                        <button type="button" class="mention-pill" onclick="filterReviewsByTag('View', this)">
+                            <span class="mention-pill-icon">🖼️</span>
+                            <span>View</span>
+                            <span class="mention-pill-count">2</span>
+                        </button>
+                        <button type="button" class="mention-pill" onclick="filterReviewsByTag('Walkability', this)">
+                            <span class="mention-pill-icon">👟</span>
+                            <span>Walkability</span>
+                            <span class="mention-pill-count">3</span>
+                        </button>
+                        <button type="button" class="mention-scroll-next-btn" onclick="scrollMentionsCarousel(1)" aria-label="Next tags">
+                            &gt;
+                        </button>
                     </div>
                 </div>
 
-                <!-- Reserve Button -->
-                <a href="/bookings" class="btn-reserve-action" style="text-decoration: none;">
-                    Reserve this Stay
-                </a>
+                <!-- ── 2-Column Reviews Feed Grid (Exact Match to Screenshot) ── -->
+                <div class="reviews-feed-grid" id="reviews-feed-grid">
+                    <% 
+                        const reviewList = (typeof reviews !== 'undefined' && reviews.length > 0) ? reviews : [];
+                        const tintClasses = ['avatar-tint-green', 'avatar-tint-blue', 'avatar-tint-amber', 'avatar-tint-purple'];
+                    %>
+                    <% reviewList.forEach((rev, idx) => { %>
+                        <div class="review-card-item" data-tag="<%= rev.tag || 'Hospitality' %>">
+                            <!-- Reviewer Info Row -->
+                            <div class="reviewer-info-row">
+                                <div class="reviewer-avatar-wrap <%= tintClasses[idx % tintClasses.length] %>">
+                                    <% if (rev.guestAvatar && rev.guestAvatar.trim()) { %>
+                                        <img src="<%= rev.guestAvatar %>" alt="<%= rev.guestName %>" />
+                                    <% } else { %>
+                                        <span><%= (rev.guestName || 'G').charAt(0).toUpperCase() %></span>
+                                    <% } %>
+                                </div>
+                                <div class="reviewer-text-col">
+                                    <div class="reviewer-name-row">
+                                        <span class="reviewer-name"><%= rev.guestName %></span>
+                                        <% if (rev.isVerifiedStay !== false) { %>
+                                            <span class="reviewer-verified-pill" title="Verified guest on StayNest">
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                                </svg>
+                                                <span>Verified Stay</span>
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                    <span class="reviewer-tenure"><%= rev.guestTenure || 'Guest on StayNest' %></span>
+                                </div>
+                            </div>
 
-                <!-- Favourite Button -->
-                <div style="display: flex; justify-content: center; margin-bottom: 12px;">
-                    <%- include("../partials/02_favourite", { home: home }) %>
+                            <!-- Rating Stars & Timestamp -->
+                            <div class="review-rating-time-row">
+                                <span class="review-stars-visual">
+                                    <% for(let s=0; s < (Number(rev.rating) || 5); s++) { %>★<% } %>
+                                </span>
+                                <span class="review-time-sep">&bull;</span>
+                                <span class="review-time-text">
+                                    <% 
+                                        const rDate = rev.createdAt ? new Date(rev.createdAt) : new Date();
+                                        const diffWeeks = Math.max(1, Math.round((Date.now() - rDate.getTime()) / (7 * 24 * 60 * 60 * 1000)));
+                                        const timeStr = diffWeeks <= 4 ? `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago` : rDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                                    %>
+                                    <%= timeStr %>
+                                </span>
+                            </div>
+
+                            <!-- Review Comment Body -->
+                            <p class="review-comment-body" id="review-text-<%= idx %>">
+                                <%= rev.comment %>
+                            </p>
+                            <% if (rev.comment && rev.comment.length > 180) { %>
+                                <button type="button" class="review-show-more-btn" onclick="toggleReviewExpand(this, '<%= idx %>')">Show more</button>
+                            <% } %>
+                        </div>
+                    <% }); %>
                 </div>
 
-                <p class="widget-sub-note">You will not be billed until booking confirmation</p>
+                <!-- ═══════════════════════════════════════════════════════════
+                     GUEST REVIEW SUBMISSION CARD (Authentication & Verification Enforced)
+                ═══════════════════════════════════════════════════════════ -->
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <!-- Logged-in User: Verified Review Submission Form -->
+                    <div class="add-review-container">
+                        <% if (typeof reviewSuccess !== 'undefined' && reviewSuccess) { %>
+                            <div class="review-success-toast">
+                                <span>🎉</span>
+                                <span>Thank you, <%= user.name %>! Your verified review has been published and added below.</span>
+                            </div>
+                        <% } %>
+
+                        <h4 class="add-review-title">Share your experience at this property</h4>
+                        <p class="add-review-subtitle">Your review is published with your verified StayNest identity to help future travelers.</p>
+
+                        <!-- Logged-in User Identity Bar -->
+                        <div class="review-logged-in-user-bar">
+                            <div class="logged-user-avatar">
+                                <% if (user.profilePhoto) { %>
+                                    <img src="<%= user.profilePhoto %>" alt="<%= user.name %>" />
+                                <% } else { %>
+                                    <span><%= user.name.charAt(0).toUpperCase() %></span>
+                                <% } %>
+                            </div>
+                            <div class="logged-user-meta">
+                                <span class="logged-user-name">Reviewing as <strong><%= user.name %></strong> (<%= user.email %>)</span>
+                                <% if (typeof userHasBooked !== 'undefined' && userHasBooked) { %>
+                                    <span class="badge-user-verified-booking">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        Verified Guest &bull; Booking Confirmed
+                                    </span>
+                                <% } else { %>
+                                    <span class="badge-user-member">StayNest Member &bull; Authenticated Account</span>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <form action="/homes/<%= home.id %>/review" method="POST" id="guest-review-form">
+                            <!-- 1. Star Rating Selector -->
+                            <div class="rating-stars-picker">
+                                <span style="font-size: 14px; font-weight: 600; color: #222; margin-right: 8px;">Rating:</span>
+                                <input type="hidden" name="rating" id="review-rating-val" value="5" />
+                                <div id="star-picker-icons" style="display: flex; gap: 4px;">
+                                    <button type="button" class="star-pick-btn" onclick="setReviewRating(1)">★</button>
+                                    <button type="button" class="star-pick-btn" onclick="setReviewRating(2)">★</button>
+                                    <button type="button" class="star-pick-btn" onclick="setReviewRating(3)">★</button>
+                                    <button type="button" class="star-pick-btn" onclick="setReviewRating(4)">★</button>
+                                    <button type="button" class="star-pick-btn" onclick="setReviewRating(5)">★</button>
+                                </div>
+                                <span id="rating-text-feedback" style="font-size: 13.5px; font-weight: 600; color: #143528; margin-left: 10px;">5.0 &bull; Exceptional</span>
+                            </div>
+
+                            <!-- 2. Mention Topic / Tag Selector matching screenshot -->
+                            <div class="review-tag-select-row">
+                                <span style="font-size: 13.5px; font-weight: 600; color: #222; margin-right: 4px;">Highlight:</span>
+                                
+                                <input type="radio" id="tag-hosp" name="tag" value="Hospitality" class="review-tag-radio" checked />
+                                <label for="tag-hosp" class="review-tag-label">🎁 Hospitality</label>
+
+                                <input type="radio" id="tag-comfort" name="tag" value="Comfort" class="review-tag-radio" />
+                                <label for="tag-comfort" class="review-tag-label">🛋️ Comfort</label>
+
+                                <input type="radio" id="tag-clean" name="tag" value="Cleanliness" class="review-tag-radio" />
+                                <label for="tag-clean" class="review-tag-label">🧼 Cleanliness</label>
+
+                                <input type="radio" id="tag-loc" name="tag" value="Location" class="review-tag-radio" />
+                                <label for="tag-loc" class="review-tag-label">📍 Location</label>
+
+                                <input type="radio" id="tag-view" name="tag" value="View" class="review-tag-radio" />
+                                <label for="tag-view" class="review-tag-label">🖼️ View</label>
+
+                                <input type="radio" id="tag-bfast" name="tag" value="Breakfast" class="review-tag-radio" />
+                                <label for="tag-bfast" class="review-tag-label">🍳 Breakfast</label>
+
+                                <input type="radio" id="tag-river" name="tag" value="River" class="review-tag-radio" />
+                                <label for="tag-river" class="review-tag-label">🛶 River</label>
+                            </div>
+
+                            <!-- 3. Review Comment Area -->
+                            <textarea 
+                                name="comment" 
+                                class="review-textarea" 
+                                placeholder="Write your honest review about the comfort, views, cleanliness, and hospitality..." 
+                                required></textarea>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn-submit-review">
+                                Submit Verified Review
+                            </button>
+                        </form>
+                    </div>
+                <% } else { %>
+                    <!-- Not Logged In: Strict Authentication Prompt (Airbnb Standard) -->
+                    <div class="review-auth-card">
+                        <div class="review-auth-icon-wrap">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#143528" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <path d="M9 12l2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <div class="review-auth-content">
+                            <h4 class="review-auth-heading">Verified Reviews Only</h4>
+                            <p class="review-auth-sub">To maintain the highest level of authenticity and trust, only registered StayNest guests can post reviews. Log in to share your stay experience.</p>
+                        </div>
+                        <a href="/auth/login?returnUrl=<%= encodeURIComponent('/homes/' + home.id + '#reviews') %>" class="btn-review-login-action">
+                            Log in to Write a Review
+                        </a>
+                    </div>
+                <% } %>
+
+                <div class="section-divider"></div>
+
+                <div class="section-divider"></div>
+
+                <!-- Interactive Map Section ("Where you'll be") -->
+                <div class="map-section-wrap" id="location">
+                    <h3 class="map-section-title">Where you'll be</h3>
+                    <p class="map-location-sub"><%= home.houseAddress %></p>
+
+                    <!-- Leaflet OpenStreetMap Container -->
+                    <div id="leaflet-property-map"></div>
+
+                    <div class="map-neighborhood-details">
+                        <p><strong>Neighborhood:</strong> Situated in a serene, secure residential district in <%= propertyCity %>. Close to curated fine-dining establishments, organic cafés, and cultural landmarks. Public transit and metro are within 10 minutes reach.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Sticky Reservation Box (Screenshots 1, 2, 3) -->
+            <aside class="sticky-booking-column">
+                <div class="reservation-card">
+                    
+                    <!-- Fee Tag (Screenshot 1) -->
+                    <div class="fee-included-tag">
+                        <span style="color: #E00B41;">🏷️</span>
+                        <span>Prices include all fees</span>
+                    </div>
+
+                    <!-- Price Row with Strikethrough (Screenshot 1) -->
+                    <div class="price-header-row">
+                        <span class="price-strikethrough">₹<%= formattedStrikethrough %></span>
+                        <span class="price-current">₹<%= formattedPrice %></span>
+                        <span class="price-unit">for 1 night</span>
+                    </div>
+
+                    <!-- Date & Guests Combined Selector Box -->
+                    <div class="booking-picker-box">
+                        <div class="picker-dates-row">
+                            <div class="picker-cell">
+                                <label class="picker-cell-label" for="res-checkin">CHECK-IN</label>
+                                <input type="date" id="res-checkin" class="picker-date-input" value="2026-10-06" onchange="calculateBookingTotal()" />
+                            </div>
+                            <div class="picker-cell">
+                                <label class="picker-cell-label" for="res-checkout">CHECKOUT</label>
+                                <input type="date" id="res-checkout" class="picker-date-input" value="2026-10-07" onchange="calculateBookingTotal()" />
+                            </div>
+                        </div>
+
+                        <div class="picker-guests-row">
+                            <label class="picker-cell-label" for="res-guests">GUESTS</label>
+                            <select id="res-guests" class="picker-guest-select">
+                                <% const maxCap = home.maxGuests || 4; %>
+                                <% for (let g = 1; g <= maxCap; g++) { %>
+                                    <option value="<%= g %>"><%= g %> <%= g === 1 ? 'guest' : 'guests' %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Vibrant Reserve Action Button (Screenshot 1) -->
+                    <button type="button" class="btn-reserve-vibrant" onclick="goToCheckout()">
+                        Reserve
+                    </button>
+
+                    <p class="wont-charge-note">You won't be charged yet</p>
+
+                    <!-- Price Breakdown Calculator -->
+                    <div class="price-breakdown-list">
+                        <div class="breakdown-row">
+                            <span id="breakdown-nights-label">₹<%= formattedPrice %> x 1 night</span>
+                            <span id="breakdown-subtotal">₹<%= formattedPrice %></span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>StayNest service fee</span>
+                            <span>₹450</span>
+                        </div>
+                        <div class="breakdown-row total-row">
+                            <span>Total before taxes</span>
+                            <span id="breakdown-total">₹<%= (basePrice + 450).toLocaleString('en-IN') %></span>
+                        </div>
+                    </div>
+
+                    <!-- Direct Chat with Host Widget -->
+                    <div class="widget-chat-box">
+                        <p class="widget-chat-prompt">Have questions before booking?</p>
+                        <button type="button" class="btn-widget-chat" onclick="openChatDrawer()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>Chat with <%= hostDisplayName %></span>
+                        </button>
+                    </div>
+
+                    <!-- Report Listing -->
+                    <div class="report-listing-link" onclick="alert('Thank you. Our Trust & Safety team has received your report for review.')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                            <line x1="4" y1="22" x2="4" y2="15"></line>
+                        </svg>
+                        <span>Report this listing</span>
+                    </div>
+
+                </div>
             </aside>
 
         </div>
     </main>
+
+    <!-- ── Fullscreen Photo Modal ("Show all photos") ── -->
+    <div class="photo-modal-overlay" id="photo-gallery-modal">
+        <div class="photo-modal-header">
+            <button type="button" class="btn-close-modal" onclick="closePhotoModal()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <span>Close gallery</span>
+            </button>
+            <span style="font-weight: 600;"><%= home.houseName %> &bull; Photo Tour</span>
+            <div></div>
+        </div>
+
+        <div class="modal-photo-list">
+            <% displayPhotos.forEach((photoUrl, pIndex) => { %>
+                <div class="modal-photo-item" id="modal-photo-<%= pIndex %>">
+                    <img src="<%= photoUrl %>" alt="Photo <%= pIndex + 1 %> of <%= home.houseName %>" />
+                    <p class="modal-photo-caption">Photo <%= pIndex + 1 %> of <%= displayPhotos.length %> &bull; Sanctuary Space</p>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- ── Live Guest-to-Host Chat Drawer ── -->
+    <div class="chat-drawer-overlay" id="chat-drawer" onclick="handleDrawerOverlayClick(event)">
+        <div class="chat-drawer-content" onclick="event.stopPropagation()">
+            <!-- Drawer Header -->
+            <div class="chat-drawer-header">
+                <div class="chat-header-info">
+                    <div class="chat-header-avatar">
+                        <%= hostDisplayName.substring(0, 2).toUpperCase() %>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 2px;"><%= hostDisplayName %></h4>
+                        <p style="font-size: 12px; opacity: 0.8;">Host &bull; Typically replies within an hour</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="closeChatDrawer()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Messages Stream -->
+            <div class="chat-messages-container" id="chat-stream">
+                <div class="chat-bubble host">
+                    <p>Namaste! I'm <%= hostDisplayName %>, host of <%= home.houseName %>. Feel free to ask about check-in timings, parking, or local recommendations.</p>
+                    <div class="chat-bubble-time">Just now</div>
+                </div>
+
+                <% if (typeof conversation !== 'undefined' && conversation && conversation.messages && conversation.messages.length > 0) { %>
+                    <% conversation.messages.forEach(msg => { %>
+                        <div class="chat-bubble <%= msg.senderRole === 'guest' ? 'guest' : 'host' %>">
+                            <p><%= msg.text %></p>
+                            <div class="chat-bubble-time">
+                                <%= new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+
+            <!-- Quick Questions Starter Pills -->
+            <div class="chat-quick-starters">
+                <button type="button" class="quick-tag-btn" onclick="sendQuickMessage('Hi! Is early check-in possible?')">Early check-in?</button>
+                <button type="button" class="quick-tag-btn" onclick="sendQuickMessage('Is fast Wi-Fi available for video meetings?')">Fast Wi-Fi?</button>
+                <button type="button" class="quick-tag-btn" onclick="sendQuickMessage('Is parking suitable for a large SUV?')">Car parking?</button>
+            </div>
+
+            <!-- Composer Box -->
+            <form class="chat-composer-box" id="guest-chat-form" onsubmit="handleSendGuestMessage(event)">
+                <input 
+                    type="text" 
+                    id="guest-chat-input" 
+                    class="chat-input-field" 
+                    placeholder="Type your message to <%= hostDisplayName %>..." 
+                    autocomplete="off"
+                    required
+                />
+                <button type="submit" class="btn-send-chat" id="btn-send-msg" title="Send message">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Leaflet JS for Map Integration -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // ── City Geolocation Coordinates Fallback ──
+        const CITY_COORDS = {
+            'hyderabad': [17.3850, 78.4867],
+            'agra': [27.1767, 78.0081],
+            'manali': [32.2432, 77.1892],
+            'delhi': [28.6139, 77.2090],
+            'mumbai': [19.0760, 72.8777],
+            'bangalore': [12.9716, 77.5946],
+            'bengaluru': [12.9716, 77.5946],
+            'goa': [15.2993, 74.1240],
+            'jaipur': [26.9124, 75.7873],
+            'kolkata': [22.5726, 88.3639],
+            'chennai': [13.0827, 80.2707],
+            'pune': [18.5204, 73.8567],
+            'kochi': [9.9312, 76.2673],
+            'kerala': [9.9312, 76.2673]
+        };
+
+        const propertyCityName = "<%= (propertyCity || '').toLowerCase() %>";
+        let mapLat = Number("<%= home.latitude || '' %>");
+        let mapLng = Number("<%= home.longitude || '' %>");
+
+        // If coordinates default to 0 or null, lookup city
+        if (!mapLat || !mapLng || (mapLat === 28.6139 && propertyCityName.includes('hyderabad'))) {
+            for (const [key, coords] of Object.entries(CITY_COORDS)) {
+                if (propertyCityName.includes(key)) {
+                    mapLat = coords[0];
+                    mapLng = coords[1];
+                    break;
+                }
+            }
+        }
+        if (!mapLat || !mapLng) {
+            mapLat = 17.3850;
+            mapLng = 78.4867; // Hyderabad default matching screenshot 1
+        }
+
+        // ── Leaflet Map Initialization ──
+        document.addEventListener('DOMContentLoaded', () => {
+            const mapContainer = document.getElementById('leaflet-property-map');
+            if (mapContainer && typeof L !== 'undefined') {
+                const map = L.map('leaflet-property-map', {
+                    center: [mapLat, mapLng],
+                    zoom: 14,
+                    zoomControl: true,
+                    scrollWheelZoom: false,
+                    attributionControl: false
+                });
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(map);
+
+                // Custom Luxury StayNest Pin Icon
+                const stayNestIcon = L.divIcon({
+                    className: 'staynest-custom-pin',
+                    html: `
+                        <div style="
+                            width: 48px;
+                            height: 48px;
+                            background: #143528;
+                            border: 3px solid #D4AF6A;
+                            border-radius: 50%;
+                            box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #FAF7F0;
+                        ">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </div>
+                    `,
+                    iconSize: [48, 48],
+                    iconAnchor: [24, 24]
+                });
+
+                const marker = L.marker([mapLat, mapLng], { icon: stayNestIcon }).addTo(map);
+                marker.bindPopup(`
+                    <div style="font-family: inherit; font-size: 13.5px; padding: 4px;">
+                        <strong><%= home.houseName %></strong><br/>
+                        <span><%= home.houseAddress %></span>
+                    </div>
+                `).openPopup();
+            }
+
+            // Share button copy link toast
+            const btnShare = document.getElementById('btn-share-trigger');
+            if (btnShare) {
+                btnShare.addEventListener('click', () => {
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                        alert('Link copied to clipboard! You can now share this stay.');
+                    }).catch(() => {
+                        alert('Listing URL: ' + window.location.href);
+                    });
+                });
+            }
+        });
+
+        // ── Full Photo Lightbox Modal Handlers ──
+        function openPhotoModal(index) {
+            const modal = document.getElementById('photo-gallery-modal');
+            if (modal) {
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                if (index !== undefined) {
+                    const targetEl = document.getElementById('modal-photo-' + index);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            }
+        }
+
+        function closePhotoModal() {
+            const modal = document.getElementById('photo-gallery-modal');
+            if (modal) {
+                modal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close on Esc key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePhotoModal();
+                closeChatDrawer();
+            }
+        });
+
+        // ── Live Guest-to-Host Chat Drawer Handlers ──
+        function openChatDrawer() {
+            const drawer = document.getElementById('chat-drawer');
+            if (drawer) {
+                drawer.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                const input = document.getElementById('guest-chat-input');
+                if (input) setTimeout(() => input.focus(), 300);
+            }
+        }
+
+        function closeChatDrawer() {
+            const drawer = document.getElementById('chat-drawer');
+            if (drawer) {
+                drawer.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function handleDrawerOverlayClick(e) {
+            if (e.target.id === 'chat-drawer') {
+                closeChatDrawer();
+            }
+        }
+
+        function sendQuickMessage(text) {
+            const input = document.getElementById('guest-chat-input');
+            if (input) {
+                input.value = text;
+                document.getElementById('guest-chat-form').requestSubmit();
+            }
+        }
+
+        async function handleSendGuestMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('guest-chat-input');
+            const messageText = input ? input.value.trim() : '';
+            if (!messageText) return;
+
+            // Optimistic UI Append
+            const stream = document.getElementById('chat-stream');
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble guest';
+            bubble.innerHTML = `
+                <p>${escapeHtml(messageText)}</p>
+                <div class="chat-bubble-time">Just now</div>
+            `;
+            stream.appendChild(bubble);
+            stream.scrollTop = stream.scrollHeight;
+            input.value = '';
+
+            try {
+                const response = await fetch('/homes/<%= home.id %>/message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messageText: messageText })
+                });
+
+                const data = await response.json();
+                if (!data.success) {
+                    if (response.status === 401) {
+                        alert('Please log in as a guest to send messages to the host.');
+                        window.location.href = '/auth/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    } else {
+                        alert(data.message || 'Could not send message.');
+                    }
+                }
+            } catch (err) {
+                console.error('Chat send error:', err);
+            }
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ── Reservation Calculator & Calendar Sync ──
+        function calculateBookingTotal() {
+            const checkinVal = document.getElementById('res-checkin').value;
+            const checkoutVal = document.getElementById('res-checkout').value;
+            if (!checkinVal || !checkoutVal) return;
+
+            const checkinDate = new Date(checkinVal);
+            const checkoutDate = new Date(checkoutVal);
+            const diffTime = checkoutDate - checkinDate;
+            const nights = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+
+            const basePerNight = <%= basePrice %>;
+            const subtotal = basePerNight * nights;
+            const serviceFee = 450;
+            const total = subtotal + serviceFee;
+
+            document.getElementById('breakdown-nights-label').textContent = `₹${basePerNight.toLocaleString('en-IN')} x ${nights} ${nights === 1 ? 'night' : 'nights'}`;
+            document.getElementById('breakdown-subtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+            document.getElementById('breakdown-total').textContent = `₹${total.toLocaleString('en-IN')}`;
+            
+            // Sync calendar display subtitle
+            const opt = { day: 'numeric', month: 'short', year: 'numeric' };
+            document.getElementById('calendar-date-display').textContent = 
+                `${checkinDate.toLocaleDateString('en-GB', opt)} – ${checkoutDate.toLocaleDateString('en-GB', opt)}`;
+        }
+
+        function clearSelectedDates() {
+            document.getElementById('res-checkin').value = '';
+            document.getElementById('res-checkout').value = '';
+            document.querySelectorAll('.calendar-day-cell.selected-day').forEach(el => el.classList.remove('selected-day'));
+            document.getElementById('calendar-date-display').textContent = 'Select check-in & checkout dates';
+        }
+
+        function goToCheckout() {
+            const checkin = document.getElementById('res-checkin').value || '2026-10-06';
+            const checkout = document.getElementById('res-checkout').value || '2026-10-07';
+            const guests = document.getElementById('res-guests').value || '1';
+            window.location.href = `/book/<%= home.id %>?checkIn=${encodeURIComponent(checkin)}&checkOut=${encodeURIComponent(checkout)}&guests=${encodeURIComponent(guests)}`;
+        }
+
+        // ── Reviews Interactive Functionality (Screenshot match) ──
+        let selectedReviewRating = 5;
+        function setReviewRating(star) {
+            selectedReviewRating = star;
+            const input = document.getElementById('review-rating-val');
+            if (input) input.value = star;
+
+            const buttons = document.querySelectorAll('#star-picker-icons .star-pick-btn');
+            buttons.forEach((btn, idx) => {
+                btn.style.color = (idx < star) ? '#D4AF6A' : '#CCCCCC';
+            });
+
+            const labels = {
+                1: '1.0 &bull; Poor',
+                2: '2.0 &bull; Fair',
+                3: '3.0 &bull; Average',
+                4: '4.0 &bull; Very Good',
+                5: '5.0 &bull; Exceptional'
+            };
+            const feedback = document.getElementById('rating-text-feedback');
+            if (feedback) feedback.innerHTML = labels[star] || `${star}.0`;
+        }
+
+        function filterReviewsByTag(tag, btn) {
+            document.querySelectorAll('#mention-pills-row .mention-pill').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const cards = document.querySelectorAll('#reviews-feed-grid .review-card-item');
+            cards.forEach(card => {
+                const cardTag = card.getAttribute('data-tag');
+                if (tag === 'all' || !tag || cardTag.toLowerCase() === tag.toLowerCase()) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function scrollMentionsCarousel(dir) {
+            const row = document.getElementById('mention-pills-row');
+            if (row) {
+                row.scrollBy({ left: dir * 180, behavior: 'smooth' });
+            }
+        }
+
+        function toggleReviewExpand(btn, idx) {
+            const p = document.getElementById('review-text-' + idx);
+            if (!p) return;
+            if (btn.textContent === 'Show more') {
+                p.style.webkitLineClamp = 'unset';
+                btn.textContent = 'Show less';
+            } else {
+                p.style.webkitLineClamp = '3';
+                btn.textContent = 'Show more';
+            }
+        }
+    </script>
 </body>
 </html>

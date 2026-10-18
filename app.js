@@ -21,9 +21,9 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-// Body parsers
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// Body parsers (50mb limit to accommodate multi-photo uploads)
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use(express.json({ limit: "50mb" }));
 
 // Cookie parser (needed for JWT from cookie)
 app.use(cookieParser());

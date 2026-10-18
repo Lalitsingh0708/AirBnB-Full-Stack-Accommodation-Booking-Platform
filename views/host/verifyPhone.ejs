@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm Your Phone Number &bull; StayNest Hosting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-page: #FAF7F0;
+            --bg-card: #FFFFFF;
+            --emerald-dark: #0B1C14;
+            --emerald-mid: #143528;
+            --emerald-accent: #1D4333;
+            --emerald-light: #EBF2ED;
+            --gold-accent: #D4AF6A;
+            --gold-hover: #C59F5A;
+            --text-main: #222222;
+            --text-sub: #5E6963;
+            --text-muted: #7A8780;
+            --border-color: #E2DAC9;
+            --status-green: #008A05;
+            --status-glow: rgba(0, 138, 5, 0.35);
+            --bad: #FF3B5C;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 12%, rgba(20, 53, 40, 0.04) 0%, transparent 60%);
+        }
+
+        /* ── Top Minimal Focused Bar ── */
+        .verify-header-bar {
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #EFEAE0;
+            background: #FFFFFF;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--emerald-dark);
+        }
+
+        .brand-logo-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--emerald-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-accent);
+            box-shadow: 0 4px 12px rgba(20, 53, 40, 0.2);
+        }
+
+        .brand-title-text {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--emerald-dark);
+        }
+
+        .header-exit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            background: var(--bg-page);
+            border: 1px solid var(--border-color);
+            color: var(--emerald-mid);
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.18s ease;
+        }
+
+        .header-exit-btn:hover {
+            background: #EDE6D8;
+            border-color: var(--gold-accent);
+        }
+
+        /* ── Main Stage ── */
+        .verify-main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 580px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 44px 24px 72px 24px;
+            position: relative;
+        }
+
+        /* ── Step Container Animations ── */
+        .step-view {
+            display: none;
+            animation-duration: 0.38s;
+            animation-fill-mode: both;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .step-view.active {
+            display: block;
+            animation-name: stepFadeIn;
+        }
+
+        @keyframes stepFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── STAGE 1: White Clean Form Matching Screenshot ── */
+        .trust-tag-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .trust-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: 5px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--emerald-mid);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+
+        .trust-pill svg {
+            color: var(--gold-accent);
+        }
+
+        .page-main-heading {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #222222;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .page-sub-heading {
+            font-size: 15px;
+            line-height: 1.55;
+            color: var(--text-sub);
+            margin-bottom: 32px;
+        }
+
+        /* Combined Phone Card Matching Screenshot */
+        .phone-card-container {
+            border: 1.5px solid #CCCCCC;
+            border-radius: 16px;
+            background: #FFFFFF;
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            margin-bottom: 10px;
+        }
+
+        .phone-card-container:focus-within {
+            border-color: var(--emerald-mid);
+            box-shadow: 0 0 0 3px rgba(20, 53, 40, 0.12);
+        }
+
+        .country-select-box {
+            padding: 12px 18px 8px 18px;
+            position: relative;
+            background: #FFFFFF;
+            border-bottom: 1px solid #CCCCCC;
+            cursor: pointer;
+        }
+
+        .country-select-box label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: capitalize;
+            margin-bottom: 2px;
+            pointer-events: none;
+        }
+
+        .country-row-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .country-native-select {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+            font-size: 15px;
+        }
+
+        .country-display-text {
+            font-size: 15.5px;
+            font-weight: 500;
+            color: #222222;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .country-chevron-icon {
+            color: #222222;
+            pointer-events: none;
+        }
+
+        .phone-input-box {
+            padding: 10px 18px 14px 18px;
+            background: #FFFFFF;
+        }
+
+        .phone-native-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 16.5px;
+            font-weight: 500;
+            color: #222222;
+            background: transparent;
+        }
+
+        .footnote-caption {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-bottom: 28px;
+        }
+
+        .btn-continue-action {
+            width: 100%;
+            height: 52px;
+            border-radius: 12px;
+            border: 1px solid var(--gold-accent);
+            background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--emerald-mid) 100%);
+            color: #FAF7F0;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(20, 53, 40, 0.25);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .btn-continue-action:hover:not(:disabled) {
+            background: linear-gradient(135deg, #24523F 0%, #0B1C14 100%);
+            transform: translateY(-1.5px);
+            box-shadow: 0 10px 26px rgba(20, 53, 40, 0.35);
+        }
+
+        .btn-continue-action:disabled {
+            background: #EBEBEB;
+            border-color: #E0E0E0;
+            color: #999999;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bottom-nav-bar {
+            margin-top: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .back-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #222222;
+            font-size: 14.5px;
+            font-weight: 600;
+            text-decoration: underline;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 0;
+            transition: color 0.15s ease;
+        }
+
+        .back-nav-btn:hover {
+            color: var(--emerald-mid);
+        }
+
+        /* ══════════════════════════════════════════════════
+           STAGE 2: LUXURY STAYNEST OTP CARD (GREEN + GOLD + BEIGE)
+        ══════════════════════════════════════════════════ */
+        .otp-light-card {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-color);
+            border-radius: 28px;
+            padding: 36px 32px 32px 32px;
+            box-shadow: 0 16px 45px rgba(20, 53, 40, 0.07), 0 2px 10px rgba(0, 0, 0, 0.02);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-pill-handle {
+            width: 44px;
+            height: 4px;
+            border-radius: 9999px;
+            background: #E2DAC9;
+            margin: 0 auto 18px auto;
+        }
+
+        .component-eyebrow {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .otp-card-title {
+            font-size: 27px;
+            font-weight: 700;
+            color: var(--emerald-dark);
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .otp-card-title.success-glow {
+            color: var(--status-green);
+        }
+
+        .otp-card-subtitle {
+            font-size: 14.5px;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .highlight-phone {
+            color: var(--emerald-dark);
+            font-weight: 600;
+        }
+
+        .btn-edit-phone {
+            background: none;
+            border: none;
+            color: var(--emerald-mid);
+            font-weight: 700;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 6px;
+        }
+
+        /* ── THE ORBIT / STRAIGHT-LINE STAGE CONTAINER ── */
+        .otp-stage-container {
+            width: 270px;
+            height: 230px;
+            margin: 0 auto 16px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orbit__svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .orbit__svg.visible {
+            opacity: 1;
+        }
+
+        .orbit__path {
+            fill: none;
+            stroke: #D4AF6A;
+            stroke-dasharray: 2 8;
+            stroke-width: 1.8;
+            opacity: 0.7;
+        }
+
+        .orbit__hub {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold-accent);
+            box-shadow: 0 0 8px rgba(212, 175, 106, 0.6);
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .orbit__hub.visible {
+            opacity: 1;
+        }
+
+        /* ── 4 SLOTS CAROUSEL (STRAIGHT LINE & ORBIT MORPH) ── */
+        .slots-carousel {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Individual Slot Tile */
+        .slot-tile {
+            position: absolute;
+            width: 56px;
+            height: 66px;
+            background: #FAF7F0;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(20, 53, 40, 0.06);
+            user-select: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.45s cubic-bezier(0.34, 1.45, 0.64, 1), background 0.25s ease;
+        }
+
+        .slot-tile:hover {
+            border-color: var(--gold-accent);
+        }
+
+        .slot-tile.active-input {
+            border-color: var(--emerald-mid);
+            box-shadow: 0 0 0 4px rgba(20, 53, 40, 0.14);
+            background: #FFFFFF;
+        }
+
+        .slot-tile.filled {
+            border-color: var(--emerald-mid);
+            background: #FFFFFF;
+            box-shadow: 0 4px 16px rgba(20, 53, 40, 0.1);
+        }
+
+        .slot-char {
+            font-family: 'Inter', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--emerald-dark);
+            transform: scale(0);
+            transition: transform 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .slot-tile.filled .slot-char {
+            transform: scale(1);
+        }
+
+        /* ── INITIAL STATE: STRAIGHT LINE (AS USER REQUESTED) ── */
+        .slots-carousel.state-line .slot-pos-0 {
+            transform: translate(-96px, 0px) rotate(0deg);
+        }
+        .slots-carousel.state-line .slot-pos-1 {
+            transform: translate(-32px, 0px) rotate(0deg);
+        }
+        .slots-carousel.state-line .slot-pos-2 {
+            transform: translate(32px, 0px) rotate(0deg);
+        }
+        .slots-carousel.state-line .slot-pos-3 {
+            transform: translate(96px, 0px) rotate(0deg);
+        }
+
+        /* ── MORPHED STATE: CIRCULAR ORBIT POSITIONS ── */
+        .slots-carousel.state-orbit .slot-pos-0 {
+            transform: translate(-48px, -48px) rotate(-16deg);
+        }
+        .slots-carousel.state-orbit .slot-pos-1 {
+            transform: translate(48px, -48px) rotate(16deg);
+        }
+        .slots-carousel.state-orbit .slot-pos-2 {
+            transform: translate(48px, 48px) rotate(-16deg);
+        }
+        .slots-carousel.state-orbit .slot-pos-3 {
+            transform: translate(-48px, 48px) rotate(16deg);
+        }
+
+        /* ── INWARD ROTATING COLLAPSE ANIMATION ── */
+        .slots-carousel.collapsing {
+            animation: orbitalCollapse 0.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes orbitalCollapse {
+            0% {
+                transform: rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            60% {
+                transform: rotate(360deg) scale(0.65);
+                opacity: 0.85;
+            }
+            100% {
+                transform: rotate(450deg) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* ── CENTRAL MERGED CORE SQUARE ── */
+        .orbit__core {
+            position: absolute;
+            width: 82px;
+            height: 82px;
+            border-radius: 24px;
+            border: 2.2px solid var(--status-green);
+            background: radial-gradient(circle, rgba(0, 138, 5, 0.12) 0%, #FFFFFF 85%);
+            box-shadow: 0 0 32px var(--status-glow), 0 8px 24px rgba(20, 53, 40, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0);
+            z-index: 10;
+            transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .orbit__core.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .orbit__core.error {
+            border-color: var(--bad);
+            box-shadow: 0 0 32px rgba(255, 59, 92, 0.35);
+            background: radial-gradient(circle, rgba(255, 59, 92, 0.12) 0%, #FFFFFF 85%);
+            animation: shakeError 0.4s ease;
+        }
+
+        /* Orbiting Particle Dots */
+        .particle-ring {
+            position: absolute;
+            inset: -20px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: spinParticles 7s linear infinite;
+        }
+
+        @keyframes spinParticles {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .dot-particle {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--status-green);
+            box-shadow: 0 0 8px var(--status-green);
+        }
+
+        .p1 { top: 0; left: 50%; transform: translateX(-50%); }
+        .p2 { top: 25%; right: 4px; }
+        .p3 { bottom: 25%; right: 4px; }
+        .p4 { bottom: 0; left: 50%; transform: translateX(-50%); }
+        .p5 { bottom: 25%; left: 4px; }
+        .p6 { top: 25%; left: 4px; }
+
+        /* Success Checkmark SVG */
+        .check-svg {
+            width: 34px;
+            height: 34px;
+        }
+
+        .check-path {
+            fill: none;
+            stroke: var(--status-green);
+            stroke-width: 3.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 40;
+            stroke-dashoffset: 40;
+            transition: stroke-dashoffset 0.45s ease 0.15s;
+        }
+
+        .orbit__core.success .check-path {
+            stroke-dashoffset: 0;
+        }
+
+        /* Master Hidden Input */
+        .otp-master-hidden {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            pointer-events: none;
+        }
+
+        /* ── FOOTER & RESEND ── */
+        .otp-card-footer {
+            margin-top: 6px;
+        }
+
+        .resend-text-row {
+            font-size: 13.5px;
+            color: var(--text-sub);
+            margin-bottom: 16px;
+        }
+
+        .btn-resend-link {
+            background: none;
+            border: none;
+            color: var(--emerald-mid);
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        .btn-resend-link:disabled {
+            color: var(--text-sub);
+            text-decoration: none;
+            cursor: default;
+        }
+
+        .hint-badge-pill {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-top: 14px;
+        }
+
+        .demo-code-btn {
+            color: var(--emerald-dark);
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: var(--bg-page);
+            padding: 3px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: all 0.18s ease;
+        }
+
+        .demo-code-btn:hover {
+            background: #EFE9DC;
+            border-color: var(--gold-accent);
+            color: var(--emerald-mid);
+        }
+
+        /* Shake animation */
+        @keyframes shakeError {
+            0%, 100% { transform: scale(1) translateX(0); }
+            20%, 60% { transform: scale(1) translateX(-9px); }
+            40%, 80% { transform: scale(1) translateX(9px); }
+        }
+
+        /* Redirect Progress Bar */
+        .redirect-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #EFEAE0;
+            border-radius: 9999px;
+            margin-top: 20px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .redirect-progress-fill {
+            height: 100%;
+            background: var(--status-green);
+            width: 0%;
+            transition: width 2.4s linear;
+        }
+
+        /* ── Real SMS Push Notification Toast (Heads-Up Alert) ── */
+        .sms-notification-toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120px);
+            background: rgba(15, 28, 20, 0.96);
+            border: 1.5px solid var(--gold-accent);
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.28), 0 0 25px rgba(212, 175, 106, 0.2);
+            border-radius: 20px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            z-index: 9999;
+            max-width: 460px;
+            width: calc(100% - 36px);
+            backdrop-filter: blur(16px);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+            cursor: pointer;
+        }
+
+        .sms-notification-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sms-toast-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--emerald-accent) 0%, var(--emerald-dark) 100%);
+            border: 1px solid var(--gold-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            color: #FFFFFF;
+        }
+
+        .sms-toast-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .sms-toast-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .sms-toast-app {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gold-accent);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .sms-toast-time {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .sms-toast-body {
+            font-size: 13.5px;
+            color: #FFFFFF;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .sms-toast-body strong {
+            color: #02EEA8;
+            letter-spacing: 2px;
+            font-size: 15.5px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 1px 7px;
+            border-radius: 5px;
+        }
+
+        .sms-toast-autofill-hint {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 3px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Real Incoming SMS Notification Toast -->
+    <div id="sms-toast" class="sms-notification-toast" onclick="autoFillToastOtp()" title="Click to auto-fill code">
+        <div class="sms-toast-icon">💬</div>
+        <div class="sms-toast-content">
+            <div class="sms-toast-header">
+                <span class="sms-toast-app">MESSAGES &bull; StayNest Security</span>
+                <span class="sms-toast-time">now</span>
+            </div>
+            <p class="sms-toast-body">
+                Your StayNest verification code is <strong id="toast-otp-code">----</strong>. Valid for 5 minutes.
+            </p>
+            <span class="sms-toast-autofill-hint">Click this notification to auto-fill code &rarr;</span>
+        </div>
+    </div>
+
+    <!-- 1. Focused Minimal Host Header -->
+    <header class="verify-header-bar">
+        <a href="/host/today" class="brand-badge">
+            <div class="brand-logo-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </div>
+            <span class="brand-title-text">StayNest</span>
+        </a>
+
+        <a href="/host/today" class="header-exit-btn">
+            <span>Exit &bull; Back to Today</span>
+        </a>
+    </header>
+
+    <!-- 2. Main Verification Stage -->
+    <main class="verify-main-container">
+
+        <!-- ══════════════════════════════════════════════════
+             STAGE 1: PHONE NUMBER INPUT (MATCHING AIRBNB SCREENSHOT)
+        ══════════════════════════════════════════════════ -->
+        <section id="stage-phone-input" class="step-view active">
+            <div class="trust-tag-row">
+                <span class="trust-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    Guest Booking Communication
+                </span>
+            </div>
+
+            <h1 class="page-main-heading">Which number can guests use to contact you?</h1>
+            <p class="page-sub-heading">
+                We'll send you booking requests, reminders, and other notifications. This number should be able to receive texts or calls.
+            </p>
+
+            <!-- Combined Country & Phone Card Matching Screenshot -->
+            <div class="phone-card-container">
+                <!-- Top Section: Country/Region -->
+                <div class="country-select-box">
+                    <label>Country/Region</label>
+                    <div class="country-row-inner">
+                        <div class="country-display-text" id="selected-country-text">
+                            <span>🇮🇳</span>
+                            <span id="label-country-name">India</span>
+                            <span id="label-dial-code">(+91)</span>
+                        </div>
+                        <div class="country-chevron-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <select id="country-dropdown-select" class="country-native-select" onchange="handleCountryChange(this)">
+                            <option value="+91" data-flag="🇮🇳" data-name="India" selected>India (+91)</option>
+                            <option value="+1" data-flag="🇺🇸" data-name="United States">United States (+1)</option>
+                            <option value="+44" data-flag="🇬🇧" data-name="United Kingdom">United Kingdom (+44)</option>
+                            <option value="+1" data-flag="🇨🇦" data-name="Canada">Canada (+1)</option>
+                            <option value="+971" data-flag="🇦🇪" data-name="United Arab Emirates">United Arab Emirates (+971)</option>
+                            <option value="+61" data-flag="🇦🇺" data-name="Australia">Australia (+61)</option>
+                            <option value="+49" data-flag="🇩🇪" data-name="Germany">Germany (+49)</option>
+                            <option value="+33" data-flag="🇫🇷" data-name="France">France (+33)</option>
+                            <option value="+65" data-flag="🇸🇬" data-name="Singapore">Singapore (+65)</option>
+                            <option value="+81" data-flag="🇯🇵" data-name="Japan">Japan (+81)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Bottom Section: Phone Number -->
+                <div class="phone-input-box">
+                    <input 
+                        type="tel" 
+                        id="phone-input-field" 
+                        class="phone-native-input" 
+                        placeholder="Phone number" 
+                        value="<%= (typeof user !== 'undefined' && user && user.phone) ? user.phone.replace(/^\+\d+\s*/, '') : '' %>"
+                        autocomplete="tel-national"
+                        maxlength="15"
+                        oninput="handlePhoneInput(this)"
+                        onkeydown="if(event.key === 'Enter') submitPhoneContinue()"
+                    />
+                </div>
+            </div>
+
+            <!-- Footnote Caption -->
+            <p class="footnote-caption">
+                We'll call or text you to confirm your number. Standard message and data rates apply.
+            </p>
+
+            <!-- Continue Button -->
+            <button 
+                type="button" 
+                id="btn-continue-phone" 
+                class="btn-continue-action" 
+                onclick="submitPhoneContinue()"
+            >
+                <span id="btn-continue-label">Continue</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+
+            <!-- Bottom Left Back Button -->
+            <div class="bottom-nav-bar">
+                <a href="/host/today" class="back-nav-btn">
+                    &lt; Back
+                </a>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+             STAGE 2: MORPHING OTP CARD (STRAIGHT LINE -> ORBIT ANIMATION)
+        ══════════════════════════════════════════════════ -->
+        <section id="stage-otp-verify" class="step-view">
+            <div class="otp-light-card">
+                <div class="card-pill-handle"></div>
+                <span class="component-eyebrow">StayNest Security</span>
+                <h2 class="otp-card-title" id="otp-title-text">Verify your number</h2>
+                <p class="otp-card-subtitle" id="otp-sub-text">
+                    Enter the 4–digit code we sent to <span id="display-verified-number" class="highlight-phone">+91 ••• 4321</span>.
+                    <button type="button" class="btn-edit-phone" onclick="goToStep(1)">Edit</button>
+                </p>
+
+                <!-- ── ORBIT & STRAIGHT-LINE STAGE ── -->
+                <div class="otp-stage-container" id="otp-stage-container" onclick="focusOtpMaster()">
+                    <!-- Dotted Orbit Path (Revealed on validation) -->
+                    <svg class="orbit__svg" id="orbit-svg" viewBox="0 0 270 230">
+                        <circle class="orbit__path" cx="135" cy="115" r="64" />
+                    </svg>
+                    <span class="orbit__hub" id="orbit-center-hub"></span>
+
+                    <!-- Central Merged Core Square -->
+                    <div class="orbit__core" id="orbit-core-box">
+                        <div class="particle-ring">
+                            <span class="dot-particle p1"></span>
+                            <span class="dot-particle p2"></span>
+                            <span class="dot-particle p3"></span>
+                            <span class="dot-particle p4"></span>
+                            <span class="dot-particle p5"></span>
+                            <span class="dot-particle p6"></span>
+                        </div>
+                        <svg class="check-svg" viewBox="0 0 40 40">
+                            <polyline class="check-path" points="12,21 19,27 29,13" />
+                        </svg>
+                    </div>
+
+                    <!-- 4 Slots Carousel: Starts in straight horizontal line, then morphs into circle -->
+                    <div class="slots-carousel state-line" id="slots-carousel">
+                        <div class="slot-tile slot-pos-0" id="slot-0">
+                            <span class="slot-char" id="slot-char-0"></span>
+                        </div>
+                        <div class="slot-tile slot-pos-1" id="slot-1">
+                            <span class="slot-char" id="slot-char-1"></span>
+                        </div>
+                        <div class="slot-tile slot-pos-2" id="slot-2">
+                            <span class="slot-char" id="slot-char-2"></span>
+                        </div>
+                        <div class="slot-tile slot-pos-3" id="slot-3">
+                            <span class="slot-char" id="slot-char-3"></span>
+                        </div>
+                    </div>
+
+                    <!-- Master Hidden Input for typing -->
+                    <input 
+                        type="tel" 
+                        inputmode="numeric" 
+                        autocomplete="one-time-code" 
+                        id="otp-master-input" 
+                        maxlength="4" 
+                        class="otp-master-hidden" 
+                    />
+                </div>
+
+                <!-- Footer details -->
+                <div class="otp-card-footer">
+                    <p class="resend-text-row">
+                        Didn't receive the code? 
+                        <button type="button" class="btn-resend-link" id="resend-btn" onclick="resendOtpCode()" disabled>
+                            Resend in <span id="resend-seconds">30s</span>
+                        </button>
+                    </p>
+
+                    <p class="hint-badge-pill" id="otp-hint-caption">
+                        Check your SMS notification banner above for the real verification code.
+                    </p>
+
+                    <div class="redirect-progress-bar" id="redirect-bar">
+                        <div class="redirect-progress-fill" id="redirect-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Left Change Number -->
+            <div class="bottom-nav-bar" style="margin-top: 28px;">
+                <button type="button" class="back-nav-btn" onclick="goToStep(1)">
+                    &lt; Change number
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ── Interactive JavaScript Logic ── -->
+    <script>
+        let currentDialCode = "+91";
+        let enteredOtp = "";
+        let countdownSeconds = 30;
+        let countdownTimer = null;
+        let isProcessing = false;
+        let latestRealOtp = "";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const phoneInput = document.getElementById("phone-input-field");
+            if (phoneInput && phoneInput.value.trim().length >= 7) {
+                document.getElementById("btn-continue-phone").disabled = false;
+            } else {
+                document.getElementById("btn-continue-phone").disabled = true;
+            }
+
+            // Bind master input events
+            const master = document.getElementById("otp-master-input");
+            if (master) {
+                master.addEventListener("input", handleMasterOtpInput);
+                master.addEventListener("keydown", handleMasterOtpKey);
+            }
+        });
+
+        function handleCountryChange(selectElem) {
+            const selectedOpt = selectElem.options[selectElem.selectedIndex];
+            currentDialCode = selectOpt.value;
+            const flag = selectOpt.getAttribute("data-flag");
+            const name = selectOpt.getAttribute("data-name");
+
+            document.getElementById("selected-country-text").innerHTML = `
+                <span>${flag}</span>
+                <span>${name}</span>
+                <span>(${currentDialCode})</span>
+            `;
+            document.getElementById("phone-input-field").focus();
+        }
+
+        function handlePhoneInput(input) {
+            input.value = input.value.replace(/[^\d\s-]/g, "");
+            const cleanDigits = input.value.replace(/\D/g, "");
+            const btn = document.getElementById("btn-continue-phone");
+            btn.disabled = cleanDigits.length < 7;
+        }
+
+        async function submitPhoneContinue() {
+            const phoneInput = document.getElementById("phone-input-field");
+            const cleanDigits = phoneInput.value.replace(/\D/g, "");
+
+            if (cleanDigits.length < 7) {
+                phoneInput.focus();
+                return;
+            }
+
+            const fullPhoneNumber = `${currentDialCode} ${cleanDigits}`;
+            const formatted = `${currentDialCode} ${cleanDigits.slice(0, 3)} ••• ${cleanDigits.slice(-4)}`;
+            document.getElementById("display-verified-number").textContent = formatted;
+
+            const continueBtn = document.getElementById("btn-continue-phone");
+            const continueLabel = document.getElementById("btn-continue-label");
+            continueBtn.disabled = true;
+            continueLabel.textContent = "Sending real code...";
+
+            try {
+                // Call real backend API: POST /host/send-phone-otp
+                const response = await fetch("/host/send-phone-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ phone: fullPhoneNumber })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    latestRealOtp = data.realOtp || "";
+                    showSmsToast(latestRealOtp);
+
+                    goToStep(2);
+                } else {
+                    alert(data.message || "Could not send OTP. Please try again.");
+                }
+            } catch (err) {
+                console.error("Error sending OTP:", err);
+                alert("Network error. Please try again.");
+            } finally {
+                continueBtn.disabled = false;
+                continueLabel.textContent = "Continue";
+            }
+        }
+
+        function showSmsToast(otpCode) {
+            const toast = document.getElementById("sms-toast");
+            const codeSpan = document.getElementById("toast-otp-code");
+            if (codeSpan) codeSpan.textContent = otpCode;
+            if (toast) {
+                toast.classList.add("show");
+                // Hide after 9 seconds automatically
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                }, 9000);
+            }
+        }
+
+        function autoFillToastOtp() {
+            if (latestRealOtp && !isProcessing) {
+                const master = document.getElementById("otp-master-input");
+                master.value = latestRealOtp;
+                enteredOtp = latestRealOtp;
+                updateSlotsDisplay();
+                updateActiveSlot();
+
+                const toast = document.getElementById("sms-toast");
+                if (toast) toast.classList.remove("show");
+
+                setTimeout(triggerMorphAndValidation, 200);
+            }
+        }
+
+        function goToStep(stepNum) {
+            const stage1 = document.getElementById("stage-phone-input");
+            const stage2 = document.getElementById("stage-otp-verify");
+
+            if (stepNum === 1) {
+                stage2.classList.remove("active");
+                stage1.classList.add("active");
+                if (countdownTimer) clearInterval(countdownTimer);
+                const toast = document.getElementById("sms-toast");
+                if (toast) toast.classList.remove("show");
+            } else if (stepNum === 2) {
+                stage1.classList.remove("active");
+                stage2.classList.add("active");
+                resetOtpState();
+                startOtpTimer();
+                setTimeout(focusOtpMaster, 350);
+            }
+        }
+
+        function focusOtpMaster() {
+            if (isProcessing) return;
+            const master = document.getElementById("otp-master-input");
+            if (master) {
+                master.focus();
+            }
+            updateActiveSlot();
+        }
+
+        function updateActiveSlot() {
+            const currentIdx = Math.min(enteredOtp.length, 3);
+            for (let i = 0; i < 4; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                if (slot) {
+                    if (i === currentIdx && !isProcessing) {
+                        slot.classList.add("active-input");
+                    } else {
+                        slot.classList.remove("active-input");
+                    }
+                }
+            }
+        }
+
+        function resetOtpState() {
+            enteredOtp = "";
+            isProcessing = false;
+            const master = document.getElementById("otp-master-input");
+            if (master) master.value = "";
+
+            // Reset UI
+            document.getElementById("otp-title-text").textContent = "Verify your number";
+            document.getElementById("otp-title-text").className = "otp-card-title";
+
+            const carousel = document.getElementById("slots-carousel");
+            carousel.className = "slots-carousel state-line";
+
+            const core = document.getElementById("orbit-core-box");
+            core.className = "orbit__core";
+
+            const orbitSvg = document.getElementById("orbit-svg");
+            if (orbitSvg) orbitSvg.classList.remove("visible");
+
+            const hub = document.getElementById("orbit-center-hub");
+            if (hub) hub.classList.remove("visible");
+
+            for (let i = 0; i < 4; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                const char = document.getElementById(`slot-char-${i}`);
+                if (slot) slot.classList.remove("filled", "active-input");
+                if (char) char.textContent = "";
+            }
+
+            updateActiveSlot();
+        }
+
+        function handleMasterOtpInput(e) {
+            if (isProcessing) return;
+            const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+            e.target.value = val;
+            enteredOtp = val;
+
+            updateSlotsDisplay();
+            updateActiveSlot();
+
+            // When all 4 digits entered -> Trigger Straight-to-Circle Morph & Real Validation!
+            if (enteredOtp.length === 4) {
+                triggerMorphAndValidation();
+            }
+        }
+
+        function handleMasterOtpKey(e) {
+            if (isProcessing) return;
+            // Native backspace triggers input event automatically
+        }
+
+        function updateSlotsDisplay() {
+            for (let i = 0; i < 4; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                const char = document.getElementById(`slot-char-${i}`);
+                if (i < enteredOtp.length) {
+                    char.textContent = enteredOtp[i];
+                    slot.classList.add("filled");
+                } else {
+                    char.textContent = "";
+                    slot.classList.remove("filled");
+                }
+            }
+        }
+
+        async function triggerMorphAndValidation() {
+            isProcessing = true;
+            const carousel = document.getElementById("slots-carousel");
+            const orbitSvg = document.getElementById("orbit-svg");
+            const hub = document.getElementById("orbit-center-hub");
+            const core = document.getElementById("orbit-core-box");
+
+            // Remove active input focus rings
+            document.querySelectorAll(".slot-tile").forEach(s => s.classList.remove("active-input"));
+
+            // STEP 1: Morph from straight line into circle layout!
+            carousel.classList.remove("state-line");
+            carousel.classList.add("state-orbit");
+
+            if (orbitSvg) orbitSvg.classList.add("visible");
+            if (hub) hub.classList.add("visible");
+
+            // STEP 2: At 450ms, start orbital spin collapse!
+            setTimeout(() => {
+                carousel.classList.add("collapsing");
+                if (hub) hub.classList.remove("visible");
+            }, 450);
+
+            // STEP 3: Central core square blooms at ~880ms
+            setTimeout(() => {
+                core.classList.add("visible");
+            }, 880);
+
+            // STEP 4: Real Backend Validation with API at ~1150ms
+            setTimeout(async () => {
+                const phoneInput = document.getElementById("phone-input-field");
+                const cleanDigits = phoneInput.value.replace(/\D/g, "");
+                const fullPhoneNumber = `${currentDialCode} ${cleanDigits}`;
+
+                try {
+                    const response = await fetch("/host/verify-phone-otp", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ phone: fullPhoneNumber, otp: enteredOtp })
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        handleVerificationSuccess();
+                    } else {
+                        handleVerificationError(data.message);
+                    }
+                } catch (err) {
+                    console.error("Verification call error:", err);
+                    handleVerificationError("Network error. Please try again.");
+                }
+            }, 1150);
+        }
+
+        function handleVerificationSuccess() {
+            const core = document.getElementById("orbit-core-box");
+            core.classList.add("success");
+
+            // Update title to green verified
+            const title = document.getElementById("otp-title-text");
+            title.textContent = "Verified successfully";
+            title.classList.add("success-glow");
+
+            const subtitle = document.getElementById("otp-sub-text");
+            subtitle.innerHTML = "Your number has been verified.";
+
+            // Fill redirect progress bar & redirect
+            const redirectBar = document.getElementById("redirect-bar");
+            const redirectFill = document.getElementById("redirect-fill");
+            if (redirectBar && redirectFill) {
+                redirectBar.style.display = "block";
+                setTimeout(() => { redirectFill.style.width = "100%"; }, 50);
+            }
+
+            setTimeout(() => {
+                window.location.href = "/host/today";
+            }, 2400);
+        }
+
+        function handleVerificationError(msg) {
+            const core = document.getElementById("orbit-core-box");
+            core.classList.add("error");
+
+            setTimeout(() => {
+                alert(msg || "Incorrect OTP code. Please enter the real code sent to your phone.");
+                resetOtpState();
+                focusOtpMaster();
+            }, 550);
+        }
+
+        function startOtpTimer() {
+            countdownSeconds = 30;
+            const resendBtn = document.getElementById("resend-btn");
+            const secondsElem = document.getElementById("resend-seconds");
+
+            resendBtn.disabled = true;
+            if (countdownTimer) clearInterval(countdownTimer);
+
+            countdownTimer = setInterval(() => {
+                countdownSeconds--;
+                if (secondsElem) secondsElem.textContent = `${countdownSeconds}s`;
+
+                if (countdownSeconds <= 0) {
+                    clearInterval(countdownTimer);
+                    resendBtn.disabled = false;
+                    resendBtn.textContent = "Resend now";
+                }
+            }, 1000);
+        }
+
+        async function resendOtpCode() {
+            const phoneInput = document.getElementById("phone-input-field");
+            const cleanDigits = phoneInput.value.replace(/\D/g, "");
+            const fullPhoneNumber = `${currentDialCode} ${cleanDigits}`;
+
+            try {
+                const response = await fetch("/host/send-phone-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ phone: fullPhoneNumber })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    latestRealOtp = data.realOtp || "";
+                    showSmsToast(latestRealOtp);
+                    startOtpTimer();
+                    resetOtpState();
+                    focusOtpMaster();
+                } else {
+                    alert(data.message || "Could not resend OTP.");
+                }
+            } catch (err) {
+                console.error("Resend error:", err);
+                alert("Failed to resend code.");
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,67 +1,189 @@
 <!-- ═══════════════════════════════════════════════════════════
-     STAYNEST GLOBAL NAVIGATION HEADER
-     - Clean SVG branding (no emojis)
-     - Real user session integration (res.locals.user)
-     - Interactive profile dropdown with auth state & logout
+     STAYNEST GLOBAL LUXURY NAVIGATION NAVBAR
+     - Brand Identity: Emerald Green (#143528, #0B1C14) & Gold (#D4AF6A)
+     - Categories/Modes from Screenshot: All (Globe), Homes (Cottage), Experiences (Balloon), Services (Bell)
+     - Preserved Guest Options: Bookings, Saved Stays, Host Dashboard
+     - Floating Luxury Search Pill: Where (Destinations), When (Dates), Who (Guests)
+     - Profile Pill Widget with Hamburger & User Avatar Circle
 ═══════════════════════════════════════════════════════════ -->
-<header class="staynest-nav-header">
-    <div class="nav-container">
+<header class="staynest-global-header" id="staynest-header">
+    <div class="header-main-row">
         
-        <!-- 1. Brand Logo -->
+        <!-- 1. Left: Brand Logo -->
         <a href="/" class="brand-link" aria-label="StayNest Home">
             <svg class="brand-logo-icon" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="34" height="34" rx="10" fill="#122B20"/>
+                <rect width="34" height="34" rx="10" fill="#0B1C14"/>
                 <path d="M17 7L8 14.5V25C8 25.5523 8.44772 26 9 26H14V19H20V26H25C25.5523 26 26 25.5523 26 25V14.5L17 7Z" fill="#FAF7F0"/>
                 <circle cx="17" cy="14" r="2.2" fill="#D4AF6A"/>
             </svg>
             <span class="brand-name">Stay<span class="brand-name-accent">Nest</span></span>
         </a>
 
-        <!-- 2. Center Nav Links -->
-        <nav class="center-nav" aria-label="Main Navigation">
-            <a href="/" class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'stays') ? 'active' : '' %>">Stays</a>
-            <a href="/bookings" class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'bookings') ? 'active' : '' %>">Bookings</a>
-            <a href="/favourite-list" class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'favourites') ? 'active' : '' %>">Saved</a>
-            <% if (typeof user !== 'undefined' && user && user.role === 'host') { %>
-                <a href="/host" class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'host') ? 'active' : '' %>">Host Dashboard</a>
+        <!-- 2. Center: Modes & Navigation (Matching Screenshot + Preserved Guest Options) -->
+        <nav class="center-mode-nav" aria-label="Explore & Navigation Categories">
+            <% if ((typeof isHostNav !== 'undefined' && isHostNav) || (typeof currentPage !== 'undefined' && currentPage && currentPage.startsWith('host'))) { %>
+                <!-- Host Specific Navigation -->
+                <a href="/host/today" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-today') ? 'active' : '' %>">
+                    <span class="tab-label">Today</span>
+                </a>
+                <a href="/host/calendar" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-calendar') ? 'active' : '' %>">
+                    <span class="tab-label">Calendar</span>
+                </a>
+                <a href="/host/listings" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && (currentPage === 'host-listings' || currentPage === 'host-view-home')) ? 'active' : '' %>">
+                    <span class="tab-label">Listings</span>
+                </a>
+                <a href="/host/messages" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-messages') ? 'active' : '' %>">
+                    <span class="tab-label">Messages</span>
+                </a>
+                <a href="/host" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && (currentPage === 'host' || currentPage === 'host-dashboard')) ? 'active' : '' %>">
+                    <span class="tab-label">Dashboard</span>
+                </a>
+            <% } else if (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage) { %>
+                <!-- Compact Search Bar Pill (Exact Match to Airbnb Search Results Screenshot) -->
+                <div class="header-compact-pill-box" id="compact-search-trigger" onclick="toggleSearchExpansion(event)" role="button" tabindex="0" aria-label="Edit search details">
+                    <span class="compact-pill-item compact-pill-item--dest">
+                        <span class="compact-pill-icon">🏡</span>
+                        <strong class="compact-pill-strong"><%= (typeof searchQuery !== 'undefined' && searchQuery.destination) ? ('Homes in ' + searchQuery.destination) : 'Homes in New Delhi' %></strong>
+                    </span>
+                    <span class="compact-pill-divider"></span>
+                    <span class="compact-pill-item compact-pill-item--dates">
+                        <%= (typeof searchQuery !== 'undefined' && searchQuery.dates) ? searchQuery.dates : 'Month in Sep' %>
+                    </span>
+                    <span class="compact-pill-divider"></span>
+                    <span class="compact-pill-item compact-pill-item--guests">
+                        <%= (typeof searchQuery !== 'undefined' && searchQuery.guests && Number(searchQuery.guests) > 0) ? (searchQuery.guests + ' guests') : 'Add guests' %>
+                    </span>
+                    <div class="compact-pill-circle-btn">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                </div>
+            <% } else { %>
+                <!-- Guest Modes from Screenshot -->
+                
+                <!-- 1. All (Globe) -->
+                <a href="/" class="mode-tab-item <%= (!locals.category || category === 'all' || category === '') ? 'active' : '' %>" id="tab-mode-all">
+                    <span class="tab-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="8.5" stroke="#B88E3E" stroke-width="1.8"/>
+                            <ellipse cx="12" cy="12" rx="4.2" ry="8.5" stroke="#B88E3E" stroke-width="1.3"/>
+                            <line x1="3.5" y1="12" x2="20.5" y2="12" stroke="#B88E3E" stroke-width="1.4"/>
+                            <path d="M12 20.5v2m-3.5 0h7" stroke="#B88E3E" stroke-width="1.8" stroke-linecap="round"/>
+                        </svg>
+                    </span>
+                    <span class="tab-label">All</span>
+                </a>
+
+                <!-- 2. Homes (Villa/Cottage) -->
+                <a href="/?category=homes" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'homes') ? 'active' : '' %>" id="tab-mode-homes">
+                    <span class="tab-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 10.5L12 3l9 7.5v10a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20.5v-10z" fill="#EBF2ED" stroke="#143528" stroke-width="1.8"/>
+                            <path d="M9 22V12h6v10" stroke="#143528" stroke-width="1.8"/>
+                            <rect x="15" y="6" width="3" height="4" fill="#143528"/>
+                        </svg>
+                    </span>
+                    <span class="tab-label">Homes</span>
+                </a>
+
+                <!-- 3. Experiences (Hot Air Balloon) -->
+                <a href="/?category=experiences" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'experiences') ? 'active' : '' %>" id="tab-mode-experiences">
+                    <span class="tab-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2a6.5 6.5 0 0 0-6.5 6.5c0 3.8 4 8 6.5 9.5 2.5-1.5 6.5-5.7 6.5-9.5A6.5 6.5 0 0 0 12 2z" fill="#FCE8EC" stroke="#E00B41" stroke-width="1.8"/>
+                            <path d="M12 2c1.8 2.2 2.8 4.2 2.8 6.5s-1 4.5-2.8 5.8m0-12.3c-1.8 2.2-2.8 4.2-2.8 6.5s1 4.5 2.8 5.8" stroke="#E00B41" stroke-width="1.2"/>
+                            <rect x="10" y="19" width="4" height="2.5" rx="0.5" fill="#B88E3E"/>
+                        </svg>
+                    </span>
+                    <span class="tab-label">Experiences</span>
+                </a>
+
+                <!-- 4. Services (Concierge Bell) -->
+                <a href="/?category=services" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'services') ? 'active' : '' %>" id="tab-mode-services">
+                    <span class="tab-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="4" r="1.5" fill="#D4AF6A"/>
+                            <path d="M12 5.5v1.5M4 17h16a1 1 0 0 0 1-1c0-4.4-3.6-8-9-8s-9 3.6-9 8a1 1 0 0 0 1 1z" fill="#F9F6EE" stroke="#143528" stroke-width="1.8"/>
+                            <rect x="2" y="17" width="20" height="3" rx="1" fill="#143528"/>
+                        </svg>
+                    </span>
+                    <span class="tab-label">Services</span>
+                </a>
+
+                <!-- Nav Divider -->
+                <span class="mode-tabs-divider" aria-hidden="true"></span>
+
+                <!-- Preserved Guest Options -->
+                <a href="/bookings" class="mode-tab-item mode-tab-item--secondary <%= (typeof currentPage !== 'undefined' && currentPage === 'bookings') ? 'active' : '' %>" title="My Bookings">
+                    <span class="tab-icon-wrap">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </span>
+                    <span class="tab-label">Bookings</span>
+                </a>
+
+                <a href="/favourite-list" class="mode-tab-item mode-tab-item--secondary <%= (typeof currentPage !== 'undefined' && currentPage === 'favourites') ? 'active' : '' %>" title="Saved Favourites">
+                    <span class="tab-icon-wrap">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </span>
+                    <span class="tab-label">Saved</span>
+                </a>
+
+                <% if (typeof user !== 'undefined' && user && user.role === 'host') { %>
+                    <a href="/host/today" class="mode-tab-item mode-tab-item--secondary" title="Host Dashboard">
+                        <span class="tab-label font-semibold">Host Hub</span>
+                    </a>
+                <% } %>
             <% } %>
         </nav>
 
-        <!-- 3. Right User Section -->
-        <div class="right-nav">
-            <!-- Host CTA -->
-            <% if (!user || user.role !== 'host') { %>
-                <a href="<%= user ? '/host/add-home' : '/auth/register' %>" class="host-cta-link">
-                    List your home
+        <!-- 3. Right: Host CTA & Profile Menu Pill -->
+        <div class="right-action-group">
+            <% if ((typeof isHostNav !== 'undefined' && isHostNav) || (typeof currentPage !== 'undefined' && currentPage && currentPage.startsWith('host'))) { %>
+                <a href="/" class="host-switch-link">
+                    Switch to travelling
                 </a>
             <% } else { %>
-                <a href="/host/add-home" class="host-cta-link">
-                    + Add Listing
-                </a>
+                <% if (!user || user.role !== 'host') { %>
+                    <a href="<%= user ? '/host/add-home' : '/auth/register' %>" class="host-cta-pill">
+                        Switch to hosting
+                    </a>
+                <% } else { %>
+                    <a href="/host/today" class="host-cta-pill">
+                        Switch to hosting
+                    </a>
+                <% } %>
             <% } %>
 
-            <!-- Profile Menu Pill Widget -->
+            <!-- Profile Menu Pill Widget (Hamburger + Avatar Circle with Initial L/O) -->
             <div class="profile-menu-wrap" id="profile-menu-container">
-                <button type="button" class="profile-pill-btn" id="profile-pill-trigger" aria-expanded="false" aria-label="User navigation menu">
+                <button type="button" class="profile-pill-trigger-btn" id="profile-pill-trigger" aria-expanded="false" aria-label="User navigation menu">
                     <!-- SVG Hamburger Icon -->
-                    <svg class="menu-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                    <svg class="hamburger-menu-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
                         <line x1="3" y1="6" x2="21" y2="6"></line>
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
 
-                    <!-- User Avatar / Initials -->
+                    <!-- Avatar Initial Circle (Matching Screenshot initial 'L') -->
                     <% if (typeof user !== 'undefined' && user) { %>
-                        <div class="user-avatar user-avatar--logged" title="<%= user.name %>">
-                            <% 
-                                const names = (user.name || 'User').trim().split(' ');
-                                const initials = names.length > 1 ? (names[0][0] + names[names.length - 1][0]).toUpperCase() : names[0].substring(0, 2).toUpperCase();
-                            %>
-                            <span><%= initials %></span>
+                        <% 
+                            const initial = (user.name || 'User').trim().charAt(0).toUpperCase();
+                        %>
+                        <div class="user-avatar-initial" title="<%= user.name %>">
+                            <span><%= initial %></span>
                         </div>
                     <% } else { %>
-                        <div class="user-avatar user-avatar--guest">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <div class="user-avatar-initial user-avatar--guest">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
@@ -69,10 +191,9 @@
                     <% } %>
                 </button>
 
-                <!-- Dropdown Menu -->
-                <div class="profile-dropdown" id="profile-dropdown-menu">
+                <!-- Profile Dropdown Menu -->
+                <div class="profile-dropdown-menu" id="profile-dropdown-menu">
                     <% if (typeof user !== 'undefined' && user) { %>
-                        <!-- Logged In Header -->
                         <div class="dropdown-header">
                             <p class="dropdown-user-name"><%= user.name %></p>
                             <p class="dropdown-user-email"><%= user.email %></p>
@@ -82,20 +203,27 @@
                         </div>
                         <div class="dropdown-divider"></div>
 
-                        <!-- User Links -->
-                        <a href="/bookings" class="dropdown-item">My Bookings</a>
-                        <a href="/favourite-list" class="dropdown-item">Saved Stays</a>
+                        <a href="/bookings" class="dropdown-item">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            <span>My Bookings</span>
+                        </a>
+                        <a href="/favourite-list" class="dropdown-item">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>Saved Stays</span>
+                        </a>
 
                         <% if (user.role === 'host') { %>
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-section-title">Host Operations</div>
-                            <a href="/host" class="dropdown-item">Host Dashboard</a>
-                            <a href="/host/view-home" class="dropdown-item">Manage Listings</a>
-                            <a href="/host/add-home" class="dropdown-item font-semibold text-emerald-800">+ Add New Stay</a>
+                            <a href="/host/today" class="dropdown-item">Host Today</a>
+                            <a href="/host/calendar" class="dropdown-item">Calendar</a>
+                            <a href="/host/listings" class="dropdown-item">Manage Listings</a>
+                            <a href="/host/messages" class="dropdown-item">Host Messages</a>
+                            <a href="/host/add-home" class="dropdown-item" style="color: #143528; font-weight: 600;">+ Create New Stay</a>
                         <% } %>
 
                         <div class="dropdown-divider"></div>
-                        <form action="/auth/logout" method="POST" class="logout-form">
+                        <form action="/auth/logout" method="POST" style="margin: 0;">
                             <button type="submit" class="dropdown-item dropdown-item--logout">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -106,49 +234,529 @@
                             </button>
                         </form>
                     <% } else { %>
-                        <!-- Guest Links -->
                         <a href="/auth/login" class="dropdown-item dropdown-item--primary">Log in</a>
                         <a href="/auth/register" class="dropdown-item">Sign up</a>
                         <div class="dropdown-divider"></div>
-                        <a href="/auth/register" class="dropdown-item">Host your home</a>
-                        <a href="/terms" class="dropdown-item">Help & Terms</a>
+                        <a href="/auth/register" class="dropdown-item">Host your sanctuary</a>
+                        <a href="/terms" class="dropdown-item">Help Centre</a>
                     <% } %>
                 </div>
             </div>
         </div>
 
     </div>
+
+    <!-- 4. Floating Luxury Search Bar (Matching Screenshot: Where • When • Who + Search Icon) -->
+    <div class="header-search-bar-row <%= (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage) ? 'search-bar-row--collapsed' : '' %>" id="header-search-bar-row">
+        <form class="floating-search-pill" action="/search" method="GET" id="global-search-form">
+            
+            <!-- Section 1: Where with Airbnb-style Suggestions Dropdown Popover -->
+            <div class="search-segment-box" id="segment-where" onclick="handleWhereBoxClick(event)">
+                <label class="segment-label" for="input-dest">Where</label>
+                <input 
+                    type="text" 
+                    id="input-dest" 
+                    name="destination" 
+                    class="segment-input" 
+                    placeholder="Search destinations" 
+                    value="<%= (typeof searchQuery !== 'undefined' && searchQuery.destination) ? searchQuery.destination : '' %>"
+                    oninput="handleWhereInput(this.value)"
+                    onfocus="openWhereSuggestions(event)"
+                    autocomplete="off"
+                />
+
+                <!-- Floating Suggestions Dropdown Popover (Exact Match to Airbnb Reference) -->
+                <div class="destination-suggestions-popup" id="where-suggestions-popup" role="listbox" aria-label="Suggested destinations" onclick="event.stopPropagation()">
+                    <div class="suggestions-header-label">Suggested destinations</div>
+                    <div class="suggestions-list-scroll">
+
+                        <!-- 1. Nearby (Live Geolocation Detection) -->
+                        <div class="suggestion-item suggestion-item--nearby" id="suggestion-item-nearby" onclick="detectLiveUserLocation(event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-nearby" id="nearby-icon-wrap">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Nearby</span>
+                                <span class="suggestion-subtitle" id="nearby-subtitle">Find what's around you</span>
+                            </div>
+                        </div>
+
+                        <!-- 2. Chandigarh -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Chandigarh', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-green">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"></path>
+                                    <circle cx="9" cy="9" r="1"></circle>
+                                    <circle cx="15" cy="9" r="1"></circle>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Chandigarh</span>
+                                <span class="suggestion-subtitle">Near you</span>
+                            </div>
+                        </div>
+
+                        <!-- 3. New Delhi, Delhi -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Delhi', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-green">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 22h16V7l-8-5-8 5v15z"></path>
+                                    <path d="M9 22v-8h6v8"></path>
+                                    <line x1="9" y1="10" x2="9" y2="10.01"></line>
+                                    <line x1="15" y1="10" x2="15" y2="10.01"></line>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">New Delhi, Delhi</span>
+                                <span class="suggestion-subtitle">For sights like India Gate</span>
+                            </div>
+                        </div>
+
+                        <!-- 4. North Goa, Goa -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Goa', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-amber">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                    <path d="M2 19c2-1 4-1 6 0s4 1 6 0 4-1 6 0"></path>
+                                    <path d="M2 15c2-1 4-1 6 0s4 1 6 0 4-1 6 0"></path>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">North Goa, Goa</span>
+                                <span class="suggestion-subtitle">Popular beach destination</span>
+                            </div>
+                        </div>
+
+                        <!-- 5. Gurugram, Haryana -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Gurugram', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-neutral">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="7" height="18" rx="1"></rect>
+                                    <rect x="14" y="8" width="7" height="13" rx="1"></rect>
+                                    <line x1="6" y1="7" x2="7" y2="7"></line>
+                                    <line x1="6" y1="11" x2="7" y2="11"></line>
+                                    <line x1="6" y1="15" x2="7" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Gurugram, Haryana</span>
+                                <span class="suggestion-subtitle">Popular destination</span>
+                            </div>
+                        </div>
+
+                        <!-- 6. Dehradun, Uttarakhand -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Dehradun', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-forest">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+                                    <path d="M10 18l2-3 2 3"></path>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Dehradun, Uttarakhand</span>
+                                <span class="suggestion-subtitle">For nature lovers</span>
+                            </div>
+                        </div>
+
+                        <!-- 7. Noida, Uttar Pradesh -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Noida', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-rose">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                                    <line x1="8" y1="6" x2="16" y2="6"></line>
+                                    <line x1="8" y1="10" x2="16" y2="10"></line>
+                                    <line x1="8" y1="14" x2="16" y2="14"></line>
+                                    <line x1="8" y1="18" x2="16" y2="18"></line>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Noida, Uttar Pradesh</span>
+                                <span class="suggestion-subtitle">Popular destination</span>
+                            </div>
+                        </div>
+
+                        <!-- 8. Manali, Himachal Pradesh (Verified Stays in App!) -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Manali', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-ice">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+                                    <path d="M12 11l2 3"></path>
+                                    <path d="M7 16l3-2"></path>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Manali, Himachal Pradesh</span>
+                                <span class="suggestion-subtitle">Snowy mountain sanctuaries &bull; Available now</span>
+                            </div>
+                        </div>
+
+                        <!-- 9. Agra & Jaipur (Verified Stays in App!) -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Agra', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-gold">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2a3 3 0 0 0-3 3c0 1.5 3 4 3 4s3-2.5 3-4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M4 22h16V10H4v12z"></path>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Agra &amp; Jaipur</span>
+                                <span class="suggestion-subtitle">Royal heritage villas &bull; Available now</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="search-segment-divider" aria-hidden="true"></div>
+
+            <!-- Section 2: When (Interactive Airbnb-style Datepicker) -->
+            <div class="search-segment-box" id="segment-when" onclick="handleWhenBoxClick(event)">
+                <label class="segment-label" for="input-checkin">When</label>
+                <div class="segment-date-wrap">
+                    <input 
+                        type="text" 
+                        id="input-checkin" 
+                        name="dates" 
+                        class="segment-input" 
+                        placeholder="Add dates" 
+                        value="<%= (typeof searchQuery !== 'undefined' && searchQuery.dates) ? searchQuery.dates : '' %>"
+                        readonly
+                        onclick="handleWhenBoxClick(event)"
+                    />
+                    <input type="hidden" name="checkin" id="hidden-checkin" />
+                    <input type="hidden" name="checkout" id="hidden-checkout" />
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="search-segment-divider" aria-hidden="true"></div>
+
+            <!-- Section 3: Who (Airbnb-style Interactive Stepper Counter) -->
+            <div class="search-segment-box" id="segment-who" onclick="handleWhoBoxClick(event)">
+                <label class="segment-label" for="who-display-input">Who</label>
+                <input 
+                    type="text" 
+                    id="who-display-input" 
+                    class="segment-input" 
+                    placeholder="Add guests" 
+                    value="<%= (typeof searchQuery !== 'undefined' && searchQuery.guests && Number(searchQuery.guests) > 0) ? (searchQuery.guests + (Number(searchQuery.guests) > 1 ? ' guests' : ' guest')) : '' %>"
+                    readonly 
+                    onclick="handleWhoBoxClick(event)"
+                />
+                <input type="hidden" name="guests" id="hidden-guests-val" value="<%= (typeof searchQuery !== 'undefined' && searchQuery.guests) ? searchQuery.guests : '' %>" />
+            </div>
+
+            <!-- Search Action Button (Matching Screenshot 1 & 2: Vibrant Pill with Icon + Text) -->
+            <button type="submit" class="btn-search-pill" aria-label="Search accommodations">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="btn-search-text">Search</span>
+            </button>
+
+            <!-- ═══════════════════════════════════════════════════════════
+                 WHO GUESTS POPUP MODAL (Exact Match to Airbnb Screenshot)
+            ═══════════════════════════════════════════════════════════ -->
+            <div class="who-guests-popup" id="who-guests-popup" role="dialog" aria-modal="true" aria-label="Add guests" onclick="event.stopPropagation()">
+                
+                <!-- 1. Adults -->
+                <div class="guest-counter-row">
+                    <div class="guest-info-col">
+                        <span class="guest-type-title">Adults</span>
+                        <span class="guest-type-desc">Ages 13 or above</span>
+                    </div>
+                    <div class="guest-stepper-box">
+                        <button type="button" class="btn-stepper is-disabled" id="btn-dec-adults" onclick="updateGuestCount('adults', -1, event)" aria-label="Decrease adults" disabled>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <span class="stepper-count-num" id="count-adults">0</span>
+                        <button type="button" class="btn-stepper" id="btn-inc-adults" onclick="updateGuestCount('adults', 1, event)" aria-label="Increase adults">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="guest-row-divider"></div>
+
+                <!-- 2. Children -->
+                <div class="guest-counter-row">
+                    <div class="guest-info-col">
+                        <span class="guest-type-title">Children</span>
+                        <span class="guest-type-desc">Ages 2–12</span>
+                    </div>
+                    <div class="guest-stepper-box">
+                        <button type="button" class="btn-stepper is-disabled" id="btn-dec-children" onclick="updateGuestCount('children', -1, event)" aria-label="Decrease children" disabled>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <span class="stepper-count-num" id="count-children">0</span>
+                        <button type="button" class="btn-stepper" id="btn-inc-children" onclick="updateGuestCount('children', 1, event)" aria-label="Increase children">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="guest-row-divider"></div>
+
+                <!-- 3. Infants -->
+                <div class="guest-counter-row">
+                    <div class="guest-info-col">
+                        <span class="guest-type-title">Infants</span>
+                        <span class="guest-type-desc">Under 2</span>
+                    </div>
+                    <div class="guest-stepper-box">
+                        <button type="button" class="btn-stepper is-disabled" id="btn-dec-infants" onclick="updateGuestCount('infants', -1, event)" aria-label="Decrease infants" disabled>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <span class="stepper-count-num" id="count-infants">0</span>
+                        <button type="button" class="btn-stepper" id="btn-inc-infants" onclick="updateGuestCount('infants', 1, event)" aria-label="Increase infants">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="guest-row-divider"></div>
+
+                <!-- 4. Pets -->
+                <div class="guest-counter-row">
+                    <div class="guest-info-col">
+                        <span class="guest-type-title">Pets</span>
+                        <a href="javascript:void(0)" class="guest-service-animal-link" onclick="event.stopPropagation()">Bringing a service animal?</a>
+                    </div>
+                    <div class="guest-stepper-box">
+                        <button type="button" class="btn-stepper is-disabled" id="btn-dec-pets" onclick="updateGuestCount('pets', -1, event)" aria-label="Decrease pets" disabled>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <span class="stepper-count-num" id="count-pets">0</span>
+                        <button type="button" class="btn-stepper" id="btn-inc-pets" onclick="updateGuestCount('pets', 1, event)" aria-label="Increase pets">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════════
+                 WHEN DATEPICKER POPUP MODAL (Exact Match to Airbnb Screenshots)
+            ═══════════════════════════════════════════════════════════ -->
+            <div class="when-datepicker-popup" id="when-datepicker-popup" role="dialog" aria-modal="true" aria-label="Choose dates" onclick="event.stopPropagation()">
+                
+                <!-- Pill Switcher: [ Dates ] [ Flexible ] -->
+                <div class="when-tab-pill-wrap">
+                    <div class="when-tab-pill">
+                        <button type="button" class="when-tab-btn active" id="tab-btn-dates" onclick="switchWhenTab('dates', event)">Dates</button>
+                        <button type="button" class="when-tab-btn" id="tab-btn-flexible" onclick="switchWhenTab('flexible', event)">Flexible</button>
+                    </div>
+                </div>
+
+                <!-- ── VIEW 1: DATES (Dual Calendar View matching Screenshot 1) ── -->
+                <div class="when-view-container" id="view-dates-content">
+                    
+                    <!-- Month Navigation Header -->
+                    <div class="calendars-nav-row">
+                        <button type="button" class="cal-nav-btn" onclick="prevMonthNav(event)" aria-label="Previous month" id="cal-prev-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <div class="cal-month-title" id="month-title-1">October 2026</div>
+                        <div class="cal-month-title" id="month-title-2">November 2026</div>
+                        <button type="button" class="cal-nav-btn" onclick="nextMonthNav(event)" aria-label="Next month" id="cal-next-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+
+                    <!-- Dual Months Calendar Grid -->
+                    <div class="dual-calendars-grid">
+                        
+                        <!-- Month 1 -->
+                        <div class="single-month-cal">
+                            <div class="cal-weekdays">
+                                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                            </div>
+                            <div class="cal-days-grid" id="days-grid-1"></div>
+                        </div>
+
+                        <!-- Month 2 -->
+                        <div class="single-month-cal">
+                            <div class="cal-weekdays">
+                                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                            </div>
+                            <div class="cal-days-grid" id="days-grid-2"></div>
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Exact Date Dropdown Row (Screenshot 1) -->
+                    <div class="datepicker-bottom-exact-row">
+                        <div class="exact-date-box" onclick="toggleExactDateOptions('checkin', event)">
+                            <div class="exact-box-col">
+                                <span class="exact-label">Check-in</span>
+                                <span class="exact-val" id="exact-checkin-val">Exact date</span>
+                            </div>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                        <div class="exact-date-box" onclick="toggleExactDateOptions('checkout', event)">
+                            <div class="exact-box-col">
+                                <span class="exact-label">Checkout</span>
+                                <span class="exact-val" id="exact-checkout-val">Exact date</span>
+                            </div>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ── VIEW 2: FLEXIBLE (Matching Screenshot 2) ── -->
+                <div class="when-view-container" id="view-flexible-content" style="display: none;">
+                    
+                    <!-- 1. How long would you like to stay? -->
+                    <div class="flex-section">
+                        <h3 class="flex-heading">How long would you like to stay?</h3>
+                        <div class="flex-duration-pills">
+                            <button type="button" class="duration-pill active" onclick="selectFlexDuration('Weekend', this, event)">Weekend</button>
+                            <button type="button" class="duration-pill" onclick="selectFlexDuration('Week', this, event)">Week</button>
+                            <button type="button" class="duration-pill" onclick="selectFlexDuration('Month', this, event)">Month</button>
+                        </div>
+                    </div>
+
+                    <!-- 2. When do you want to go? -->
+                    <div class="flex-section" style="margin-top: 32px;">
+                        <h3 class="flex-heading">When do you want to go?</h3>
+                        <div class="flex-carousel-wrap">
+                            <div class="flex-months-track" id="flex-months-track">
+                                
+                                <div class="flex-month-card active" onclick="toggleFlexMonth(this, 'October 2026', event)">
+                                    <div class="flex-card-icon">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                            <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="flex-card-month">October</span>
+                                    <span class="flex-card-year">2026</span>
+                                </div>
+
+                                <div class="flex-month-card" onclick="toggleFlexMonth(this, 'November 2026', event)">
+                                    <div class="flex-card-icon">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                            <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="flex-card-month">November</span>
+                                    <span class="flex-card-year">2026</span>
+                                </div>
+
+                                <div class="flex-month-card" onclick="toggleFlexMonth(this, 'December 2026', event)">
+                                    <div class="flex-card-icon">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                            <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="flex-card-month">December</span>
+                                    <span class="flex-card-year">2026</span>
+                                </div>
+
+                                <div class="flex-month-card" onclick="toggleFlexMonth(this, 'January 2027', event)">
+                                    <div class="flex-card-icon">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                            <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="flex-card-month">January</span>
+                                    <span class="flex-card-year">2027</span>
+                                </div>
+
+                                <div class="flex-month-card" onclick="toggleFlexMonth(this, 'February 2027', event)">
+                                    <div class="flex-card-icon">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                            <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="flex-card-month">February</span>
+                                    <span class="flex-card-year">2027</span>
+                                </div>
+
+                                <div class="flex-month-card" onclick="toggleFlexMonth(this, 'March 2027', event)">
+                                    <div class="flex-card-icon">
+                                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                            <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="flex-card-month">March</span>
+                                    <span class="flex-card-year">2027</span>
+                                </div>
+
+                            </div>
+
+                            <!-- Carousel Next Button (Screenshot 2) -->
+                            <button type="button" class="flex-arrow-btn" onclick="scrollFlexCarousel(1, event)" aria-label="Next months">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+    </div>
 </header>
 
-<!-- Scoped CSS for Global Nav -->
+<!-- ═══════════════════════════════════════════════════════════
+     SCOPED LUXURY STYLING FOR NAVBAR
+═══════════════════════════════════════════════════════════ -->
 <style>
-    .staynest-nav-header {
+    .staynest-global-header {
         position: sticky;
         top: 0;
         z-index: 100;
-        background: #FAF7F0;
-        border-bottom: 1px solid #E8E2D5;
-        box-shadow: 0 1px 4px rgba(18, 43, 32, 0.04);
+        background: #FFFFFF;
+        border-bottom: 1px solid #EBEBEB;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
-    .nav-container {
-        max-width: 1320px;
+    /* ── Top Row ── */
+    .header-main-row {
+        max-width: 1360px;
         margin: 0 auto;
-        padding: 14px 24px;
+        padding: 12px 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 20px;
     }
 
-    /* Brand */
+    /* Brand Logo */
     .brand-link {
         display: flex;
         align-items: center;
         gap: 10px;
         text-decoration: none;
-        color: #111827;
+        color: #0B1C14;
         transition: transform 0.15s ease;
+        flex-shrink: 0;
     }
 
     .brand-link:hover {
@@ -156,168 +764,205 @@
     }
 
     .brand-name {
-        font-size: 20px;
+        font-size: 21px;
         font-weight: 800;
-        letter-spacing: -0.5px;
-        color: #111827;
+        letter-spacing: -0.6px;
+        color: #0B1C14;
     }
 
     .brand-name-accent {
-        color: #122B20;
-        font-weight: 900;
+        color: #D4AF6A;
+        font-weight: 800;
     }
 
-    /* Center Nav */
-    .center-nav {
+    /* Center Navigation (Matching Screenshot) */
+    .center-mode-nav {
         display: flex;
         align-items: center;
-        gap: 28px;
+        gap: 22px;
+        flex-wrap: nowrap;
     }
 
-    .nav-link {
+    .mode-tab-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 4px;
         text-decoration: none;
-        color: #4B5563;
-        font-size: 14px;
+        color: #6A6A6A;
+        font-size: 14.5px;
         font-weight: 500;
-        padding: 6px 4px;
         position: relative;
-        transition: color 0.15s ease;
+        transition: color 0.18s ease;
+        white-space: nowrap;
     }
 
-    .nav-link:hover {
-        color: #111827;
+    .mode-tab-item:hover {
+        color: #111111;
     }
 
-    .nav-link.active {
-        color: #122B20;
+    .tab-icon-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Active Tab Underline (Matching Screenshot) */
+    .mode-tab-item.active {
+        color: #111111;
         font-weight: 600;
     }
 
-    .nav-link.active::after {
+    .mode-tab-item.active::after {
         content: '';
         position: absolute;
         bottom: -2px;
         left: 0;
         right: 0;
-        height: 2px;
-        background: #D4AF6A;
+        height: 2.5px;
+        background: #111111;
         border-radius: 2px;
     }
 
-    /* Right Nav */
-    .right-nav {
-        display: flex;
-        align-items: center;
-        gap: 16px;
+    .mode-tabs-divider {
+        width: 1px;
+        height: 22px;
+        background: #E0E0E0;
+        margin: 0 4px;
+        display: inline-block;
     }
 
-    .host-cta-link {
+    .mode-tab-item--secondary {
+        color: #555555;
+    }
+
+    .mode-tab-item--secondary.active::after {
+        background: #D4AF6A;
+    }
+
+    /* Right Section */
+    .right-action-group {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-shrink: 0;
+    }
+
+    .host-cta-pill {
         text-decoration: none;
-        font-size: 13.5px;
+        font-size: 14px;
         font-weight: 600;
-        color: #122B20;
-        padding: 8px 14px;
+        color: #222222;
+        padding: 10px 16px;
+        border-radius: 9999px;
+        transition: background 0.15s ease;
+        white-space: nowrap;
+    }
+
+    .host-cta-pill:hover {
+        background: #F7F7F7;
+    }
+
+    .host-switch-link {
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: #222222;
+        padding: 9px 16px;
         border-radius: 9999px;
         transition: background 0.15s ease;
     }
 
-    .host-cta-link:hover {
-        background: #EFE9DC;
+    .host-switch-link:hover {
+        background: #F7F7F7;
     }
 
-    /* Profile Pill Widget */
+    /* Profile Pill Trigger Button (Matching Screenshot: Hamburger + L Avatar) */
     .profile-menu-wrap {
         position: relative;
     }
 
-    .profile-pill-btn {
+    .profile-pill-trigger-btn {
         display: flex;
         align-items: center;
-        gap: 10px;
-        background: #FAF7F0;
-        border: 1px solid #D8D2C4;
-        padding: 5px 6px 5px 12px;
+        gap: 12px;
+        background: #FFFFFF;
+        border: 1px solid #DDDDDD;
+        padding: 5px 6px 5px 14px;
         border-radius: 9999px;
         cursor: pointer;
         transition: box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
-    .profile-pill-btn:hover {
-        box-shadow: 0 2px 8px rgba(18, 43, 32, 0.12);
-        border-color: #D4AF6A;
+    .profile-pill-trigger-btn:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
     }
 
-    .menu-icon {
-        color: #122B20;
+    .hamburger-menu-icon {
+        color: #222222;
     }
 
-    .user-avatar {
+    /* Initial Circle Badge (Matching Screenshot: 'L' on Light Green) */
+    .user-avatar-initial {
         width: 32px;
         height: 32px;
         border-radius: 50%;
+        background: #C5E2D2;
+        color: #143528;
+        border: 1px solid rgba(20, 53, 40, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
+        font-size: 13.5px;
         font-weight: 700;
     }
 
-    .user-avatar--logged {
-        background: #122B20;
-        color: #FAF7F0;
-    }
-
     .user-avatar--guest {
-        background: #EFE9DC;
-        color: #122B20;
+        background: #F2EFE8;
+        color: #6B7280;
+        border: none;
     }
 
-    /* Dropdown */
-    .profile-dropdown {
+    /* Profile Dropdown */
+    .profile-dropdown-menu {
         position: absolute;
         top: calc(100% + 10px);
         right: 0;
         width: 250px;
-        background: #FAF7F0;
+        background: #FFFFFF;
         border-radius: 16px;
-        border: 1px solid #E8E2D5;
-        box-shadow: 0 12px 36px -5px rgba(18, 43, 32, 0.18), 0 0 1px rgba(0, 0, 0, 0.08);
+        border: 1px solid #EBEBEB;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16);
         padding: 8px 0;
         display: none;
         z-index: 1000;
-        animation: dropFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: dropFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .profile-dropdown.is-open {
+    .profile-dropdown-menu.is-open {
         display: block;
     }
 
-    @keyframes dropFade {
-        from {
-            opacity: 0;
-            transform: translateY(-6px) scale(0.98);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+    @keyframes dropFadeIn {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .dropdown-header {
-        padding: 10px 18px 8px;
+        padding: 12px 18px 8px;
     }
 
     .dropdown-user-name {
-        font-size: 14px;
+        font-size: 14.5px;
         font-weight: 700;
-        color: #111827;
+        color: #111111;
         margin: 0;
         line-height: 1.3;
     }
 
     .dropdown-user-email {
         font-size: 12px;
-        color: #6B7280;
+        color: #717171;
         margin: 2px 0 6px;
         word-break: break-all;
     }
@@ -325,7 +970,6 @@
     .dropdown-role-badge {
         font-size: 10.5px;
         font-weight: 700;
-        letter-spacing: 0.05em;
         text-transform: uppercase;
         padding: 2px 8px;
         border-radius: 6px;
@@ -338,8 +982,8 @@
     }
 
     .dropdown-role-badge.role-guest {
-        background: #E0E7FF;
-        color: #3730A3;
+        background: #EBF2ED;
+        color: #143528;
     }
 
     .dropdown-section-title {
@@ -347,41 +991,40 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: #9CA3AF;
+        color: #888888;
         padding: 6px 18px 4px;
     }
 
     .dropdown-divider {
         height: 1px;
-        background: #F3F4F6;
+        background: #EBEBEB;
         margin: 6px 0;
     }
 
     .dropdown-item {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         width: 100%;
-        padding: 9px 18px;
+        padding: 10px 18px;
         font-size: 13.5px;
-        color: #374151;
+        color: #222222;
         text-decoration: none;
         background: transparent;
         border: none;
         text-align: left;
         cursor: pointer;
-        transition: background 0.12s ease, color 0.12s ease;
+        transition: background 0.12s ease;
         box-sizing: border-box;
     }
 
     .dropdown-item:hover {
-        background: #F9FAFB;
-        color: #111827;
+        background: #F7F7F7;
     }
 
     .dropdown-item--primary {
         font-weight: 600;
-        color: #122B20;
+        color: #0B1C14;
     }
 
     .dropdown-item--logout {
@@ -391,60 +1034,1526 @@
 
     .dropdown-item--logout:hover {
         background: #FEF2F2;
-        color: #B91C1C;
     }
 
-    .logout-form {
-        margin: 0;
+    /* ── Compact Search Pill for Search Results Page (Screenshot 1) ── */
+    .header-compact-pill-box {
+        display: inline-flex;
+        align-items: center;
+        background: #FFFFFF;
+        border: 1px solid #DDDDDD;
+        border-radius: 9999px;
+        padding: 6px 8px 6px 18px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+        gap: 14px;
+        user-select: none;
+    }
+
+    .header-compact-pill-box:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.08);
+        border-color: #B0B0B0;
+    }
+
+    .compact-pill-item {
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #222222;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .compact-pill-item--dest {
+        color: #111111;
+    }
+
+    .compact-pill-strong {
+        font-weight: 600;
+    }
+
+    .compact-pill-divider {
+        width: 1px;
+        height: 18px;
+        background: #EBEBEB;
+    }
+
+    .compact-pill-circle-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #E00B41;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFFFFF;
+        margin-left: 4px;
+        flex-shrink: 0;
+        transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .header-compact-pill-box:hover .compact-pill-circle-btn {
+        transform: scale(1.06);
+        background: #D7043A;
+    }
+
+    .search-bar-row--collapsed {
+        display: none !important;
+    }
+
+    .search-bar-row--expanded {
+        display: flex !important;
+        animation: dropFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* ── Floating Search Pill Row (Matching Screenshot: Where • When • Who) ── */
+    .header-search-bar-row {
+        padding: 0 24px 18px 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .floating-search-pill {
+        display: flex;
+        align-items: center;
+        background: #FFFFFF;
+        border: 1px solid #DDDDDD;
+        border-radius: 9999px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        padding: 6px 8px 6px 20px;
+        max-width: 860px;
+        width: 100%;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        position: relative;
+    }
+
+    .floating-search-pill:hover,
+    .floating-search-pill:focus-within {
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.14);
+        border-color: #B0B0B0;
+    }
+
+    .search-segment-box {
+        flex: 1;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: background 0.15s ease, box-shadow 0.15s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+    }
+
+    .search-segment-box:hover {
+        background: #F2F2F2;
+    }
+
+    .search-segment-box.is-active {
+        background: #FFFFFF;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.14);
+    }
+
+    /* ── Destination Suggestions Popover (Exact Match to Airbnb Screenshot) ── */
+    .destination-suggestions-popup {
+        position: absolute;
+        top: calc(100% + 14px);
+        left: 0;
+        width: 440px;
+        max-width: 92vw;
+        background: #FFFFFF;
+        border-radius: 32px;
+        box-shadow: 0 16px 42px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.06);
+        padding: 24px 16px 20px 20px;
+        z-index: 9999;
+        display: none;
+        cursor: default;
+        text-align: left;
+    }
+
+    .destination-suggestions-popup.is-open {
+        display: block;
+        animation: popupFadeSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes popupFadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(-8px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .suggestions-header-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #222222;
+        letter-spacing: -0.2px;
+        padding: 0 10px 14px 8px;
+    }
+
+    .suggestions-list-scroll {
+        max-height: 400px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-right: 6px;
+    }
+
+    .suggestions-list-scroll::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .suggestions-list-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .suggestions-list-scroll::-webkit-scrollbar-thumb {
+        background: #D8D4CC;
+        border-radius: 9999px;
+    }
+
+    .suggestions-list-scroll::-webkit-scrollbar-thumb:hover {
+        background: #B4AE9F;
+    }
+
+    .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 10px 12px;
+        border-radius: 18px;
+        cursor: pointer;
+        transition: background 0.14s ease, transform 0.12s ease;
+        outline: none;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item:focus-visible {
+        background: #F5F3EC;
+        transform: translateX(2px);
+    }
+
+    .suggestion-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: transform 0.18s ease;
+    }
+
+    .suggestion-item:hover .suggestion-icon-box {
+        transform: scale(1.05);
+    }
+
+    /* Icon Box Color Variants Matching Screenshot */
+    .icon-nearby {
+        background: #EEF4FD;
+        color: #1E6BE6;
+    }
+
+    .icon-green {
+        background: #EFF8F2;
+        color: #2D8A4E;
+    }
+
+    .icon-amber {
+        background: #FEF6EE;
+        color: #D97706;
+    }
+
+    .icon-neutral {
+        background: #F9F6F0;
+        color: #855E38;
+    }
+
+    .icon-forest {
+        background: #E8F5E9;
+        color: #166534;
+    }
+
+    .icon-rose {
+        background: #FDF2F4;
+        color: #BE185D;
+    }
+
+    .icon-ice {
+        background: #F0F9FF;
+        color: #0284C7;
+    }
+
+    .icon-gold {
+        background: #FEF9C3;
+        color: #B45309;
+    }
+
+    .suggestion-text-box {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .suggestion-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #222222;
+        line-height: 1.25;
+    }
+
+    .suggestion-subtitle {
+        font-size: 13px;
+        font-weight: 400;
+        color: #717171;
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @keyframes pulseLocation {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.14); opacity: 0.65; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .pulse-loc {
+        animation: pulseLocation 0.9s infinite ease-in-out;
+    }
+
+    .segment-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #222222;
+        margin-bottom: 2px;
+        display: block;
+        cursor: pointer;
+        letter-spacing: -0.2px;
+    }
+
+    .segment-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-family: inherit;
+        font-size: 14px;
+        color: #222222;
+        outline: none;
+        padding: 0;
+        font-weight: 400;
+    }
+
+    .segment-input::placeholder {
+        color: #717171;
+    }
+
+    .segment-select {
+        cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .search-segment-divider {
+        width: 1px;
+        height: 32px;
+        background: #DDDDDD;
+        flex-shrink: 0;
+    }
+
+    /* Circular / Pill Vibrant Search Button (Matching Screenshot 1 & 2) */
+    .btn-search-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #E00B41;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 9999px;
+        padding: 12px 22px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        flex-shrink: 0;
+        margin-left: 6px;
+        box-shadow: 0 2px 10px rgba(224, 11, 65, 0.35);
+        transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .btn-search-pill:hover {
+        background: #C70938;
+        transform: scale(1.02);
+    }
+
+    .btn-search-text {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+    }
+
+    .btn-search-circular {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #E00B41;
+        color: #FFFFFF;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        margin-left: 6px;
+        box-shadow: 0 2px 8px rgba(224, 11, 65, 0.35);
+        transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .btn-search-circular:hover {
+        background: #C70938;
+        transform: scale(1.04);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       WHO GUESTS POPUP (Exact Match to Airbnb Screenshot)
+    ═══════════════════════════════════════════════════════════ */
+    .who-guests-popup {
+        position: absolute;
+        top: calc(100% + 14px);
+        right: 0;
+        width: 410px;
+        max-width: 94vw;
+        background: #FFFFFF;
+        border-radius: 32px;
+        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.06);
+        padding: 24px 28px;
+        z-index: 9999;
+        display: none;
+        cursor: default;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    .who-guests-popup.is-open {
+        display: block;
+        animation: popupFadeSlideRight 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes popupFadeSlideRight {
+        from {
+            opacity: 0;
+            transform: translateY(-8px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .guest-counter-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+    }
+
+    .guest-info-col {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .guest-type-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #222222;
+        letter-spacing: -0.2px;
+    }
+
+    .guest-type-desc {
+        font-size: 14px;
+        font-weight: 400;
+        color: #717171;
+    }
+
+    .guest-service-animal-link {
+        font-size: 14px;
+        font-weight: 500;
+        color: #717171;
+        text-decoration: underline;
+        transition: color 0.15s ease;
+    }
+
+    .guest-service-animal-link:hover {
+        color: #222222;
+    }
+
+    .guest-row-divider {
+        height: 1px;
+        background: #EBEBEB;
+        width: 100%;
+    }
+
+    .guest-stepper-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .btn-stepper {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid #B0B0B0;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #717171;
+        cursor: pointer;
+        transition: all 0.15s ease;
         padding: 0;
     }
 
-    /* Mobile Responsive */
+    .btn-stepper:not(.is-disabled):hover {
+        border-color: #222222;
+        color: #222222;
+        transform: scale(1.05);
+    }
+
+    .btn-stepper.is-disabled {
+        border-color: #EBEBEB;
+        color: #D6D6D6;
+        cursor: not-allowed;
+        opacity: 0.55;
+    }
+
+    .stepper-count-num {
+        font-size: 16px;
+        font-weight: 500;
+        color: #222222;
+        min-width: 24px;
+        text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       WHEN DATEPICKER POPUP MODAL (Exact Match to Airbnb Screenshots)
+    ═══════════════════════════════════════════════════════════ */
+    .when-datepicker-popup {
+        position: absolute;
+        top: calc(100% + 14px);
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 840px;
+        max-width: 96vw;
+        background: #FFFFFF;
+        border-radius: 32px;
+        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.06);
+        padding: 28px 36px 24px 36px;
+        z-index: 9999;
+        display: none;
+        cursor: default;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    .when-datepicker-popup.is-open {
+        display: block;
+        animation: popupFadeSlideCenter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes popupFadeSlideCenter {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -8px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+        }
+    }
+
+    /* Tab Switcher: [ Dates ] [ Flexible ] */
+    .when-tab-pill-wrap {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+    }
+
+    .when-tab-pill {
+        display: inline-flex;
+        background: #EBEBEB;
+        padding: 4px;
+        border-radius: 9999px;
+    }
+
+    .when-tab-btn {
+        border: none;
+        background: transparent;
+        padding: 8px 24px;
+        border-radius: 9999px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #222222;
+        cursor: pointer;
+        transition: all 0.16s ease;
+    }
+
+    .when-tab-btn.active {
+        background: #FFFFFF;
+        color: #222222;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    /* ── Dates View: Dual Calendars ── */
+    .calendars-nav-row {
+        display: grid;
+        grid-template-columns: 40px 1fr 1fr 40px;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .cal-nav-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid transparent;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #222222;
+        transition: background 0.14s ease, border-color 0.14s ease;
+    }
+
+    .cal-nav-btn:hover {
+        background: #F2F2F2;
+        border-color: #E0E0E0;
+    }
+
+    .cal-month-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #222222;
+        text-align: center;
+        letter-spacing: -0.2px;
+    }
+
+    .dual-calendars-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+    }
+
+    .single-month-cal {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cal-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: #717171;
+        margin-bottom: 12px;
+    }
+
+    .cal-days-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        row-gap: 4px;
+    }
+
+    .cal-day-cell {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #222222;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        position: relative;
+        border-radius: 50%;
+        margin: 2px;
+        transition: all 0.14s ease;
+    }
+
+    .cal-day-cell.is-empty {
+        cursor: default;
+    }
+
+    .cal-day-cell.is-disabled {
+        color: #DDDDDD;
+        cursor: not-allowed;
+        text-decoration: none;
+    }
+
+    .cal-day-cell:not(.is-disabled):not(.is-empty):hover {
+        border: 1.5px solid #222222;
+    }
+
+    /* Selected Check-in & Check-out (Screenshot 1) */
+    .cal-day-cell.is-checkin,
+    .cal-day-cell.is-checkout {
+        background: #222222 !important;
+        color: #FFFFFF !important;
+        border-radius: 50% !important;
+        font-weight: 700;
+    }
+
+    /* In-range highlight */
+    .cal-day-cell.in-range {
+        background: #F4F0E8 !important; /* luxury warm cream highlight */
+        border-radius: 0 !important;
+        color: #143528 !important;
+    }
+
+    .cal-day-cell.is-checkin.has-range {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    .cal-day-cell.is-checkout.has-range {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+    }
+
+    /* Bottom Exact Date Selectors (Screenshot 1) */
+    .datepicker-bottom-exact-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 24px;
+        padding-top: 18px;
+        border-top: 1px solid #EBEBEB;
+    }
+
+    .exact-date-box {
+        border: 1px solid #DDDDDD;
+        border-radius: 16px;
+        padding: 10px 16px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .exact-date-box:hover {
+        border-color: #222222;
+    }
+
+    .exact-box-col {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .exact-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #717171;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .exact-val {
+        font-size: 14px;
+        font-weight: 600;
+        color: #222222;
+    }
+
+    /* ── View 2: Flexible Tab (Screenshot 2) ── */
+    .flex-section {
+        text-align: center;
+    }
+
+    .flex-heading {
+        font-size: 18px;
+        font-weight: 600;
+        color: #222222;
+        margin-bottom: 18px;
+        letter-spacing: -0.3px;
+    }
+
+    .flex-duration-pills {
+        display: inline-flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .duration-pill {
+        background: #FFFFFF;
+        border: 1px solid #DDDDDD;
+        border-radius: 9999px;
+        padding: 9px 24px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #222222;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .duration-pill:hover {
+        border-color: #222222;
+    }
+
+    .duration-pill.active {
+        border: 2px solid #222222;
+        background: #F7F7F7;
+        font-weight: 600;
+    }
+
+    /* Horizontal Months Carousel (Screenshot 2) */
+    .flex-carousel-wrap {
+        display: flex;
+        align-items: center;
+        position: relative;
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .flex-months-track {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding: 4px 6px 12px 6px;
+        scroll-behavior: smooth;
+        width: 100%;
+    }
+
+    .flex-months-track::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .flex-months-track::-webkit-scrollbar-thumb {
+        background: #E0E0E0;
+        border-radius: 9999px;
+    }
+
+    .flex-month-card {
+        min-width: 105px;
+        height: 122px;
+        border: 1.5px solid #E5E5E5;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: pointer;
+        background: #FFFFFF;
+        transition: all 0.16s ease;
+        flex-shrink: 0;
+    }
+
+    .flex-month-card:hover {
+        border-color: #222222;
+    }
+
+    .flex-month-card.active {
+        border: 2px solid #222222;
+        background: #FAFAF7;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .flex-card-icon {
+        color: #717171;
+        margin-bottom: 4px;
+    }
+
+    .flex-month-card.active .flex-card-icon {
+        color: #143528;
+    }
+
+    .flex-card-month {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #222222;
+    }
+
+    .flex-card-year {
+        font-size: 12px;
+        font-weight: 400;
+        color: #717171;
+    }
+
+    .flex-arrow-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        border: 1px solid #DDDDDD;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-left: 8px;
+        flex-shrink: 0;
+        transition: all 0.15s ease;
+    }
+
+    .flex-arrow-btn:hover {
+        border-color: #222222;
+        transform: scale(1.05);
+    }
+
+    /* ── Responsive Behavior ── */
+    @media (max-width: 1024px) {
+        .center-mode-nav {
+            gap: 14px;
+        }
+
+        .mode-tab-item {
+            font-size: 13.5px;
+        }
+
+        .floating-search-pill {
+            max-width: 100%;
+        }
+    }
+
     @media (max-width: 768px) {
-        .center-nav {
+        .header-main-row {
+            padding: 10px 16px;
+        }
+
+        .center-mode-nav {
             display: none;
         }
 
-        .host-cta-link {
+        .host-cta-pill {
             display: none;
+        }
+
+        .header-search-bar-row {
+            padding: 0 16px 12px 16px;
+        }
+
+        .floating-search-pill {
+            padding: 6px 8px 6px 14px;
+        }
+
+        .search-segment-divider {
+            display: none;
+        }
+
+        .destination-suggestions-popup {
+            position: fixed;
+            top: 130px;
+            left: 12px;
+            right: 12px;
+            width: auto;
+            max-width: none;
+            border-radius: 24px;
+            padding: 18px 14px;
+        }
+
+        .when-datepicker-popup {
+            position: fixed;
+            top: 130px;
+            left: 8px;
+            right: 8px;
+            width: auto;
+            max-width: none;
+            transform: none;
+            border-radius: 24px;
+            padding: 20px 14px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .dual-calendars-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .cal-month-title#month-title-2 {
+            display: none;
+        }
+
+        .single-month-cal:nth-child(2) {
+            display: none;
+        }
+
+        .calendars-nav-row {
+            grid-template-columns: 40px 1fr 40px;
+        }
+
+        .btn-search-text {
+            display: none;
+        }
+
+        .btn-search-pill {
+            padding: 12px 14px;
+            border-radius: 50%;
+        }
+
+        .who-guests-popup {
+            position: fixed;
+            top: 130px;
+            left: 10px;
+            right: 10px;
+            width: auto;
+            max-width: none;
+            border-radius: 24px;
+            padding: 20px 18px;
         }
     }
 </style>
 
-<!-- Toggle Script for User Menu Dropdown -->
+<!-- ═══════════════════════════════════════════════════════════
+     INTERACTIVE JAVASCRIPT FOR NAVBAR & SEARCH
+═══════════════════════════════════════════════════════════ -->
 <script>
     (function () {
+        // Dropdown toggle
         const trigger = document.getElementById('profile-pill-trigger');
         const dropdown = document.getElementById('profile-dropdown-menu');
         const container = document.getElementById('profile-menu-container');
 
-        if (!trigger || !dropdown || !container) return;
+        if (trigger && dropdown && container) {
+            trigger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const isOpen = dropdown.classList.toggle('is-open');
+                trigger.setAttribute('aria-expanded', isOpen);
+            });
 
-        function toggleDropdown(e) {
-            e.stopPropagation();
-            const isOpen = dropdown.classList.toggle('is-open');
-            trigger.setAttribute('aria-expanded', isOpen);
+            document.addEventListener('click', function (e) {
+                if (!container.contains(e.target)) {
+                    dropdown.classList.remove('is-open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    dropdown.classList.remove('is-open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                }
+            });
         }
 
-        function closeDropdown() {
-            dropdown.classList.remove('is-open');
-            trigger.setAttribute('aria-expanded', 'false');
-        }
-
-        trigger.addEventListener('click', toggleDropdown);
-
-        // Close on clicking outside
+        // Close popups when clicking outside
         document.addEventListener('click', function (e) {
-            if (!container.contains(e.target)) {
-                closeDropdown();
+            const segWhere = document.getElementById('segment-where');
+            const wherePopup = document.getElementById('where-suggestions-popup');
+            if (segWhere && wherePopup && !segWhere.contains(e.target)) {
+                closeWhereSuggestions();
+            }
+
+            const segWhen = document.getElementById('segment-when');
+            const whenPopup = document.getElementById('when-datepicker-popup');
+            if (segWhen && whenPopup && !segWhen.contains(e.target) && !whenPopup.contains(e.target)) {
+                closeWhenDatepicker();
+            }
+
+            const segWho = document.getElementById('segment-who');
+            const whoPopup = document.getElementById('who-guests-popup');
+            if (segWho && whoPopup && !segWho.contains(e.target) && !whoPopup.contains(e.target)) {
+                closeWhoPopup();
             }
         });
 
-        // Close on Escape key
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
-                closeDropdown();
+                closeWhereSuggestions();
+                closeWhenDatepicker();
+                closeWhoPopup();
             }
         });
     })();
+
+    function focusSearchField(id) {
+        const el = document.getElementById(id);
+        if (el) el.focus();
+    }
+
+    /* ── Where Destination Suggestions Popover Logic ── */
+    function handleWhereBoxClick(e) {
+        closeWhenDatepicker();
+        openWhereSuggestions(e);
+        const input = document.getElementById('input-dest');
+        if (input && document.activeElement !== input) {
+            input.focus();
+        }
+    }
+
+    function openWhereSuggestions(e) {
+        if (e) e.stopPropagation();
+        closeWhenDatepicker();
+        closeWhoPopup();
+        const popup = document.getElementById('where-suggestions-popup');
+        const segWhere = document.getElementById('segment-where');
+        if (popup) popup.classList.add('is-open');
+        if (segWhere) segWhere.classList.add('is-active');
+    }
+
+    function closeWhereSuggestions() {
+        const popup = document.getElementById('where-suggestions-popup');
+        const segWhere = document.getElementById('segment-where');
+        if (popup) popup.classList.remove('is-open');
+        if (segWhere) segWhere.classList.remove('is-active');
+    }
+
+    function handleWhereInput(val) {
+        openWhereSuggestions();
+        if (typeof filterListings === 'function') {
+            filterListings(val);
+        }
+        const q = (val || '').toLowerCase().trim();
+        const items = document.querySelectorAll('.suggestion-item:not(.suggestion-item--nearby)');
+        items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (!q || text.includes(q)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function selectDestinationOption(destName, e) {
+        if (e) e.stopPropagation();
+        const input = document.getElementById('input-dest');
+        if (input) {
+            input.value = destName;
+        }
+        closeWhereSuggestions();
+        if (typeof filterListings === 'function') {
+            filterListings(destName);
+        } else {
+            const form = document.getElementById('global-search-form');
+            if (form) form.submit();
+        }
+    }
+
+    /* ── Live Geolocation / Nearby Detection ── */
+    async function detectLiveUserLocation(e) {
+        if (e) e.stopPropagation();
+        const sub = document.getElementById('nearby-subtitle');
+        const iconWrap = document.getElementById('nearby-icon-wrap');
+
+        if (sub) sub.innerHTML = '<span style="color: #1E6BE6; font-weight: 600;">⟳ Detecting live GPS location...</span>';
+        if (iconWrap) iconWrap.classList.add('pulse-loc');
+
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
+                            headers: { 'Accept-Language': 'en' }
+                        });
+                        const data = await res.json();
+                        const addr = data.address || {};
+                        const detectedCity = addr.city || addr.town || addr.village || addr.suburb || addr.state_district || addr.state || 'Nearby';
+                        
+                        if (sub) sub.innerHTML = `<span style="color: #166534; font-weight: 600;">✓ Live: ${detectedCity}</span>`;
+                        setTimeout(() => {
+                            selectDestinationOption(detectedCity);
+                        }, 400);
+                    } catch (err) {
+                        console.warn("Reverse geocode failed, using IP fallback:", err);
+                        await fallbackIpLocation(sub, iconWrap);
+                    } finally {
+                        if (iconWrap) iconWrap.classList.remove('pulse-loc');
+                    }
+                },
+                async (err) => {
+                    console.warn("Geolocation permission or timeout, trying IP fallback:", err.message);
+                    await fallbackIpLocation(sub, iconWrap);
+                },
+                { timeout: 7000, enableHighAccuracy: true }
+            );
+        } else {
+            await fallbackIpLocation(sub, iconWrap);
+        }
+    }
+
+    async function fallbackIpLocation(sub, iconWrap) {
+        try {
+            const res = await fetch('https://ipapi.co/json/');
+            const data = await res.json();
+            if (data && (data.city || data.region)) {
+                const locName = data.city || data.region;
+                if (sub) sub.innerHTML = `<span style="color: #166534; font-weight: 600;">✓ Live: ${locName}</span>`;
+                setTimeout(() => {
+                    selectDestinationOption(locName);
+                }, 400);
+                return;
+            }
+        } catch (e) {
+            console.warn("IP fallback failed:", e);
+        }
+        if (iconWrap) iconWrap.classList.remove('pulse-loc');
+        if (sub) sub.textContent = "Location unavailable • Showing top sanctuaries";
+        setTimeout(() => {
+            selectDestinationOption('Manali');
+        }, 500);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       WHEN DATEPICKER & FLEXIBLE MODAL LOGIC (Airbnb Match)
+    ═══════════════════════════════════════════════════════════ */
+    let currentViewDate = new Date(2026, 9, 1); // Current environment date: October 2026
+    let selectedCheckIn = null;
+    let selectedCheckOut = null;
+    let flexDuration = 'Weekend';
+    let selectedFlexMonths = ['October 2026'];
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    function handleWhenBoxClick(e) {
+        if (e) e.stopPropagation();
+        closeWhereSuggestions();
+        closeWhoPopup();
+        const popup = document.getElementById('when-datepicker-popup');
+        const segWhen = document.getElementById('segment-when');
+        if (popup) popup.classList.add('is-open');
+        if (segWhen) segWhen.classList.add('is-active');
+        renderDualCalendars();
+    }
+
+    function closeWhenDatepicker() {
+        const popup = document.getElementById('when-datepicker-popup');
+        const segWhen = document.getElementById('segment-when');
+        if (popup) popup.classList.remove('is-open');
+        if (segWhen) segWhen.classList.remove('is-active');
+    }
+
+    function switchWhenTab(tabName, e) {
+        if (e) e.stopPropagation();
+        const btnDates = document.getElementById('tab-btn-dates');
+        const btnFlex = document.getElementById('tab-btn-flexible');
+        const viewDates = document.getElementById('view-dates-content');
+        const viewFlex = document.getElementById('view-flexible-content');
+
+        if (tabName === 'dates') {
+            btnDates.classList.add('active');
+            btnFlex.classList.remove('active');
+            viewDates.style.display = 'block';
+            viewFlex.style.display = 'none';
+            renderDualCalendars();
+        } else {
+            btnFlex.classList.add('active');
+            btnDates.classList.remove('active');
+            viewFlex.style.display = 'block';
+            viewDates.style.display = 'none';
+        }
+    }
+
+    function renderDualCalendars() {
+        const month1 = new Date(currentViewDate.getFullYear(), currentViewDate.getMonth(), 1);
+        const month2 = new Date(currentViewDate.getFullYear(), currentViewDate.getMonth() + 1, 1);
+
+        const title1 = document.getElementById('month-title-1');
+        const title2 = document.getElementById('month-title-2');
+        if (title1) title1.textContent = `${monthNames[month1.getMonth()]} ${month1.getFullYear()}`;
+        if (title2) title2.textContent = `${monthNames[month2.getMonth()]} ${month2.getFullYear()}`;
+
+        renderSingleMonthGrid(month1, 'days-grid-1');
+        renderSingleMonthGrid(month2, 'days-grid-2');
+    }
+
+    function renderSingleMonthGrid(monthDate, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+
+        const year = monthDate.getFullYear();
+        const month = monthDate.getMonth();
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        const today = new Date(2026, 9, 17);
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < firstDayIndex; i++) {
+            const emptyCell = document.createElement('div');
+            emptyCell.className = 'cal-day-cell is-empty';
+            container.appendChild(emptyCell);
+        }
+
+        for (let day = 1; day <= totalDays; day++) {
+            const cellDate = new Date(year, month, day);
+            cellDate.setHours(0, 0, 0, 0);
+
+            const dayBtn = document.createElement('button');
+            dayBtn.type = 'button';
+            dayBtn.className = 'cal-day-cell cal-day-btn';
+            dayBtn.textContent = day;
+
+            const isPast = cellDate < today;
+            if (isPast) {
+                dayBtn.classList.add('is-disabled');
+                dayBtn.disabled = true;
+            } else {
+                if (selectedCheckIn && isSameDate(cellDate, selectedCheckIn)) {
+                    dayBtn.classList.add('is-checkin');
+                    if (selectedCheckOut) dayBtn.classList.add('has-range');
+                }
+                if (selectedCheckOut && isSameDate(cellDate, selectedCheckOut)) {
+                    dayBtn.classList.add('is-checkout');
+                    dayBtn.classList.add('has-range');
+                }
+                if (selectedCheckIn && selectedCheckOut && cellDate > selectedCheckIn && cellDate < selectedCheckOut) {
+                    dayBtn.classList.add('in-range');
+                }
+
+                dayBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    handleDateClick(cellDate);
+                });
+            }
+
+            container.appendChild(dayBtn);
+        }
+    }
+
+    function isSameDate(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+               d1.getMonth() === d2.getMonth() &&
+               d1.getDate() === d2.getDate();
+    }
+
+    function handleDateClick(date) {
+        if (!selectedCheckIn || (selectedCheckIn && selectedCheckOut)) {
+            selectedCheckIn = date;
+            selectedCheckOut = null;
+        } else if (selectedCheckIn && !selectedCheckOut) {
+            if (date < selectedCheckIn) {
+                selectedCheckIn = date;
+            } else {
+                selectedCheckOut = date;
+            }
+        }
+        updateExactBoxes();
+        updateWhenInput();
+        renderDualCalendars();
+    }
+
+    function updateExactBoxes() {
+        const checkinBox = document.getElementById('exact-checkin-val');
+        const checkoutBox = document.getElementById('exact-checkout-val');
+        if (checkinBox) {
+            checkinBox.textContent = selectedCheckIn ? `${selectedCheckIn.getDate()} ${shortMonths[selectedCheckIn.getMonth()]} ${selectedCheckIn.getFullYear()}` : 'Exact date';
+        }
+        if (checkoutBox) {
+            checkoutBox.textContent = selectedCheckOut ? `${selectedCheckOut.getDate()} ${shortMonths[selectedCheckOut.getMonth()]} ${selectedCheckOut.getFullYear()}` : 'Exact date';
+        }
+    }
+
+    function updateWhenInput() {
+        const input = document.getElementById('input-checkin');
+        const hiddenIn = document.getElementById('hidden-checkin');
+        const hiddenOut = document.getElementById('hidden-checkout');
+        if (!input) return;
+
+        if (selectedCheckIn && selectedCheckOut) {
+            input.value = `${selectedCheckIn.getDate()} ${shortMonths[selectedCheckIn.getMonth()]} – ${selectedCheckOut.getDate()} ${shortMonths[selectedCheckOut.getMonth()]}`;
+            if (hiddenIn) hiddenIn.value = selectedCheckIn.toISOString();
+            if (hiddenOut) hiddenOut.value = selectedCheckOut.toISOString();
+        } else if (selectedCheckIn) {
+            input.value = `${selectedCheckIn.getDate()} ${shortMonths[selectedCheckIn.getMonth()]} – Add checkout`;
+            if (hiddenIn) hiddenIn.value = selectedCheckIn.toISOString();
+        } else {
+            input.value = '';
+        }
+    }
+
+    function prevMonthNav(e) {
+        if (e) e.stopPropagation();
+        const minDate = new Date(2026, 9, 1);
+        const prev = new Date(currentViewDate.getFullYear(), currentViewDate.getMonth() - 1, 1);
+        if (prev >= minDate) {
+            currentViewDate = prev;
+            renderDualCalendars();
+        }
+    }
+
+    function nextMonthNav(e) {
+        if (e) e.stopPropagation();
+        currentViewDate = new Date(currentViewDate.getFullYear(), currentViewDate.getMonth() + 1, 1);
+        renderDualCalendars();
+    }
+
+    function toggleExactDateOptions(type, e) {
+        if (e) e.stopPropagation();
+        const box = type === 'checkin' ? document.getElementById('exact-checkin-val') : document.getElementById('exact-checkout-val');
+        if (!box) return;
+        const options = ['Exact date', '± 1 day', '± 2 days', '± 3 days', '± 7 days'];
+        const current = box.textContent;
+        const idx = options.indexOf(current);
+        const next = (idx + 1) % options.length;
+        box.textContent = options[next];
+    }
+
+    /* ── Flexible Tab Logic (Screenshot 2) ── */
+    function selectFlexDuration(dur, btn, e) {
+        if (e) e.stopPropagation();
+        document.querySelectorAll('.duration-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        flexDuration = dur;
+        updateFlexibleWhenInput();
+    }
+
+    function toggleFlexMonth(card, monthYear, e) {
+        if (e) e.stopPropagation();
+        document.querySelectorAll('.flex-month-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        selectedFlexMonths = [monthYear];
+        updateFlexibleWhenInput();
+    }
+
+    function updateFlexibleWhenInput() {
+        const input = document.getElementById('input-checkin');
+        if (!input) return;
+        const month = selectedFlexMonths[0] ? selectedFlexMonths[0].split(' ')[0] : 'Anytime';
+        input.value = `${flexDuration} in ${month}`;
+    }
+
+    function scrollFlexCarousel(dir, e) {
+        if (e) e.stopPropagation();
+        const track = document.getElementById('flex-months-track');
+        if (track) {
+            track.scrollBy({ left: dir * 220, behavior: 'smooth' });
+        }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       WHO GUESTS POPUP & STEPPER COUNTER LOGIC (Airbnb Match)
+    ═══════════════════════════════════════════════════════════ */
+    let guestCounts = { adults: 0, children: 0, infants: 0, pets: 0 };
+
+    function handleWhoBoxClick(e) {
+        if (e) e.stopPropagation();
+        closeWhereSuggestions();
+        closeWhenDatepicker();
+        const popup = document.getElementById('who-guests-popup');
+        if (popup && popup.classList.contains('is-open')) {
+            closeWhoPopup();
+        } else {
+            openWhoPopup(e);
+        }
+    }
+
+    function openWhoPopup(e) {
+        if (e) e.stopPropagation();
+        closeWhereSuggestions();
+        closeWhenDatepicker();
+        const popup = document.getElementById('who-guests-popup');
+        const segWho = document.getElementById('segment-who');
+        if (popup) popup.classList.add('is-open');
+        if (segWho) segWho.classList.add('is-active');
+    }
+
+    function closeWhoPopup() {
+        const popup = document.getElementById('who-guests-popup');
+        const segWho = document.getElementById('segment-who');
+        if (popup) popup.classList.remove('is-open');
+        if (segWho) segWho.classList.remove('is-active');
+    }
+
+    function updateGuestCount(type, delta, e) {
+        if (e) e.stopPropagation();
+
+        // If adding children/infants/pets when adults is 0, auto-set adults to 1 (Airbnb behavior)
+        if (type !== 'adults' && delta > 0 && guestCounts.adults === 0) {
+            guestCounts.adults = 1;
+        }
+
+        guestCounts[type] = Math.max(0, guestCounts[type] + delta);
+
+        // If adults becomes 0, reset children to 0 as well
+        if (type === 'adults' && guestCounts.adults === 0) {
+            guestCounts.children = 0;
+        }
+
+        renderGuestCountsUI();
+    }
+
+    function renderGuestCountsUI() {
+        ['adults', 'children', 'infants', 'pets'].forEach(t => {
+            const numEl = document.getElementById('count-' + t);
+            const decBtn = document.getElementById('btn-dec-' + t);
+            if (numEl) numEl.textContent = guestCounts[t];
+            if (decBtn) {
+                decBtn.disabled = (guestCounts[t] === 0);
+                decBtn.classList.toggle('is-disabled', guestCounts[t] === 0);
+            }
+        });
+
+        // Update inputs
+        const totalGuests = guestCounts.adults + guestCounts.children;
+        const displayInput = document.getElementById('who-display-input');
+        const hiddenInput = document.getElementById('hidden-guests-val');
+
+        let summary = '';
+        if (totalGuests > 0) {
+            summary = totalGuests === 1 ? '1 guest' : `${totalGuests} guests`;
+            if (guestCounts.infants > 0) {
+                summary += `, ${guestCounts.infants} infant${guestCounts.infants > 1 ? 's' : ''}`;
+            }
+            if (guestCounts.pets > 0) {
+                summary += `, ${guestCounts.pets} pet${guestCounts.pets > 1 ? 's' : ''}`;
+            }
+        }
+
+        if (displayInput) {
+            displayInput.value = summary;
+        }
+        if (hiddenInput) {
+            hiddenInput.value = totalGuests > 0 ? totalGuests : '';
+        }
+    }
+
+    function initGuestCountsFromQuery() {
+        const hiddenInput = document.getElementById('hidden-guests-val');
+        if (hiddenInput && hiddenInput.value) {
+            const count = parseInt(hiddenInput.value, 10);
+            if (!isNaN(count) && count > 0) {
+                guestCounts.adults = count;
+                renderGuestCountsUI();
+            }
+        }
+    }
+
+    function toggleSearchExpansion(e) {
+        if (e) e.stopPropagation();
+        const row = document.getElementById('header-search-bar-row');
+        if (row) {
+            if (row.classList.contains('search-bar-row--collapsed')) {
+                row.classList.remove('search-bar-row--collapsed');
+                row.classList.add('search-bar-row--expanded');
+                setTimeout(() => {
+                    const inp = document.getElementById('input-dest');
+                    if (inp) inp.focus();
+                }, 60);
+            } else {
+                row.classList.add('search-bar-row--collapsed');
+                row.classList.remove('search-bar-row--expanded');
+            }
+        }
+    }
+
+    // Initialize calendar and guests on load
+    document.addEventListener('DOMContentLoaded', function () {
+        renderDualCalendars();
+        initGuestCountsFromQuery();
+    });
 </script>

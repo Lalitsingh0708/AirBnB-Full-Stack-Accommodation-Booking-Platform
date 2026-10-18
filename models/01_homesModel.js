@@ -24,6 +24,32 @@ export class Home {
         this.latitude = options.latitude !== undefined ? Number(options.latitude) : 28.6139;
         this.longitude = options.longitude !== undefined ? Number(options.longitude) : 77.2090;
         this.showPreciseLocation = options.showPreciseLocation !== undefined ? Boolean(options.showPreciseLocation === true || options.showPreciseLocation === 'true' || options.showPreciseLocation === '1') : true;
+        this.highlights = options.highlights || [];
+        this.photos = options.photos || (url ? [url] : []);
+        this.bookingSettings = options.bookingSettings || "approve_first_5";
+        this.weekendAdjustment = options.weekendAdjustment !== undefined ? Number(options.weekendAdjustment) : 6;
+        this.weekendPrice = options.weekendPrice !== undefined ? Number(options.weekendPrice) : Math.round(Number(price || 2321) * (1 + this.weekendAdjustment / 100));
+        this.discounts = options.discounts || {
+            newListingPromotion: true,
+            lastMinuteDiscount: 7,
+            weeklyDiscount: 10,
+            monthlyDiscount: 20
+        };
+        this.safetyDetails = options.safetyDetails || {
+            securityCameras: false,
+            noiseMonitors: false,
+            weapons: false
+        };
+        this.residentialAddress = options.residentialAddress || {
+            country: "India",
+            flat: "",
+            street: "",
+            landmark: "",
+            district: "",
+            city: "",
+            state: "",
+            pinCode: ""
+        };
         this.createdAt = options.createdAt || new Date().toISOString();
     }
 
@@ -97,6 +123,14 @@ export class Home {
                 latitude: updatedData.latitude !== undefined ? Number(updatedData.latitude) : (current.latitude || 28.6139),
                 longitude: updatedData.longitude !== undefined ? Number(updatedData.longitude) : (current.longitude || 77.2090),
                 showPreciseLocation: updatedData.showPreciseLocation !== undefined ? Boolean(updatedData.showPreciseLocation === true || updatedData.showPreciseLocation === 'true' || updatedData.showPreciseLocation === '1') : (current.showPreciseLocation !== undefined ? current.showPreciseLocation : true),
+                highlights: updatedData.highlights !== undefined ? updatedData.highlights : (current.highlights || []),
+                photos: updatedData.photos !== undefined ? updatedData.photos : (current.photos || []),
+                bookingSettings: updatedData.bookingSettings !== undefined ? updatedData.bookingSettings : (current.bookingSettings || "approve_first_5"),
+                weekendAdjustment: updatedData.weekendAdjustment !== undefined ? Number(updatedData.weekendAdjustment) : (current.weekendAdjustment !== undefined ? current.weekendAdjustment : 6),
+                weekendPrice: updatedData.weekendPrice !== undefined ? Number(updatedData.weekendPrice) : (current.weekendPrice !== undefined ? current.weekendPrice : Math.round(Number(updatedData.housePrice || current.housePrice || 2321) * 1.06)),
+                discounts: updatedData.discounts !== undefined ? updatedData.discounts : (current.discounts || { newListingPromotion: true, lastMinuteDiscount: 7, weeklyDiscount: 10, monthlyDiscount: 20 }),
+                safetyDetails: updatedData.safetyDetails !== undefined ? updatedData.safetyDetails : (current.safetyDetails || { securityCameras: false, noiseMonitors: false, weapons: false }),
+                residentialAddress: updatedData.residentialAddress !== undefined ? updatedData.residentialAddress : (current.residentialAddress || { country: "India", flat: "", street: "", landmark: "", district: "", city: "", state: "", pinCode: "" }),
                 updatedAt: new Date().toISOString()
             };
 

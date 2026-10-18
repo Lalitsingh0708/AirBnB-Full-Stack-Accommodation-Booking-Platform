@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm and Pay &bull; <%= home.houseName %> &bull; StayNest</title>
+    <meta name="description" content="Complete your reservation for <%= home.houseName %> on StayNest." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --surface-subtle: #F7F5EE;
+            --emerald-dark: #0B1C14;
+            --emerald-mid: #143528;
+            --emerald-accent: #1D4333;
+            --emerald-light: #EBF2ED;
+            --gold-accent: #D4AF6A;
+            --gold-deep: #B88E3E;
+            --coral-brand: #E00B41;
+            --text-dark: #222222;
+            --text-muted: #717171;
+            --border-light: #DDDDDD;
+            --border-subtle: #EBEBEB;
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-sm: 8px;
+            --shadow-card: 0 6px 24px rgba(0,0,0,0.06);
+            --shadow-float: 0 12px 36px rgba(18, 43, 32, 0.12);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Simple Top Header ── */
+        .checkout-top-nav {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--emerald-dark);
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-name span {
+            color: var(--gold-accent);
+        }
+
+        .checkout-secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--emerald-mid);
+        }
+
+        /* ── Layout Container ── */
+        .checkout-main-container {
+            max-width: 1140px;
+            margin: 32px auto 80px auto;
+            padding: 0 24px;
+        }
+
+        .back-nav-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .btn-back-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .btn-back-circle:hover {
+            background: #F7F7F7;
+            transform: scale(1.04);
+        }
+
+        .checkout-page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #222222;
+            letter-spacing: -0.5px;
+        }
+
+        /* Two-Column Split */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 440px;
+            gap: 64px;
+            align-items: start;
+        }
+
+        /* ── Left Column: Form & Trip Info ── */
+        .checkout-left-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .section-separator {
+            height: 1px;
+            background: var(--border-subtle);
+            width: 100%;
+        }
+
+        .pane-section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 20px;
+        }
+
+        /* Trip Review Box */
+        .trip-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .trip-item-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 4px;
+        }
+
+        .trip-item-sub {
+            font-size: 14.5px;
+            color: var(--text-muted);
+        }
+
+        .btn-edit-trip {
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: underline;
+            color: #222222;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* User / Guest Account Box */
+        .guest-auth-card {
+            background: var(--surface-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .guest-auth-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .guest-avatar-small {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--emerald-mid);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .guest-info-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222222;
+        }
+
+        .guest-info-email {
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        /* Payment Method Tabs */
+        .payment-methods-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .payment-option-card {
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #FFFFFF;
+        }
+
+        .payment-option-card.selected {
+            border-color: var(--emerald-mid);
+            background: #F9FAF9;
+            box-shadow: 0 0 0 1px var(--emerald-mid);
+        }
+
+        .payment-option-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-radio-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #222222;
+        }
+
+        .option-radio-title input[type="radio"] {
+            accent-color: var(--emerald-mid);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .option-brand-icons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .payment-details-body {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .payment-option-card.selected .payment-details-body {
+            display: block;
+        }
+
+        /* Form Controls */
+        .form-group-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .form-control-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #222222;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 14px;
+            color: #222222;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--emerald-mid);
+        }
+
+        /* Policy & Ground Rules */
+        .policy-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .policy-icon {
+            color: var(--emerald-mid);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .policy-text-wrap h5 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .policy-text-wrap p {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        /* Submit Action */
+        .btn-confirm-pay {
+            width: 100%;
+            height: 52px;
+            background: radial-gradient(circle, rgba(235,87,87,1) 0%, rgba(224,11,65,1) 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16.5px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(224, 11, 65, 0.35);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-confirm-pay:hover {
+            background: #D90038;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(224, 11, 65, 0.45);
+        }
+
+        .terms-subtext {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-top: 14px;
+        }
+
+        /* ── Right Column: Sticky Summary ── */
+        .checkout-right-pane {
+            position: sticky;
+            top: 40px;
+        }
+
+        .summary-card {
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            background: #FFFFFF;
+            box-shadow: var(--shadow-card);
+        }
+
+        .property-summary-header {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 22px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .summary-thumb {
+            width: 108px;
+            height: 108px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #F2F2F2;
+        }
+
+        .summary-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .summary-property-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .summary-property-type {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .summary-property-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222222;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+
+        .summary-property-rating {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #222222;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Price Breakdown List */
+        .summary-breakdown-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 20px;
+        }
+
+        .summary-breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14.5px;
+            color: #222222;
+        }
+
+        .summary-breakdown-row.total-row {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222222;
+            padding-top: 4px;
+        }
+
+        .trust-badge-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 900px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .checkout-right-pane {
+                position: static;
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Simple Secure Header -->
+    <header class="checkout-top-nav">
+        <a href="/" class="brand-link" aria-label="StayNest Home">
+            <svg class="brand-logo-icon" width="30" height="30" viewBox="0 0 34 34" fill="none">
+                <rect width="34" height="34" rx="10" fill="#122B20"/>
+                <path d="M17 7L8 14.5V25C8 25.5523 8.44772 26 9 26H14V19H20V26H25C25.5523 26 26 25.5523 26 25V14.5L17 7Z" fill="#FAF7F0"/>
+                <circle cx="17" cy="14" r="2.2" fill="#D4AF6A"/>
+            </svg>
+            <span class="brand-name">Stay<span class="brand-name-accent">Nest</span></span>
+        </a>
+
+        <div class="checkout-secure-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span>256-Bit SSL Encrypted Checkout</span>
+        </div>
+    </header>
+
+    <%
+        // Formatting & Calculations
+        const pricePerNight = Number(home.housePrice) || 2620;
+        const totalNights = Math.max(1, Number(nights) || 1);
+        const subtotal = pricePerNight * totalNights;
+        const serviceFee = 450;
+        const totalAmount = subtotal + serviceFee;
+
+        const checkInDate = new Date(checkIn);
+        const checkOutDate = new Date(checkOut);
+        const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+        const checkInFormatted = checkInDate.toLocaleDateString('en-GB', dateOptions);
+        const checkOutFormatted = checkOutDate.toLocaleDateString('en-GB', dateOptions);
+
+        const propertyThumb = home.housePhoto || (home.photos && home.photos[0]) || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=80';
+    %>
+
+    <main class="checkout-main-container">
+        
+        <div class="back-nav-bar">
+            <a href="/homes/<%= home.id %>" class="btn-back-circle" title="Back to listing">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </a>
+            <h1 class="checkout-page-title">Confirm and pay</h1>
+        </div>
+
+        <div class="checkout-grid">
+            
+            <!-- LEFT COLUMN -->
+            <div class="checkout-left-pane">
+                
+                <!-- Trip Summary Section -->
+                <div>
+                    <h2 class="pane-section-title">Your trip</h2>
+                    
+                    <div class="trip-item-row">
+                        <div>
+                            <div class="trip-item-label">Dates</div>
+                            <div class="trip-item-sub"><%= checkInFormatted %> &ndash; <%= checkOutFormatted %> (<%= totalNights %> <%= totalNights === 1 ? 'night' : 'nights' %>)</div>
+                        </div>
+                        <a href="/homes/<%= home.id %>" class="btn-edit-trip">Edit</a>
+                    </div>
+
+                    <div class="trip-item-row">
+                        <div>
+                            <div class="trip-item-label">Guests</div>
+                            <div class="trip-item-sub"><%= guests %> <%= guests === 1 ? 'guest' : 'guests' %></div>
+                        </div>
+                        <a href="/homes/<%= home.id %>" class="btn-edit-trip">Edit</a>
+                    </div>
+                </div>
+
+                <div class="section-separator"></div>
+
+                <!-- Guest Profile Verification -->
+                <div>
+                    <h2 class="pane-section-title">Logged-in guest</h2>
+                    <div class="guest-auth-card">
+                        <div class="guest-auth-info">
+                            <div class="guest-avatar-small">
+                                <%= (user && user.name) ? user.name.substring(0, 2).toUpperCase() : 'G' %>
+                            </div>
+                            <div>
+                                <div class="guest-info-name"><%= (user && user.name) ? user.name : 'StayNest Guest' %></div>
+                                <div class="guest-info-email"><%= (user && user.email) ? user.email : '' %> &bull; Authenticated Account</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="display: block; font-size: 13px; font-weight: 600; color: #008A05; margin-bottom: 2px;">✓ Verified Account</span>
+                            <a href="/auth/login?returnUrl=/book/<%= home.id %>" style="font-size: 12px; color: var(--text-muted); text-decoration: underline;">Switch account</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-separator"></div>
+
+                <!-- Payment Form -->
+                <form id="booking-payment-form" action="/book/<%= home.id %>" method="POST">
+                    <input type="hidden" name="checkIn" value="<%= checkIn %>" />
+                    <input type="hidden" name="checkOut" value="<%= checkOut %>" />
+                    <input type="hidden" name="guests" value="<%= guests %>" />
+                    <input type="hidden" name="totalNights" value="<%= totalNights %>" />
+                    <input type="hidden" name="pricePerNight" value="<%= pricePerNight %>" />
+                    <input type="hidden" name="totalAmount" value="<%= totalAmount %>" />
+
+                    <h2 class="pane-section-title">Pay with</h2>
+
+                    <div class="payment-methods-stack">
+                        
+                        <!-- 1. UPI Option -->
+                        <div class="payment-option-card selected" onclick="selectPaymentMethod('upi', this)">
+                            <div class="payment-option-header">
+                                <label class="option-radio-title">
+                                    <input type="radio" name="paymentMethod" value="upi" checked />
+                                    <span>UPI (Google Pay, PhonePe, Paytm, BHIM)</span>
+                                </label>
+                                <div class="option-brand-icons">
+                                    <span style="font-size: 12px; font-weight: 700; color: #222222; background: #EEEEEE; padding: 3px 8px; border-radius: 4px;">UPI</span>
+                                </div>
+                            </div>
+                            <div class="payment-details-body">
+                                <div class="form-control-wrap">
+                                    <label class="form-label" for="upi-id">Enter UPI ID / VPA</label>
+                                    <input type="text" id="upi-id" class="form-input" placeholder="username@okhdfcbank or 9876543210@paytm" value="guest@upi" />
+                                </div>
+                                <p style="font-size: 12.5px; color: var(--text-muted);">A collect payment request will be triggered to your UPI app upon confirmation.</p>
+                            </div>
+                        </div>
+
+                        <!-- 2. Credit / Debit Card -->
+                        <div class="payment-option-card" onclick="selectPaymentMethod('card', this)">
+                            <div class="payment-option-header">
+                                <label class="option-radio-title">
+                                    <input type="radio" name="paymentMethod" value="card" />
+                                    <span>Credit or Debit Card</span>
+                                </label>
+                                <div class="option-brand-icons">
+                                    <span style="font-size: 12px; font-weight: 700; color: #143528;">VISA &bull; MC</span>
+                                </div>
+                            </div>
+                            <div class="payment-details-body">
+                                <div class="form-control-wrap">
+                                    <label class="form-label">Card Number</label>
+                                    <input type="text" class="form-input" placeholder="4111 2222 3333 4444" maxlength="19" />
+                                </div>
+                                <div class="form-group-row">
+                                    <div class="form-control-wrap">
+                                        <label class="form-label">Expiration (MM/YY)</label>
+                                        <input type="text" class="form-input" placeholder="12/28" maxlength="5" />
+                                    </div>
+                                    <div class="form-control-wrap">
+                                        <label class="form-label">CVV</label>
+                                        <input type="password" class="form-input" placeholder="123" maxlength="4" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Net Banking -->
+                        <div class="payment-option-card" onclick="selectPaymentMethod('netbanking', this)">
+                            <div class="payment-option-header">
+                                <label class="option-radio-title">
+                                    <input type="radio" name="paymentMethod" value="netbanking" />
+                                    <span>Net Banking</span>
+                                </label>
+                                <span style="font-size: 12px; color: var(--text-muted);">All Indian Banks</span>
+                            </div>
+                            <div class="payment-details-body">
+                                <div class="form-control-wrap">
+                                    <label class="form-label">Select Bank</label>
+                                    <select class="form-input">
+                                        <option>HDFC Bank</option>
+                                        <option>ICICI Bank</option>
+                                        <option>State Bank of India</option>
+                                        <option>Axis Bank</option>
+                                        <option>Kotak Mahindra Bank</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Pay on Arrival -->
+                        <div class="payment-option-card" onclick="selectPaymentMethod('pay_on_arrival', this)">
+                            <div class="payment-option-header">
+                                <label class="option-radio-title">
+                                    <input type="radio" name="paymentMethod" value="pay_on_arrival" />
+                                    <span>Pay at Property</span>
+                                </label>
+                                <span style="font-size: 12px; font-weight: 600; color: var(--emerald-mid);">Pay on Check-in</span>
+                            </div>
+                            <div class="payment-details-body">
+                                <p style="font-size: 13px; color: var(--text-muted);">Reserve now without upfront payment. You can pay via cash, card, or UPI directly to the host when you arrive.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div style="margin-top: 24px;" class="form-control-wrap">
+                        <label class="form-label" for="special-requests">Special requests or note to host (Optional)</label>
+                        <input type="text" id="special-requests" name="specialRequests" class="form-input" placeholder="e.g. Expected arrival around 4 PM, need extra towel" />
+                    </div>
+
+                    <div class="section-separator" style="margin: 32px 0;"></div>
+
+                    <!-- Cancellation & Ground Rules -->
+                    <div>
+                        <h2 class="pane-section-title">Cancellation policy</h2>
+                        <div class="policy-item">
+                            <div class="policy-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 14 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="policy-text-wrap">
+                                <h5>Free cancellation for 48 hours</h5>
+                                <p>Cancel before <%= checkInFormatted %> for a full refund. After that, cancel before check-in and get a 50% refund, minus service fee.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-separator" style="margin: 32px 0;"></div>
+
+                    <!-- Ground Rules -->
+                    <div>
+                        <h2 class="pane-section-title">Ground rules</h2>
+                        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 14px;">We ask every guest to remember a few simple things about what makes a great guest:</p>
+                        <ul style="padding-left: 20px; font-size: 14px; color: #444444; line-height: 1.6;">
+                            <li>Follow the house rules set by <%= home.hostName || 'the host' %></li>
+                            <li>Treat the sanctuary as you would your own home</li>
+                            <li>Observe quiet hours after 10:00 PM</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-separator" style="margin: 32px 0;"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-confirm-pay" id="btn-submit-booking">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span>Confirm and Pay ₹<%= totalAmount.toLocaleString('en-IN') %></span>
+                    </button>
+
+                    <p class="terms-subtext">
+                        By selecting the button above, I agree to the Host's House Rules, Ground Rules for Guests, StayNest Rebooking and Refund Policy, and that StayNest can charge my payment method if I'm responsible for damage.
+                    </p>
+                </form>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Sticky Property & Price Card -->
+            <aside class="checkout-right-pane">
+                <div class="summary-card">
+                    
+                    <div class="property-summary-header">
+                        <div class="summary-thumb">
+                            <img src="<%= propertyThumb %>" alt="<%= home.houseName %>" />
+                        </div>
+                        <div class="summary-property-info">
+                            <span class="summary-property-type"><%= home.placeType || 'Entire sanctuary' %> in <%= home.city || 'India' %></span>
+                            <h3 class="summary-property-name"><%= home.houseName %></h3>
+                            <div class="summary-property-rating">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="#222222">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                                <span>5.0</span>
+                                <span style="color: var(--text-muted); font-weight: 400;">(19 reviews) &bull; Guest favourite</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #008A05;">
+                            ✓ Protected by StayNest Host Guarantee
+                        </span>
+                    </div>
+
+                    <!-- Price Details -->
+                    <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Price details</h4>
+                    
+                    <div class="summary-breakdown-list">
+                        <div class="summary-breakdown-row">
+                            <span>₹<%= pricePerNight.toLocaleString('en-IN') %> x <%= totalNights %> <%= totalNights === 1 ? 'night' : 'nights' %></span>
+                            <span>₹<%= subtotal.toLocaleString('en-IN') %></span>
+                        </div>
+                        <div class="summary-breakdown-row">
+                            <span>StayNest service fee</span>
+                            <span>₹<%= serviceFee.toLocaleString('en-IN') %></span>
+                        </div>
+                        <div class="summary-breakdown-row">
+                            <span>Taxes & fees</span>
+                            <span style="color: #008A05;">Included</span>
+                        </div>
+                        <div class="summary-breakdown-row total-row">
+                            <span>Total (INR)</span>
+                            <span>₹<%= totalAmount.toLocaleString('en-IN') %></span>
+                        </div>
+                    </div>
+
+                    <div class="trust-badge-footer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--emerald-mid); flex-shrink: 0;">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        <span>Your payment is secured with industry standard encryption. You will receive an instant booking voucher and invoice via email.</span>
+                    </div>
+
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <script>
+        function selectPaymentMethod(method, element) {
+            document.querySelectorAll('.payment-option-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            const radio = element.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        }
+
+        document.getElementById('booking-payment-form').addEventListener('submit', function() {
+            const btn = document.getElementById('btn-submit-booking');
+            btn.innerHTML = '<span>Processing your reservation...</span>';
+            btn.style.opacity = '0.75';
+            btn.style.pointerEvents = 'none';
+        });
+    </script>
+</body>
+</html>
