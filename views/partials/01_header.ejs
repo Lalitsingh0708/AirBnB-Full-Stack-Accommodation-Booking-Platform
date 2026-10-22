@@ -38,110 +38,112 @@
                 <a href="/host" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && (currentPage === 'host' || currentPage === 'host-dashboard')) ? 'active' : '' %>">
                     <span class="tab-label">Dashboard</span>
                 </a>
-            <% } else if (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage) { %>
-                <!-- Compact Search Bar Pill (Exact Match to Airbnb Search Results Screenshot) -->
-                <div class="header-compact-pill-box" id="compact-search-trigger" onclick="toggleSearchExpansion(event)" role="button" tabindex="0" aria-label="Edit search details">
+            <% } else { %>
+                <!-- 1. Guest Categories Tabs (Visible at top, smoothly fades & slides out on scroll) -->
+                <div class="header-modes-strip" id="header-modes-strip">
+                    <!-- 1. All (Globe) -->
+                    <a href="/" class="mode-tab-item <%= (!locals.category || category === 'all' || category === '') ? 'active' : '' %>" id="tab-mode-all">
+                        <span class="tab-icon-wrap">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="8.5" stroke="#B88E3E" stroke-width="1.8"/>
+                                <ellipse cx="12" cy="12" rx="4.2" ry="8.5" stroke="#B88E3E" stroke-width="1.3"/>
+                                <line x1="3.5" y1="12" x2="20.5" y2="12" stroke="#B88E3E" stroke-width="1.4"/>
+                                <path d="M12 20.5v2m-3.5 0h7" stroke="#B88E3E" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                        <span class="tab-label">All</span>
+                    </a>
+
+                    <!-- 2. Homes (Villa/Cottage) -->
+                    <a href="/?category=homes" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'homes') ? 'active' : '' %>" id="tab-mode-homes">
+                        <span class="tab-icon-wrap">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 10.5L12 3l9 7.5v10a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20.5v-10z" fill="#EBF2ED" stroke="#143528" stroke-width="1.8"/>
+                                <path d="M9 22V12h6v10" stroke="#143528" stroke-width="1.8"/>
+                                <rect x="15" y="6" width="3" height="4" fill="#143528"/>
+                            </svg>
+                        </span>
+                        <span class="tab-label">Homes</span>
+                    </a>
+
+                    <!-- 3. Experiences (Hot Air Balloon) -->
+                    <a href="/?category=experiences" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'experiences') ? 'active' : '' %>" id="tab-mode-experiences">
+                        <span class="tab-icon-wrap">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2a6.5 6.5 0 0 0-6.5 6.5c0 3.8 4 8 6.5 9.5 2.5-1.5 6.5-5.7 6.5-9.5A6.5 6.5 0 0 0 12 2z" fill="#FCE8EC" stroke="#E00B41" stroke-width="1.8"/>
+                                <path d="M12 2c1.8 2.2 2.8 4.2 2.8 6.5s-1 4.5-2.8 5.8m0-12.3c-1.8 2.2-2.8 4.2-2.8 6.5s1 4.5 2.8 5.8" stroke="#E00B41" stroke-width="1.2"/>
+                                <rect x="10" y="19" width="4" height="2.5" rx="0.5" fill="#B88E3E"/>
+                            </svg>
+                        </span>
+                        <span class="tab-label">Experiences</span>
+                    </a>
+
+                    <!-- 4. Services (Concierge Bell) -->
+                    <a href="/?category=services" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'services') ? 'active' : '' %>" id="tab-mode-services">
+                        <span class="tab-icon-wrap">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="4" r="1.5" fill="#D4AF6A"/>
+                                <path d="M12 5.5v1.5M4 17h16a1 1 0 0 0 1-1c0-4.4-3.6-8-9-8s-9 3.6-9 8a1 1 0 0 0 1 1z" fill="#F9F6EE" stroke="#143528" stroke-width="1.8"/>
+                                <rect x="2" y="17" width="20" height="3" rx="1" fill="#143528"/>
+                            </svg>
+                        </span>
+                        <span class="tab-label">Services</span>
+                    </a>
+
+                    <!-- Nav Divider -->
+                    <span class="mode-tabs-divider" aria-hidden="true"></span>
+
+                    <!-- Preserved Guest Options -->
+                    <a href="/bookings" class="mode-tab-item mode-tab-item--secondary <%= (typeof currentPage !== 'undefined' && currentPage === 'bookings') ? 'active' : '' %>" title="My Bookings">
+                        <span class="tab-icon-wrap">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </span>
+                        <span class="tab-label">Bookings</span>
+                    </a>
+
+                    <a href="/favourite-list" class="mode-tab-item mode-tab-item--secondary <%= (typeof currentPage !== 'undefined' && currentPage === 'favourites') ? 'active' : '' %>" title="Saved Favourites">
+                        <span class="tab-icon-wrap">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </span>
+                        <span class="tab-label">Saved</span>
+                    </a>
+
+                    <% if (typeof user !== 'undefined' && user && user.role === 'host') { %>
+                        <a href="/host/today" class="mode-tab-item mode-tab-item--secondary" title="Host Dashboard">
+                            <span class="tab-label font-semibold">Host Hub</span>
+                        </a>
+                    <% } %>
+                </div>
+
+                <!-- 2. Compact Search Bar Pill (Exact Match to Airbnb Screenshot: 🏠 Anywhere • Anytime • Add guests + 🔍) -->
+                <!-- Smoothly transitions in when user scrolls down! -->
+                <div class="header-compact-pill-box <%= (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage) ? 'compact-pill--force-show' : '' %>" id="compact-search-trigger" onclick="handleCompactPillClick(event)" role="button" tabindex="0" aria-label="Search stays">
                     <span class="compact-pill-item compact-pill-item--dest">
-                        <span class="compact-pill-icon">🏡</span>
-                        <strong class="compact-pill-strong"><%= (typeof searchQuery !== 'undefined' && searchQuery.destination) ? ('Homes in ' + searchQuery.destination) : 'Homes in New Delhi' %></strong>
+                        <span class="compact-pill-icon">🏠</span>
+                        <strong class="compact-pill-strong"><%= (typeof searchQuery !== 'undefined' && searchQuery.destination) ? searchQuery.destination : 'Anywhere' %></strong>
                     </span>
                     <span class="compact-pill-divider"></span>
                     <span class="compact-pill-item compact-pill-item--dates">
-                        <%= (typeof searchQuery !== 'undefined' && searchQuery.dates) ? searchQuery.dates : 'Month in Sep' %>
+                        <%= (typeof searchQuery !== 'undefined' && searchQuery.dates) ? searchQuery.dates : 'Anytime' %>
                     </span>
                     <span class="compact-pill-divider"></span>
                     <span class="compact-pill-item compact-pill-item--guests">
                         <%= (typeof searchQuery !== 'undefined' && searchQuery.guests && Number(searchQuery.guests) > 0) ? (searchQuery.guests + ' guests') : 'Add guests' %>
                     </span>
                     <div class="compact-pill-circle-btn">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                     </div>
                 </div>
-            <% } else { %>
-                <!-- Guest Modes from Screenshot -->
-                
-                <!-- 1. All (Globe) -->
-                <a href="/" class="mode-tab-item <%= (!locals.category || category === 'all' || category === '') ? 'active' : '' %>" id="tab-mode-all">
-                    <span class="tab-icon-wrap">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" r="8.5" stroke="#B88E3E" stroke-width="1.8"/>
-                            <ellipse cx="12" cy="12" rx="4.2" ry="8.5" stroke="#B88E3E" stroke-width="1.3"/>
-                            <line x1="3.5" y1="12" x2="20.5" y2="12" stroke="#B88E3E" stroke-width="1.4"/>
-                            <path d="M12 20.5v2m-3.5 0h7" stroke="#B88E3E" stroke-width="1.8" stroke-linecap="round"/>
-                        </svg>
-                    </span>
-                    <span class="tab-label">All</span>
-                </a>
-
-                <!-- 2. Homes (Villa/Cottage) -->
-                <a href="/?category=homes" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'homes') ? 'active' : '' %>" id="tab-mode-homes">
-                    <span class="tab-icon-wrap">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 10.5L12 3l9 7.5v10a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20.5v-10z" fill="#EBF2ED" stroke="#143528" stroke-width="1.8"/>
-                            <path d="M9 22V12h6v10" stroke="#143528" stroke-width="1.8"/>
-                            <rect x="15" y="6" width="3" height="4" fill="#143528"/>
-                        </svg>
-                    </span>
-                    <span class="tab-label">Homes</span>
-                </a>
-
-                <!-- 3. Experiences (Hot Air Balloon) -->
-                <a href="/?category=experiences" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'experiences') ? 'active' : '' %>" id="tab-mode-experiences">
-                    <span class="tab-icon-wrap">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2a6.5 6.5 0 0 0-6.5 6.5c0 3.8 4 8 6.5 9.5 2.5-1.5 6.5-5.7 6.5-9.5A6.5 6.5 0 0 0 12 2z" fill="#FCE8EC" stroke="#E00B41" stroke-width="1.8"/>
-                            <path d="M12 2c1.8 2.2 2.8 4.2 2.8 6.5s-1 4.5-2.8 5.8m0-12.3c-1.8 2.2-2.8 4.2-2.8 6.5s1 4.5 2.8 5.8" stroke="#E00B41" stroke-width="1.2"/>
-                            <rect x="10" y="19" width="4" height="2.5" rx="0.5" fill="#B88E3E"/>
-                        </svg>
-                    </span>
-                    <span class="tab-label">Experiences</span>
-                </a>
-
-                <!-- 4. Services (Concierge Bell) -->
-                <a href="/?category=services" class="mode-tab-item <%= (typeof category !== 'undefined' && category === 'services') ? 'active' : '' %>" id="tab-mode-services">
-                    <span class="tab-icon-wrap">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="4" r="1.5" fill="#D4AF6A"/>
-                            <path d="M12 5.5v1.5M4 17h16a1 1 0 0 0 1-1c0-4.4-3.6-8-9-8s-9 3.6-9 8a1 1 0 0 0 1 1z" fill="#F9F6EE" stroke="#143528" stroke-width="1.8"/>
-                            <rect x="2" y="17" width="20" height="3" rx="1" fill="#143528"/>
-                        </svg>
-                    </span>
-                    <span class="tab-label">Services</span>
-                </a>
-
-                <!-- Nav Divider -->
-                <span class="mode-tabs-divider" aria-hidden="true"></span>
-
-                <!-- Preserved Guest Options -->
-                <a href="/bookings" class="mode-tab-item mode-tab-item--secondary <%= (typeof currentPage !== 'undefined' && currentPage === 'bookings') ? 'active' : '' %>" title="My Bookings">
-                    <span class="tab-icon-wrap">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                    </span>
-                    <span class="tab-label">Bookings</span>
-                </a>
-
-                <a href="/favourite-list" class="mode-tab-item mode-tab-item--secondary <%= (typeof currentPage !== 'undefined' && currentPage === 'favourites') ? 'active' : '' %>" title="Saved Favourites">
-                    <span class="tab-icon-wrap">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
-                    </span>
-                    <span class="tab-label">Saved</span>
-                </a>
-
-                <% if (typeof user !== 'undefined' && user && user.role === 'host') { %>
-                    <a href="/host/today" class="mode-tab-item mode-tab-item--secondary" title="Host Dashboard">
-                        <span class="tab-label font-semibold">Host Hub</span>
-                    </a>
-                <% } %>
             <% } %>
         </nav>
 
@@ -727,11 +729,19 @@
     .staynest-global-header {
         position: sticky;
         top: 0;
-        z-index: 100;
+        z-index: 1000;
         background: #FFFFFF;
         border-bottom: 1px solid #EBEBEB;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        transition: box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                    border-color 0.25s ease,
+                    background-color 0.25s ease;
+    }
+
+    .staynest-global-header.header--scrolled {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border-bottom-color: #E2E2E2;
     }
 
     /* ── Top Row ── */
@@ -743,6 +753,12 @@
         align-items: center;
         justify-content: space-between;
         gap: 20px;
+        transition: padding 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .staynest-global-header.header--scrolled .header-main-row {
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
     /* Brand Logo */
@@ -772,12 +788,33 @@
         font-weight: 800;
     }
 
-    /* Center Navigation (Matching Screenshot) */
+    /* Center Navigation (Container for Category Tabs + Compact Search Pill) */
     .center-mode-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        flex: 1;
+        max-width: 720px;
+    }
+
+    .header-modes-strip {
         display: flex;
         align-items: center;
         gap: 22px;
         flex-wrap: nowrap;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: auto;
+    }
+
+    .staynest-global-header.header--scrolled .header-modes-strip {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.92);
+        pointer-events: none;
+        display: none !important;
     }
 
     .mode-tab-item {
@@ -1033,33 +1070,57 @@
         background: #FEF2F2;
     }
 
-    /* ── Compact Search Pill for Search Results Page (Screenshot 1) ── */
+    /* ── Compact Search Pill (Visible when scrolled, matching user screenshot) ── */
     .header-compact-pill-box {
-        display: inline-flex;
+        display: none;
         align-items: center;
         background: #FFFFFF;
         border: 1px solid #DDDDDD;
         border-radius: 9999px;
-        padding: 6px 8px 6px 18px;
+        padding: 7px 9px 7px 18px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
         cursor: pointer;
-        transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
         gap: 14px;
         user-select: none;
+        opacity: 0;
+        transform: translateY(6px) scale(0.9);
+        pointer-events: none;
+    }
+
+    .staynest-global-header.header--scrolled .header-compact-pill-box {
+        display: inline-flex;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+        animation: pillPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .header-compact-pill-box.compact-pill--force-show {
+        display: inline-flex !important;
+        opacity: 1 !important;
+        transform: translateY(0) scale(1) !important;
+        pointer-events: auto !important;
+    }
+
+    @keyframes pillPopIn {
+        0% { opacity: 0; transform: translateY(8px) scale(0.88); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .header-compact-pill-box:hover {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 6px 18px rgba(0, 0, 0, 0.1);
         border-color: #B0B0B0;
     }
 
     .compact-pill-item {
-        font-size: 13.5px;
+        font-size: 14px;
         font-weight: 500;
         color: #222222;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        letter-spacing: -0.15px;
     }
 
     .compact-pill-item--dest {
@@ -1068,6 +1129,10 @@
 
     .compact-pill-strong {
         font-weight: 600;
+    }
+
+    .compact-pill-item--guests {
+        color: #717171;
     }
 
     .compact-pill-divider {
@@ -1087,12 +1152,61 @@
         color: #FFFFFF;
         margin-left: 4px;
         flex-shrink: 0;
-        transition: transform 0.15s ease, background 0.15s ease;
+        transition: transform 0.18s ease, background 0.18s ease;
     }
 
     .header-compact-pill-box:hover .compact-pill-circle-btn {
-        transform: scale(1.06);
+        transform: scale(1.08);
         background: #D7043A;
+    }
+
+    /* ── Floating Search Pill Row (Transitions smoothly on scroll) ── */
+    .header-search-bar-row {
+        padding: 0 24px 18px 24px;
+        display: flex;
+        justify-content: center;
+        max-height: 120px;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        transform-origin: top center;
+        transition: max-height 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+                    padding 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow: visible;
+    }
+
+    /* When SCROLLED: collapse the big search bar smoothly */
+    .staynest-global-header.header--scrolled .header-search-bar-row:not(.header-search-bar-row--temporarily-expanded) {
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(-22px) scale(0.92);
+        padding-top: 0;
+        padding-bottom: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    /* Temporarily expanded search bar when clicking compact pill in scrolled state */
+    .header-search-bar-row.header-search-bar-row--temporarily-expanded {
+        max-height: 120px !important;
+        opacity: 1 !important;
+        transform: translateY(0) scale(1) !important;
+        pointer-events: auto !important;
+        overflow: visible !important;
+        padding: 4px 24px 18px 24px !important;
+        animation: searchRowExpand 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes searchRowExpand {
+        from {
+            opacity: 0;
+            transform: translateY(-16px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 
     .search-bar-row--collapsed {
@@ -1102,13 +1216,6 @@
     .search-bar-row--expanded {
         display: flex !important;
         animation: dropFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    /* ── Floating Search Pill Row (Matching Screenshot: Where • When • Who) ── */
-    .header-search-bar-row {
-        padding: 0 24px 18px 24px;
-        display: flex;
-        justify-content: center;
     }
 
     .floating-search-pill {
@@ -2530,27 +2637,89 @@
         }
     }
 
-    function toggleSearchExpansion(e) {
-        if (e) e.stopPropagation();
-        const row = document.getElementById('header-search-bar-row');
-        if (row) {
-            if (row.classList.contains('search-bar-row--collapsed')) {
-                row.classList.remove('search-bar-row--collapsed');
-                row.classList.add('search-bar-row--expanded');
-                setTimeout(() => {
-                    const inp = document.getElementById('input-dest');
-                    if (inp) inp.focus();
-                }, 60);
-            } else {
-                row.classList.add('search-bar-row--collapsed');
-                row.classList.remove('search-bar-row--expanded');
+    // ── Smooth Scroll Navbar Transition (Airbnb Signature Experience) ──
+    function handleHeaderScroll() {
+        const header = document.getElementById('staynest-header');
+        if (!header) return;
+
+        // Skip scroll toggle for host dashboard pages
+        const isHost = <%= ((typeof isHostNav !== 'undefined' && isHostNav) || (typeof currentPage !== 'undefined' && currentPage && currentPage.startsWith('host'))) ? 'true' : 'false' %>;
+        if (isHost) return;
+
+        const isSearchPage = <%= (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage) ? 'true' : 'false' %>;
+        if (isSearchPage) {
+            header.classList.add('header--scrolled');
+            return;
+        }
+
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+        if (scrollY > 35) {
+            if (!header.classList.contains('header--scrolled')) {
+                header.classList.add('header--scrolled');
+                // Close any open popups when scrolling down
+                closeWhereSuggestions();
+                closeWhenDatepicker();
+                closeWhoPopup();
+            }
+        } else {
+            if (header.classList.contains('header--scrolled')) {
+                header.classList.remove('header--scrolled');
+                const row = document.getElementById('header-search-bar-row');
+                if (row) {
+                    row.classList.remove('header-search-bar-row--temporarily-expanded');
+                }
             }
         }
     }
 
-    // Initialize calendar and guests on load
+    // Clicking the compact pill in scrolled state toggles expansion of full search bar
+    function handleCompactPillClick(e) {
+        if (e) e.stopPropagation();
+        const searchRow = document.getElementById('header-search-bar-row');
+        if (!searchRow) return;
+
+        if (searchRow.classList.contains('header-search-bar-row--temporarily-expanded')) {
+            searchRow.classList.remove('header-search-bar-row--temporarily-expanded');
+            closeWhereSuggestions();
+            closeWhenDatepicker();
+            closeWhoPopup();
+        } else {
+            searchRow.classList.add('header-search-bar-row--temporarily-expanded');
+            setTimeout(() => {
+                const destInput = document.getElementById('input-dest');
+                if (destInput) {
+                    destInput.focus();
+                    openWhereSuggestions();
+                }
+            }, 80);
+        }
+    }
+
+    function toggleSearchExpansion(e) {
+        handleCompactPillClick(e);
+    }
+
+    // Close expanded search bar on outside click
+    document.addEventListener('click', function(e) {
+        const header = document.getElementById('staynest-header');
+        if (header && !header.contains(e.target)) {
+            const searchRow = document.getElementById('header-search-bar-row');
+            if (searchRow && searchRow.classList.contains('header-search-bar-row--temporarily-expanded')) {
+                searchRow.classList.remove('header-search-bar-row--temporarily-expanded');
+            }
+        }
+    });
+
+    // Initialize calendar, guests, and scroll handler on load
     document.addEventListener('DOMContentLoaded', function () {
         renderDualCalendars();
         initGuestCountsFromQuery();
+        handleHeaderScroll();
     });
+
+    // 60fps smooth scroll handler
+    window.addEventListener('scroll', function() {
+        requestAnimationFrame(handleHeaderScroll);
+    }, { passive: true });
 </script>
