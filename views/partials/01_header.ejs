@@ -734,9 +734,10 @@
         border-bottom: 1px solid #EBEBEB;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        transition: box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                    border-color 0.25s ease,
-                    background-color 0.25s ease;
+        transition: box-shadow 0.35s cubic-bezier(0.2, 0, 0, 1), 
+                    border-color 0.35s cubic-bezier(0.2, 0, 0, 1),
+                    background-color 0.35s cubic-bezier(0.2, 0, 0, 1);
+        will-change: box-shadow;
     }
 
     .staynest-global-header.header--scrolled {
@@ -748,12 +749,12 @@
     .header-main-row {
         max-width: 1360px;
         margin: 0 auto;
-        padding: 12px 28px;
+        padding: 13px 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 20px;
-        transition: padding 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: padding 0.35s cubic-bezier(0.2, 0, 0, 1);
     }
 
     .staynest-global-header.header--scrolled .header-main-row {
@@ -788,33 +789,38 @@
         font-weight: 800;
     }
 
-    /* Center Navigation (Container for Category Tabs + Compact Search Pill) */
+    /* Center Navigation (Grid container for Category Tabs & Compact Search Pill) */
     .center-mode-nav {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: grid;
+        place-items: center;
+        grid-template-areas: "navslot";
         position: relative;
         flex: 1;
         max-width: 720px;
+        min-height: 48px;
     }
 
     .header-modes-strip {
+        grid-area: navslot;
         display: flex;
         align-items: center;
         gap: 22px;
         flex-wrap: nowrap;
         opacity: 1;
         transform: translateY(0) scale(1);
-        transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        visibility: visible;
         pointer-events: auto;
+        transition: opacity 0.32s cubic-bezier(0.2, 0, 0, 1), 
+                    transform 0.32s cubic-bezier(0.2, 0, 0, 1),
+                    visibility 0.32s cubic-bezier(0.2, 0, 0, 1);
+        will-change: opacity, transform;
     }
 
     .staynest-global-header.header--scrolled .header-modes-strip {
         opacity: 0;
-        transform: translateY(-8px) scale(0.92);
+        transform: translateY(-12px) scale(0.92);
         pointer-events: none;
-        display: none !important;
+        visibility: hidden;
     }
 
     .mode-tab-item {
@@ -1072,7 +1078,8 @@
 
     /* ── Compact Search Pill (Visible when scrolled, matching user screenshot) ── */
     .header-compact-pill-box {
-        display: none;
+        grid-area: navslot;
+        display: inline-flex;
         align-items: center;
         background: #FFFFFF;
         border: 1px solid #DDDDDD;
@@ -1080,32 +1087,39 @@
         padding: 7px 9px 7px 18px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
         cursor: pointer;
-        transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
         gap: 14px;
         user-select: none;
         opacity: 0;
-        transform: translateY(6px) scale(0.9);
+        transform: translateY(12px) scale(0.9);
+        visibility: hidden;
         pointer-events: none;
+        transition: box-shadow 0.25s ease, 
+                    border-color 0.25s ease, 
+                    transform 0.35s cubic-bezier(0.2, 0, 0, 1), 
+                    opacity 0.32s cubic-bezier(0.2, 0, 0, 1),
+                    visibility 0.35s cubic-bezier(0.2, 0, 0, 1);
+        will-change: opacity, transform, box-shadow;
     }
 
     .staynest-global-header.header--scrolled .header-compact-pill-box {
-        display: inline-flex;
         opacity: 1;
         transform: translateY(0) scale(1);
         pointer-events: auto;
-        animation: pillPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        visibility: visible;
+    }
+
+    .staynest-global-header.header--scrolled.search-temporarily-open .header-compact-pill-box {
+        opacity: 0 !important;
+        transform: translateY(-8px) scale(0.92) !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
     }
 
     .header-compact-pill-box.compact-pill--force-show {
-        display: inline-flex !important;
         opacity: 1 !important;
         transform: translateY(0) scale(1) !important;
         pointer-events: auto !important;
-    }
-
-    @keyframes pillPopIn {
-        0% { opacity: 0; transform: translateY(8px) scale(0.88); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
+        visibility: visible !important;
     }
 
     .header-compact-pill-box:hover {
@@ -1162,51 +1176,49 @@
 
     /* ── Floating Search Pill Row (Transitions smoothly on scroll) ── */
     .header-search-bar-row {
-        padding: 0 24px 18px 24px;
+        padding: 0 24px 16px 24px;
         display: flex;
         justify-content: center;
-        max-height: 120px;
+        height: 78px;
+        box-sizing: border-box;
         opacity: 1;
         transform: translateY(0) scale(1);
-        transform-origin: top center;
-        transition: max-height 0.26s cubic-bezier(0.16, 1, 0.3, 1),
-                    opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                    transform 0.26s cubic-bezier(0.16, 1, 0.3, 1),
-                    padding 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+        transform-origin: center top;
         overflow: visible;
+        visibility: visible;
+        transition: height 0.35s cubic-bezier(0.2, 0, 0, 1),
+                    padding 0.35s cubic-bezier(0.2, 0, 0, 1),
+                    opacity 0.28s cubic-bezier(0.2, 0, 0, 1),
+                    transform 0.35s cubic-bezier(0.2, 0, 0, 1),
+                    visibility 0.35s cubic-bezier(0.2, 0, 0, 1);
+        will-change: height, opacity, transform;
     }
 
     /* When SCROLLED: collapse the big search bar smoothly */
     .staynest-global-header.header--scrolled .header-search-bar-row:not(.header-search-bar-row--temporarily-expanded) {
-        max-height: 0;
-        opacity: 0;
-        transform: translateY(-22px) scale(0.92);
+        height: 0;
         padding-top: 0;
         padding-bottom: 0;
+        opacity: 0;
+        transform: translateY(-24px) scale(0.88);
         pointer-events: none;
         overflow: hidden;
+        visibility: hidden;
     }
 
     /* Temporarily expanded search bar when clicking compact pill in scrolled state */
     .header-search-bar-row.header-search-bar-row--temporarily-expanded {
-        max-height: 120px !important;
+        height: 78px !important;
         opacity: 1 !important;
         transform: translateY(0) scale(1) !important;
         pointer-events: auto !important;
         overflow: visible !important;
-        padding: 4px 24px 18px 24px !important;
-        animation: searchRowExpand 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes searchRowExpand {
-        from {
-            opacity: 0;
-            transform: translateY(-16px) scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+        visibility: visible !important;
+        padding: 0 24px 16px 24px !important;
+        transition: height 0.35s cubic-bezier(0.2, 0, 0, 1),
+                    padding 0.35s cubic-bezier(0.2, 0, 0, 1),
+                    opacity 0.3s cubic-bezier(0.2, 0, 0, 1),
+                    transform 0.35s cubic-bezier(0.2, 0, 0, 1) !important;
     }
 
     .search-bar-row--collapsed {
@@ -1228,8 +1240,22 @@
         padding: 6px 8px 6px 20px;
         max-width: 860px;
         width: 100%;
-        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        transform-origin: center top;
+        transition: box-shadow 0.2s ease, 
+                    border-color 0.2s ease,
+                    transform 0.35s cubic-bezier(0.2, 0, 0, 1),
+                    opacity 0.28s cubic-bezier(0.2, 0, 0, 1);
         position: relative;
+    }
+
+    .staynest-global-header.header--scrolled .header-search-bar-row:not(.header-search-bar-row--temporarily-expanded) .floating-search-pill {
+        transform: scale(0.88);
+        opacity: 0;
+    }
+
+    .header-search-bar-row.header-search-bar-row--temporarily-expanded .floating-search-pill {
+        transform: scale(1) !important;
+        opacity: 1 !important;
     }
 
     .floating-search-pill:hover,
@@ -2637,7 +2663,10 @@
         }
     }
 
-    // ── Smooth Scroll Navbar Transition (Airbnb Signature Experience) ──
+    // ── Ultra-Smooth Scroll Navbar Transition (Airbnb Signature Physics) ──
+    let isScrollTicking = false;
+    let isNavbarScrolled = false;
+
     function handleHeaderScroll() {
         const header = document.getElementById('staynest-header');
         if (!header) return;
@@ -2648,52 +2677,64 @@
 
         const isSearchPage = <%= (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage) ? 'true' : 'false' %>;
         if (isSearchPage) {
-            header.classList.add('header--scrolled');
+            if (!header.classList.contains('header--scrolled')) {
+                header.classList.add('header--scrolled');
+            }
             return;
         }
 
         const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
 
-        if (scrollY > 35) {
-            if (!header.classList.contains('header--scrolled')) {
-                header.classList.add('header--scrolled');
-                // Close any open popups when scrolling down
-                closeWhereSuggestions();
-                closeWhenDatepicker();
-                closeWhoPopup();
-            }
-        } else {
-            if (header.classList.contains('header--scrolled')) {
-                header.classList.remove('header--scrolled');
-                const row = document.getElementById('header-search-bar-row');
-                if (row) {
-                    row.classList.remove('header-search-bar-row--temporarily-expanded');
-                }
-            }
+        // Airbnb Hysteresis: activates when scrolling down past 38px, smoothly resets when back up near top (< 12px)
+        if (scrollY > 38 && !isNavbarScrolled) {
+            isNavbarScrolled = true;
+            header.classList.add('header--scrolled');
+            closeExpandedSearch();
+        } else if (scrollY < 12 && isNavbarScrolled) {
+            isNavbarScrolled = false;
+            header.classList.remove('header--scrolled');
+            closeExpandedSearch();
+        } else if (isNavbarScrolled && header.classList.contains('search-temporarily-open')) {
+            closeExpandedSearch();
         }
     }
 
     // Clicking the compact pill in scrolled state toggles expansion of full search bar
     function handleCompactPillClick(e) {
         if (e) e.stopPropagation();
+        const header = document.getElementById('staynest-header');
         const searchRow = document.getElementById('header-search-bar-row');
-        if (!searchRow) return;
+        if (!searchRow || !header) return;
 
         if (searchRow.classList.contains('header-search-bar-row--temporarily-expanded')) {
-            searchRow.classList.remove('header-search-bar-row--temporarily-expanded');
-            closeWhereSuggestions();
-            closeWhenDatepicker();
-            closeWhoPopup();
+            closeExpandedSearch();
         } else {
-            searchRow.classList.add('header-search-bar-row--temporarily-expanded');
-            setTimeout(() => {
-                const destInput = document.getElementById('input-dest');
-                if (destInput) {
-                    destInput.focus();
-                    openWhereSuggestions();
-                }
-            }, 80);
+            openExpandedSearch();
         }
+    }
+
+    function openExpandedSearch() {
+        const header = document.getElementById('staynest-header');
+        const searchRow = document.getElementById('header-search-bar-row');
+        if (header) header.classList.add('search-temporarily-open');
+        if (searchRow) searchRow.classList.add('header-search-bar-row--temporarily-expanded');
+        setTimeout(() => {
+            const destInput = document.getElementById('input-dest');
+            if (destInput) {
+                destInput.focus();
+                openWhereSuggestions();
+            }
+        }, 90);
+    }
+
+    function closeExpandedSearch() {
+        const header = document.getElementById('staynest-header');
+        const searchRow = document.getElementById('header-search-bar-row');
+        if (header) header.classList.remove('search-temporarily-open');
+        if (searchRow) searchRow.classList.remove('header-search-bar-row--temporarily-expanded');
+        closeWhereSuggestions();
+        closeWhenDatepicker();
+        closeWhoPopup();
     }
 
     function toggleSearchExpansion(e) {
@@ -2704,10 +2745,7 @@
     document.addEventListener('click', function(e) {
         const header = document.getElementById('staynest-header');
         if (header && !header.contains(e.target)) {
-            const searchRow = document.getElementById('header-search-bar-row');
-            if (searchRow && searchRow.classList.contains('header-search-bar-row--temporarily-expanded')) {
-                searchRow.classList.remove('header-search-bar-row--temporarily-expanded');
-            }
+            closeExpandedSearch();
         }
     });
 
@@ -2718,8 +2756,14 @@
         handleHeaderScroll();
     });
 
-    // 60fps smooth scroll handler
+    // 60/120fps smooth ticking scroll handler
     window.addEventListener('scroll', function() {
-        requestAnimationFrame(handleHeaderScroll);
+        if (!isScrollTicking) {
+            window.requestAnimationFrame(function() {
+                handleHeaderScroll();
+                isScrollTicking = false;
+            });
+            isScrollTicking = true;
+        }
     }, { passive: true });
 </script>
