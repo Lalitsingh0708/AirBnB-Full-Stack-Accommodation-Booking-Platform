@@ -68,10 +68,27 @@ export const optionalAuth = async (req, res, next) => {
     next();
 };
 
-// Middleware: restrict to specific roles
+// Middleware: restrict to specific roles (with auto-upgrade for host role)
 export const restrictTo = (...roles) => {
-    return (req, res, next) => {
-        if (!req.user || !roles.includes(req.user.role)) {
+    return async (req, res, next) => {
+        if (!req.user) {
+            const returnUrl = encodeURIComponent(req.originalUrl || "/host/today");
+            return res.redirect(`/auth/login?returnUrl=${returnUrl}`);
+        }
+
+        // If a logged-in user wants to access host features, auto-upgrade them to host
+        if (roles.includes("host") && req.user.role === "guest") {
+            try {
+                await User.findByIdAndUpdate(req.user._id, { role: "host", isApproved: true });
+                req.user.role = "host";
+                req.user.isApproved = true;
+                res.locals.user = req.user;
+            } catch (err) {
+                console.error("Auto promote to host error:", err);
+            }
+        }
+
+        if (!roles.includes(req.user.role)) {
             return res.status(403).render("01_404.ejs", {
                 message: "You do not have permission to access this page.",
             });
@@ -80,10 +97,16 @@ export const restrictTo = (...roles) => {
     };
 };
 
-// Middleware: host must be approved by admin
-export const requireApproved = (req, res, next) => {
-    if (req.user.role === "host" && !req.user.isApproved) {
-        return res.redirect("/host/pending");
+// Middleware: host must be approved by admin (auto-approves in dev & production)
+export const requireApproved = async (req, res, next) => {
+    if (req.user && req.user.role === "host" && !req.user.isApproved) {
+        try {
+            await User.findByIdAndUpdate(req.user._id, { isApproved: true });
+            req.user.isApproved = true;
+            res.locals.user = req.user;
+        } catch (err) {
+            console.error("Auto approve host error:", err);
+        }
     }
     next();
 };

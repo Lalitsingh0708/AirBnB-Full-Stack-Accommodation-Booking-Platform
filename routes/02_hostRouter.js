@@ -18,8 +18,24 @@ import {
     postDeleteHome,
 } from "../controller/02_hostController.js";
 import { uploadCloud } from "../config/cloudinary.js";
+import User from "../models/User.js";
 
 const hostRouter = express.Router();
+
+// Seamless switch to hosting (auto-promotes guest to host)
+hostRouter.get("/host/switch", protect, async (req, res) => {
+    try {
+        if (req.user.role !== "host" || !req.user.isApproved) {
+            await User.findByIdAndUpdate(req.user._id, { role: "host", isApproved: true });
+            req.user.role = "host";
+            req.user.isApproved = true;
+            res.locals.user = req.user;
+        }
+    } catch (err) {
+        console.error("Error in /host/switch:", err);
+    }
+    return res.redirect("/host/today");
+});
 
 // Pending approval page — host logged in but not approved yet
 hostRouter.get("/host/pending", protect, restrictTo("host"), (req, res) => {

@@ -152,15 +152,9 @@
                     Switch to travelling
                 </a>
             <% } else { %>
-                <% if (!user || user.role !== 'host') { %>
-                    <a href="<%= user ? '/host/add-home' : '/auth/register' %>" class="host-cta-pill">
-                        Switch to hosting
-                    </a>
-                <% } else { %>
-                    <a href="/host/today" class="host-cta-pill">
-                        Switch to hosting
-                    </a>
-                <% } %>
+                <a href="<%= (typeof user !== 'undefined' && user) ? '/host/switch' : '/auth/login?returnUrl=/host/switch' %>" class="host-cta-pill">
+                    Switch to hosting
+                </a>
             <% } %>
 
             <!-- Profile Menu Pill Widget (Hamburger + Avatar Circle with Initial L/O) -->
@@ -220,6 +214,9 @@
                             <a href="/host/listings" class="dropdown-item">Manage Listings</a>
                             <a href="/host/messages" class="dropdown-item">Host Messages</a>
                             <a href="/host/add-home" class="dropdown-item" style="color: #143528; font-weight: 600;">+ Create New Stay</a>
+                        <% } else { %>
+                            <div class="dropdown-divider"></div>
+                            <a href="/host/switch" class="dropdown-item" style="color: #143528; font-weight: 600;">Switch to hosting</a>
                         <% } %>
 
                         <div class="dropdown-divider"></div>
