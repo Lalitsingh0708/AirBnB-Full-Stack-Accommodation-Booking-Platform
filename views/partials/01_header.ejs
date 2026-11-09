@@ -9,9 +9,10 @@
 <%
     const isDetailsPage = (typeof currentPage !== 'undefined' && currentPage === 'home-details');
     const isSearchPage = (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage);
+    const isHostMode = (typeof isHostNav !== 'undefined' && isHostNav) || (typeof currentPage !== 'undefined' && currentPage && currentPage.startsWith('host'));
     const showCompactPill = isSearchPage;
 %>
-<header class="staynest-global-header" id="staynest-header">
+<header class="staynest-global-header <%= isHostMode ? 'staynest-global-header--host' : '' %>" id="staynest-header">
     <div class="header-main-row">
         
         <!-- 1. Left: Brand Logo -->
@@ -25,24 +26,26 @@
         </a>
 
         <!-- 2. Center: Modes & Navigation (Matching Screenshot + Preserved Guest Options) -->
-        <nav class="center-mode-nav" aria-label="Explore & Navigation Categories">
-            <% if ((typeof isHostNav !== 'undefined' && isHostNav) || (typeof currentPage !== 'undefined' && currentPage && currentPage.startsWith('host'))) { %>
-                <!-- Host Specific Navigation -->
-                <a href="/host/today" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-today') ? 'active' : '' %>">
-                    <span class="tab-label">Today</span>
-                </a>
-                <a href="/host/calendar" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-calendar') ? 'active' : '' %>">
-                    <span class="tab-label">Calendar</span>
-                </a>
-                <a href="/host/listings" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && (currentPage === 'host-listings' || currentPage === 'host-view-home')) ? 'active' : '' %>">
-                    <span class="tab-label">Listings</span>
-                </a>
-                <a href="/host/messages" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-messages') ? 'active' : '' %>">
-                    <span class="tab-label">Messages</span>
-                </a>
-                <a href="/host" class="mode-tab-item <%= (typeof currentPage !== 'undefined' && (currentPage === 'host' || currentPage === 'host-dashboard')) ? 'active' : '' %>">
-                    <span class="tab-label">Dashboard</span>
-                </a>
+        <nav class="center-mode-nav <%= isHostMode ? 'center-mode-nav--host' : '' %>" aria-label="Explore & Navigation Categories">
+            <% if (isHostMode) { %>
+                <!-- Host Specific Navigation (Horizontal row of tabs) -->
+                <div class="host-modes-strip" id="host-modes-strip">
+                    <a href="/host/today" class="mode-tab-item host-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-today') ? 'active' : '' %>">
+                        <span class="tab-label">Today</span>
+                    </a>
+                    <a href="/host/calendar" class="mode-tab-item host-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-calendar') ? 'active' : '' %>">
+                        <span class="tab-label">Calendar</span>
+                    </a>
+                    <a href="/host/listings" class="mode-tab-item host-tab-item <%= (typeof currentPage !== 'undefined' && (currentPage === 'host-listings' || currentPage === 'host-view-home')) ? 'active' : '' %>">
+                        <span class="tab-label">Listings</span>
+                    </a>
+                    <a href="/host/messages" class="mode-tab-item host-tab-item <%= (typeof currentPage !== 'undefined' && currentPage === 'host-messages') ? 'active' : '' %>">
+                        <span class="tab-label">Messages</span>
+                    </a>
+                    <a href="/host" class="mode-tab-item host-tab-item <%= (typeof currentPage !== 'undefined' && (currentPage === 'host' || currentPage === 'host-dashboard')) ? 'active' : '' %>">
+                        <span class="tab-label">Dashboard</span>
+                    </a>
+                </div>
             <% } else { %>
                 <!-- 1. Guest Categories Tabs (Visible at top, smoothly fades & slides out on scroll) -->
                 <div class="header-modes-strip" id="header-modes-strip">
@@ -255,7 +258,7 @@
 
     </div>
 
-    <% if (!isDetailsPage) { %>
+    <% if (!isDetailsPage && !isHostMode) { %>
     <!-- 4. Floating Luxury Search Bar (Matching Screenshot: Where • When • Who + Search Icon) -->
     <div class="header-search-bar-row <%= (showCompactPill) ? 'search-bar-row--collapsed' : '' %>" id="header-search-bar-row">
         <form class="floating-search-pill" action="/search" method="GET" id="global-search-form">
@@ -816,6 +819,64 @@
         flex: 1;
         max-width: 720px;
         min-height: 48px;
+    }
+
+    .center-mode-nav--host {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .host-modes-strip {
+        grid-area: navslot;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+        flex-wrap: nowrap;
+    }
+
+    .host-tab-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #555555;
+        padding: 8px 6px;
+        text-decoration: none;
+        position: relative;
+        transition: color 0.18s ease;
+        white-space: nowrap;
+    }
+
+    .host-tab-item:hover {
+        color: #143528;
+    }
+
+    .host-tab-item.active {
+        color: #143528;
+        font-weight: 700;
+    }
+
+    .host-tab-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2.5px;
+        background: #143528;
+        border-radius: 2px;
+    }
+
+    .staynest-global-header--host {
+        background: rgba(250, 248, 245, 0.98);
+        border-bottom: 1px solid rgba(226, 218, 204, 0.85);
+    }
+
+    .staynest-global-header--host .header-main-row {
+        padding: 14px 32px;
     }
 
     .header-modes-strip {
