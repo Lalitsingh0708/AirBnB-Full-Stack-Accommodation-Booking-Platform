@@ -16,6 +16,8 @@ import {
     postCreateBooking,
     postCancelBooking,
     postAddReview,
+    postCreateRazorpayOrder,
+    postVerifyRazorpayPayment,
 } from "../controller/01_storeController.js";
 import { protect } from "../middleware/auth.js";
 
@@ -31,12 +33,14 @@ UserRouter.get("/bookings", protect, getBookings);
 UserRouter.post("/bookings/cancel/:id", protect, postCancelBooking);
 UserRouter.get("/book/:id", protect, getCheckout);
 UserRouter.post("/book/:id", protect, postCreateBooking);
-UserRouter.get("/favourite-list", getFavroutelist);
+UserRouter.post("/api/payment/create-order", protect, postCreateRazorpayOrder);
+UserRouter.post("/api/payment/verify-payment", protect, postVerifyRazorpayPayment);
+UserRouter.get("/favourite-list", protect, getFavroutelist);
 UserRouter.get("/index", postAddHome);
 UserRouter.get("/homes/:id", getHomeDetails);
 UserRouter.post("/homes/:id/review", protect, postAddReview);
 UserRouter.get("/homes/:id/messages", getPropertyMessages);
 UserRouter.post("/homes/:id/message", postSendMessageToHost);
-UserRouter.post("/favourite", postAddToFavourite);
+UserRouter.post("/favourite", protect, postAddToFavourite);
 
 export default UserRouter;

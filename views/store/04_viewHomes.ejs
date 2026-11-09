@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StayNest &bull; Handpicked Vacation Stays & Villas</title>
-    <meta name="description" content="Discover handpicked vacation rentals, boutique villas, and unique stays across top destinations on StayNest." />
+    <title>Vacation Rentals & Villas | StayNest</title>
+    <meta name="description" content="Browse verified vacation rentals, boutique villas, and apartments across India on StayNest." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
@@ -30,6 +30,12 @@
 
         body {
             background-color: var(--bg-beige);
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             min-height: 100vh;
@@ -346,7 +352,7 @@
             background: var(--emerald-mid);
             color: #FFFFFF;
             text-decoration: none;
-            border-radius: 9999px;
+            border-radius: 10px;
             font-size: 13.5px;
             font-weight: 600;
             display: flex;
@@ -412,13 +418,13 @@
         <div class="hero-banner">
             <p class="hero-eyebrow">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                <span>Curated Escapes &bull; StayNest</span>
+                <span>Verified Stays | StayNest</span>
             </p>
             <h1 class="hero-headline">
-                Find your next <em>sanctuary.</em>
+                Book villas, cottages, and <em>apartments</em> across India.
             </h1>
             <p class="hero-sub">
-                Handpicked boutique villas, mountain hideaways, and architectural spaces curated for peaceful, unforgettable living.
+                Verified properties with instant booking, transparent pricing, and direct host communication.
             </p>
 
             <!-- Search Bar -->
@@ -548,5 +554,8 @@
             }
         }
     </script>
+
+    <!-- Global Luxury Footer -->
+    <%- include("../partials/03_footer.ejs") %>
 </body>
 </html>

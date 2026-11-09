@@ -1,0 +1,812 @@
+<!-- ═══════════════════════════════════════════════════════════
+     STAYNEST GLOBAL LUXURY FOOTER
+     - Exact Airbnb Architecture & Responsive Physics
+     - 1. Inspiration for future getaways (Interactive tabbed destination grid)
+     - 2. 4-Column Directory: Support, Hosting, StayNest, Trust & Safety
+     - 3. Bottom Legal, Currency/Language, Social Links & Smooth Back-to-Top
+═══════════════════════════════════════════════════════════ -->
+<footer class="staynest-global-footer" id="staynest-footer">
+    
+    <!-- ── TOP SECTION: Inspiration for Future Getaways (Tabbed Destination Grid) ── -->
+    <section class="footer-inspiration-section">
+        <div class="footer-container">
+            <h2 class="inspiration-main-heading">Inspiration for future getaways</h2>
+
+            <!-- Category Pills/Tabs -->
+            <div class="inspiration-tabs-scroll" role="tablist" aria-label="Destinations categories">
+                <button type="button" class="inspire-tab active" data-tab="popular" onclick="switchInspirationTab('popular', this)">Popular</button>
+                <button type="button" class="inspire-tab" data-tab="mountains" onclick="switchInspirationTab('mountains', this)">Mountains & Hills</button>
+                <button type="button" class="inspire-tab" data-tab="coastal" onclick="switchInspirationTab('coastal', this)">Beach & Coastal</button>
+                <button type="button" class="inspire-tab" data-tab="heritage" onclick="switchInspirationTab('heritage', this)">Heritage & Culture</button>
+                <button type="button" class="inspire-tab" data-tab="outdoors" onclick="switchInspirationTab('outdoors', this)">Outdoors & Nature</button>
+                <button type="button" class="inspire-tab" data-tab="unique" onclick="switchInspirationTab('unique', this)">Unique Stays</button>
+            </div>
+
+            <!-- Tab 1: Popular -->
+            <div class="inspiration-grid-content active" id="tab-content-popular">
+                <div class="destination-links-grid">
+                    <a href="/search?destination=Manali" class="dest-link-item">
+                        <span class="dest-link-title">Manali</span>
+                        <span class="dest-link-subtitle">Mountain chalets & villas</span>
+                    </a>
+                    <a href="/search?destination=Goa" class="dest-link-item">
+                        <span class="dest-link-title">Goa</span>
+                        <span class="dest-link-subtitle">Beachfront holiday homes</span>
+                    </a>
+                    <a href="/search?destination=Shimla" class="dest-link-item">
+                        <span class="dest-link-title">Shimla</span>
+                        <span class="dest-link-subtitle">Colonial retreats & cottages</span>
+                    </a>
+                    <a href="/search?destination=Jaipur" class="dest-link-item">
+                        <span class="dest-link-title">Jaipur</span>
+                        <span class="dest-link-subtitle">Royal havelis & palaces</span>
+                    </a>
+                    <a href="/search?destination=Udaipur" class="dest-link-item">
+                        <span class="dest-link-title">Udaipur</span>
+                        <span class="dest-link-subtitle">Lakefront boutique villas</span>
+                    </a>
+                    <a href="/search?destination=Lonavala" class="dest-link-item">
+                        <span class="dest-link-title">Lonavala</span>
+                        <span class="dest-link-subtitle">Private pool hideaways</span>
+                    </a>
+                    <a href="/search?destination=Rishikesh" class="dest-link-item">
+                        <span class="dest-link-title">Rishikesh</span>
+                        <span class="dest-link-subtitle">Riverside yoga sanctuaries</span>
+                    </a>
+                    <a href="/search?destination=Ooty" class="dest-link-item">
+                        <span class="dest-link-title">Ooty</span>
+                        <span class="dest-link-subtitle">Tea estate bungalows</span>
+                    </a>
+                    <a href="/search?destination=Mussoorie" class="dest-link-item">
+                        <span class="dest-link-title">Mussoorie</span>
+                        <span class="dest-link-subtitle">Valley view penthouses</span>
+                    </a>
+                    <a href="/search?destination=Chandigarh" class="dest-link-item">
+                        <span class="dest-link-title">Chandigarh</span>
+                        <span class="dest-link-subtitle">Modern architectural flats</span>
+                    </a>
+                    <a href="/search?destination=New+Delhi" class="dest-link-item">
+                        <span class="dest-link-title">New Delhi</span>
+                        <span class="dest-link-subtitle">Designer city lofts</span>
+                    </a>
+                    <a href="/search?destination=Agra" class="dest-link-item">
+                        <span class="dest-link-title">Agra</span>
+                        <span class="dest-link-subtitle">Mughal heritage stays</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tab 2: Mountains & Hills -->
+            <div class="inspiration-grid-content" id="tab-content-mountains" style="display: none;">
+                <div class="destination-links-grid">
+                    <a href="/search?destination=Manali" class="dest-link-item">
+                        <span class="dest-link-title">Solang Valley</span>
+                        <span class="dest-link-subtitle">Snow view glass chalets</span>
+                    </a>
+                    <a href="/search?destination=Dharamshala" class="dest-link-item">
+                        <span class="dest-link-title">Dharamshala</span>
+                        <span class="dest-link-subtitle">Pine forest eco lodges</span>
+                    </a>
+                    <a href="/search?destination=Kasol" class="dest-link-item">
+                        <span class="dest-link-title">Kasol & Parvati</span>
+                        <span class="dest-link-subtitle">Riverside wood cabins</span>
+                    </a>
+                    <a href="/search?destination=Kasauli" class="dest-link-item">
+                        <span class="dest-link-title">Kasauli</span>
+                        <span class="dest-link-subtitle">Victorian hill homes</span>
+                    </a>
+                    <a href="/search?destination=Munnar" class="dest-link-item">
+                        <span class="dest-link-title">Munnar</span>
+                        <span class="dest-link-subtitle">Misty tea plantation stays</span>
+                    </a>
+                    <a href="/search?destination=Coorg" class="dest-link-item">
+                        <span class="dest-link-title">Coorg</span>
+                        <span class="dest-link-subtitle">Coffee estate villas</span>
+                    </a>
+                    <a href="/search?destination=Srinagar" class="dest-link-item">
+                        <span class="dest-link-title">Srinagar</span>
+                        <span class="dest-link-subtitle">Traditional cedar houseboats</span>
+                    </a>
+                    <a href="/search?destination=Nainital" class="dest-link-item">
+                        <span class="dest-link-title">Nainital</span>
+                        <span class="dest-link-subtitle">Lake view colonial stays</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tab 3: Beach & Coastal -->
+            <div class="inspiration-grid-content" id="tab-content-coastal" style="display: none;">
+                <div class="destination-links-grid">
+                    <a href="/search?destination=North+Goa" class="dest-link-item">
+                        <span class="dest-link-title">Anjuna & Vagator</span>
+                        <span class="dest-link-subtitle">Luxury beachside villas</span>
+                    </a>
+                    <a href="/search?destination=South+Goa" class="dest-link-item">
+                        <span class="dest-link-title">Palolem & Agonda</span>
+                        <span class="dest-link-subtitle">Tranquil coconut grove stays</span>
+                    </a>
+                    <a href="/search?destination=Gokarna" class="dest-link-item">
+                        <span class="dest-link-title">Gokarna</span>
+                        <span class="dest-link-subtitle">Cliffside ocean cabins</span>
+                    </a>
+                    <a href="/search?destination=Pondicherry" class="dest-link-item">
+                        <span class="dest-link-title">Pondicherry</span>
+                        <span class="dest-link-subtitle">French Quarter heritage villas</span>
+                    </a>
+                    <a href="/search?destination=Varkala" class="dest-link-item">
+                        <span class="dest-link-title">Varkala</span>
+                        <span class="dest-link-subtitle">Sunset cliff hideaways</span>
+                    </a>
+                    <a href="/search?destination=Alibaug" class="dest-link-item">
+                        <span class="dest-link-title">Alibaug</span>
+                        <span class="dest-link-subtitle">Private pool estate mansions</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tab 4: Heritage & Culture -->
+            <div class="inspiration-grid-content" id="tab-content-heritage" style="display: none;">
+                <div class="destination-links-grid">
+                    <a href="/search?destination=Jaipur" class="dest-link-item">
+                        <span class="dest-link-title">Amer Foot</span>
+                        <span class="dest-link-subtitle">Carved stone havelis</span>
+                    </a>
+                    <a href="/search?destination=Jodhpur" class="dest-link-item">
+                        <span class="dest-link-title">Jodhpur</span>
+                        <span class="dest-link-subtitle">Blue city heritage manses</span>
+                    </a>
+                    <a href="/search?destination=Varanasi" class="dest-link-item">
+                        <span class="dest-link-title">Varanasi</span>
+                        <span class="dest-link-subtitle">Ghat-facing antique homes</span>
+                    </a>
+                    <a href="/search?destination=Amritsar" class="dest-link-item">
+                        <span class="dest-link-title">Amritsar</span>
+                        <span class="dest-link-subtitle">Cultural farm stays</span>
+                    </a>
+                    <a href="/search?destination=Hampi" class="dest-link-item">
+                        <span class="dest-link-title">Hampi</span>
+                        <span class="dest-link-subtitle">Boulder landscape cottages</span>
+                    </a>
+                    <a href="/search?destination=Khajuraho" class="dest-link-item">
+                        <span class="dest-link-title">Khajuraho</span>
+                        <span class="dest-link-subtitle">Artisan heritage retreats</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tab 5: Outdoors & Nature -->
+            <div class="inspiration-grid-content" id="tab-content-outdoors" style="display: none;">
+                <div class="destination-links-grid">
+                    <a href="/search?destination=Jim+Corbett" class="dest-link-item">
+                        <span class="dest-link-title">Jim Corbett</span>
+                        <span class="dest-link-subtitle">Jungle safari luxury tents</span>
+                    </a>
+                    <a href="/search?destination=Ranthambore" class="dest-link-item">
+                        <span class="dest-link-title">Ranthambore</span>
+                        <span class="dest-link-subtitle">Wildlife forest lodges</span>
+                    </a>
+                    <a href="/search?destination=Wayanad" class="dest-link-item">
+                        <span class="dest-link-title">Wayanad</span>
+                        <span class="dest-link-subtitle">Rainforest canopy treehouses</span>
+                    </a>
+                    <a href="/search?destination=Spiti" class="dest-link-item">
+                        <span class="dest-link-title">Spiti Valley</span>
+                        <span class="dest-link-subtitle">High altitude homestays</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tab 6: Unique Stays -->
+            <div class="inspiration-grid-content" id="tab-content-unique" style="display: none;">
+                <div class="destination-links-grid">
+                    <a href="/search?category=treehouse" class="dest-link-item">
+                        <span class="dest-link-title">Treehouses</span>
+                        <span class="dest-link-subtitle">Living high amidst pine & cedar</span>
+                    </a>
+                    <a href="/search?category=dome" class="dest-link-item">
+                        <span class="dest-link-title">Geodesic Domes</span>
+                        <span class="dest-link-subtitle">Stargazing bubble glamping</span>
+                    </a>
+                    <a href="/search?category=houseboat" class="dest-link-item">
+                        <span class="dest-link-title">Houseboats</span>
+                        <span class="dest-link-subtitle">Floating lake sanctuaries</span>
+                    </a>
+                    <a href="/search?category=farm" class="dest-link-item">
+                        <span class="dest-link-title">Organic Farmsteads</span>
+                        <span class="dest-link-subtitle">Farm-to-table peaceful escapes</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ── MIDDLE SECTION: 4-Column Structured Directory ── -->
+    <section class="footer-directory-section">
+        <div class="footer-container">
+            <div class="footer-columns-grid">
+                
+                <!-- Col 1: Support -->
+                <div class="footer-col">
+                    <h3 class="footer-col-title">Support</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="/help" class="footer-link">Help Centre</a></li>
+                        <li><a href="/aircover" class="footer-link">StayCover Protection</a></li>
+                        <li><a href="/accessibility" class="footer-link">Disability support</a></li>
+                        <li><a href="/cancellation" class="footer-link">Cancellation options</a></li>
+                        <li><a href="/safety" class="footer-link">Our COVID-19 response</a></li>
+                        <li><a href="/report-concern" class="footer-link">Report neighbourhood concern</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 2: Hosting -->
+                <div class="footer-col">
+                    <h3 class="footer-col-title">Hosting</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="/host/add-home" class="footer-link footer-link--highlight">StayNest your home</a></li>
+                        <li><a href="/host/aircover" class="footer-link">StayCover for Hosts</a></li>
+                        <li><a href="/host/resources" class="footer-link">Hosting resources</a></li>
+                        <li><a href="/community" class="footer-link">Community forum</a></li>
+                        <li><a href="/host/responsible" class="footer-link">Hosting responsibly</a></li>
+                        <li><a href="/host/class" class="footer-link">Join a free Hosting class</a></li>
+                        <li><a href="/host/today" class="footer-link">Host Operations Hub</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: StayNest -->
+                <div class="footer-col">
+                    <h3 class="footer-col-title">StayNest</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="/news" class="footer-link">Newsroom</a></li>
+                        <li><a href="/features" class="footer-link">New features & releases</a></li>
+                        <li><a href="/careers" class="footer-link">Careers <span class="footer-pill-tag">Hiring</span></a></li>
+                        <li><a href="/investors" class="footer-link">Investors</a></li>
+                        <li><a href="/gift-cards" class="footer-link">StayNest gift cards</a></li>
+                        <li><a href="/emergency-stays" class="footer-link">StayNest.org emergency stays</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Trust & Guarantees -->
+                <div class="footer-col">
+                    <h3 class="footer-col-title">Trust & Guarantees</h3>
+                    <div class="footer-trust-box">
+                        <div class="trust-pill-badge">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF6A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <polyline points="9 12 11 14 15 10"></polyline>
+                            </svg>
+                            <span>100% Verified Accommodations</span>
+                        </div>
+                        <p class="trust-col-desc">Every listing is verified for accurate photos, cleanliness standards, and host transparency.</p>
+                        <div class="footer-secure-row">
+                            <span class="secure-tag">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 4px;">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>End-to-End SSL
+                            </span>
+                            <span class="secure-tag">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 4px;">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>Fraud Shield
+                            </span>
+                            <span class="secure-tag">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 4px;">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                </svg>Instant Booking
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ── BOTTOM BAR: Legal, Language/Currency & Social Links ── -->
+    <section class="footer-bottom-bar">
+        <div class="footer-container footer-bottom-inner">
+            
+            <!-- Left: Copyright & Legal -->
+            <div class="footer-legal-left">
+                <span class="copyright-text">&copy; <%= new Date().getFullYear() %> StayNest, Inc.</span>
+                <span class="legal-dot">&bull;</span>
+                <a href="/privacy" class="legal-link">Privacy</a>
+                <span class="legal-dot">&bull;</span>
+                <a href="/terms" class="legal-link">Terms</a>
+                <span class="legal-dot">&bull;</span>
+                <a href="/sitemap" class="legal-link">Sitemap</a>
+                <span class="legal-dot">&bull;</span>
+                <a href="/company" class="legal-link">Company details</a>
+            </div>
+
+            <!-- Right: Locales, Socials & Back to Top -->
+            <div class="footer-action-right">
+                
+                <!-- Language & Currency Badges -->
+                <div class="footer-locales-wrap">
+                    <button type="button" class="footer-locale-btn" aria-label="Select language: English (IN)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                        <span>English (IN)</span>
+                    </button>
+                    <button type="button" class="footer-locale-btn" aria-label="Select currency: INR">
+                        <span class="currency-symbol">₹</span>
+                        <span>INR</span>
+                    </button>
+                </div>
+
+                <!-- Social Icons -->
+                <div class="footer-social-icons">
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="StayNest on Facebook">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="StayNest on Twitter / X">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                        </svg>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="StayNest on Instagram">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="StayNest on LinkedIn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"></path>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Smooth Back to Top Button -->
+                <button type="button" class="btn-back-to-top" onclick="scrollToPageTop()" aria-label="Back to top">
+                    <span>Back to top</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                </button>
+
+            </div>
+
+        </div>
+    </section>
+
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER STYLES (Scoped, Responsive, Ultra-Clean Airbnb Architecture)
+═══════════════════════════════════════════════════════════ -->
+<style>
+    .staynest-global-footer {
+        background-color: #F7F7F7;
+        border-top: 1px solid #EBEBEB;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        color: #222222;
+        width: 100%;
+        margin-top: 60px;
+        box-sizing: border-box;
+    }
+
+    .footer-container {
+        max-width: 1360px;
+        margin: 0 auto;
+        padding: 0 28px;
+        box-sizing: border-box;
+    }
+
+    /* ── 1. Inspiration Section ── */
+    .footer-inspiration-section {
+        padding: 44px 0 36px 0;
+        border-bottom: 1px solid #EBEBEB;
+    }
+
+    .inspiration-main-heading {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111111;
+        letter-spacing: -0.4px;
+        margin: 0 0 18px 0;
+    }
+
+    .inspiration-tabs-scroll {
+        display: flex;
+        gap: 8px;
+        border-bottom: 1px solid #DDDDDD;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        scrollbar-width: none;
+    }
+
+    .inspiration-tabs-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .inspire-tab {
+        background: transparent;
+        border: none;
+        padding: 10px 14px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #6A6A6A;
+        cursor: pointer;
+        position: relative;
+        white-space: nowrap;
+        transition: color 0.16s ease;
+    }
+
+    .inspire-tab:hover {
+        color: #111111;
+    }
+
+    .inspire-tab.active {
+        color: #111111;
+        font-weight: 600;
+    }
+
+    .inspire-tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2.5px;
+        background: #111111;
+        border-radius: 2px;
+    }
+
+    .destination-links-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px 24px;
+        margin-top: 26px;
+    }
+
+    .dest-link-item {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        text-decoration: none;
+        transition: transform 0.14s ease;
+    }
+
+    .dest-link-item:hover .dest-link-title {
+        color: #0B1C14;
+        text-decoration: underline;
+    }
+
+    .dest-link-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #222222;
+        letter-spacing: -0.15px;
+    }
+
+    .dest-link-subtitle {
+        font-size: 13px;
+        font-weight: 400;
+        color: #717171;
+    }
+
+    /* ── 2. Directory Columns ── */
+    .footer-directory-section {
+        padding: 44px 0;
+        border-bottom: 1px solid #EBEBEB;
+    }
+
+    .footer-columns-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1.25fr;
+        gap: 36px;
+    }
+
+    .footer-col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .footer-col-title {
+        font-size: 14.5px;
+        font-weight: 700;
+        color: #111111;
+        letter-spacing: -0.2px;
+        margin: 0 0 16px 0;
+    }
+
+    .footer-links-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .footer-link {
+        text-decoration: none;
+        color: #484848;
+        font-size: 13.5px;
+        font-weight: 400;
+        line-height: 1.4;
+        transition: color 0.14s ease, text-decoration 0.14s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .footer-link:hover {
+        color: #111111;
+        text-decoration: underline;
+    }
+
+    .footer-link--highlight {
+        color: #0B1C14;
+        font-weight: 600;
+    }
+
+    .footer-pill-tag {
+        font-size: 10.5px;
+        font-weight: 700;
+        background: #EBF2ED;
+        color: #143528;
+        padding: 1px 7px;
+        border-radius: 9999px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    /* Col 4: Trust Box */
+    .footer-trust-box {
+        background: #FFFFFF;
+        border: 1px solid #E5E5E5;
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .trust-pill-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #0B1C14;
+        margin-bottom: 8px;
+    }
+
+    .trust-col-desc {
+        font-size: 12.5px;
+        color: #666666;
+        line-height: 1.5;
+        margin: 0 0 14px 0;
+    }
+
+    .footer-secure-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .secure-tag {
+        font-size: 11px;
+        font-weight: 600;
+        background: #F8F8F8;
+        border: 1px solid #EBEBEB;
+        color: #333333;
+        padding: 4px 10px;
+        border-radius: 8px;
+    }
+
+    /* ── 3. Bottom Legal & Locales Bar ── */
+    .footer-bottom-bar {
+        padding: 20px 0;
+        background: #F7F7F7;
+    }
+
+    .footer-bottom-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .footer-legal-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 13.5px;
+        color: #555555;
+    }
+
+    .copyright-text {
+        font-weight: 500;
+        color: #222222;
+    }
+
+    .legal-dot {
+        color: #888888;
+        font-size: 12px;
+    }
+
+    .legal-link {
+        color: #555555;
+        text-decoration: none;
+        transition: color 0.15s ease;
+    }
+
+    .legal-link:hover {
+        color: #111111;
+        text-decoration: underline;
+    }
+
+    .footer-action-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .footer-locales-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .footer-locale-btn {
+        background: transparent;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #222222;
+        cursor: pointer;
+        padding: 6px 4px;
+        border-radius: 6px;
+        transition: background 0.15s ease;
+    }
+
+    .footer-locale-btn:hover {
+        background: #ECECEC;
+        text-decoration: underline;
+    }
+
+    .currency-symbol {
+        font-size: 14.5px;
+        font-weight: 700;
+    }
+
+    .footer-social-icons {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .social-icon-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #222222;
+        text-decoration: none;
+        transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .social-icon-btn:hover {
+        background: #ECECEC;
+        transform: translateY(-1.5px);
+    }
+
+    .btn-back-to-top {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #FFFFFF;
+        border: 1px solid #DDDDDD;
+        border-radius: 9999px;
+        padding: 7px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #222222;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.16s ease;
+    }
+
+    .btn-back-to-top:hover {
+        background: #F7F7F7;
+        border-color: #222222;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.09);
+    }
+
+    /* ── Responsive Behavior ── */
+    @media (max-width: 1024px) {
+        .footer-columns-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .destination-links-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .staynest-global-footer {
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            padding: 0 18px;
+        }
+
+        .destination-links-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .footer-columns-grid {
+            grid-template-columns: 1fr;
+            gap: 28px;
+        }
+
+        .footer-col {
+            border-bottom: 1px solid #EBEBEB;
+            padding-bottom: 24px;
+        }
+
+        .footer-col:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .footer-bottom-inner {
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .footer-action-right {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+</style>
+
+<script>
+    function switchInspirationTab(tabName, btn) {
+        document.querySelectorAll('.inspire-tab').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+
+        document.querySelectorAll('.inspiration-grid-content').forEach(content => {
+            content.style.display = 'none';
+            content.classList.remove('active');
+        });
+
+        const target = document.getElementById('tab-content-' + tabName);
+        if (target) {
+            target.style.display = 'block';
+            target.classList.add('active');
+        }
+    }
+
+    function scrollToPageTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+</script>

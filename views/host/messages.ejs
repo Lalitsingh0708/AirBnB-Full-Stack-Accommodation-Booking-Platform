@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Messages &bull; StayNest Host</title>
+    <title>Messages | StayNest</title>
+    <meta name="description" content="Host and guest communications and booking inquiries on StayNest." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -25,7 +25,13 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: #FAF8F5;
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-main);
             min-height: 100vh;
@@ -471,6 +477,7 @@
             <% } %>
         </div>
 
+        <script src="/socket.io/socket.io.js"></script>
         <script>
             // Scroll chat to bottom
             const chatBox = document.getElementById('chat-messages-box');
@@ -485,7 +492,40 @@
                     item.style.display = (name.includes(term) || title.includes(term)) ? 'flex' : 'none';
                 });
             }
+
+            <% if (user) { %>
+            const socket = io();
+            const currentUserId = "<%= user._id %>";
+            const activeConvId = "<%= activeConversation ? activeConversation._id : '' %>";
+
+            socket.on('connect', () => {
+                socket.emit('join_user', currentUserId);
+                if (activeConvId) {
+                    socket.emit('join_conversation', activeConvId);
+                }
+            });
+
+            socket.on('new_message', (data) => {
+                if (data.conversationId === activeConvId && chatBox) {
+                    const bubble = document.createElement('div');
+                    const isHost = data.message.senderRole === 'host';
+                    bubble.className = `bubble-row ${isHost ? 'host-bubble-row' : 'guest-bubble-row'}`;
+                    const timeStr = new Date(data.message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    bubble.innerHTML = `
+                        <div class="bubble-box">
+                            ${data.message.text}
+                            <span class="bubble-time">${timeStr}</span>
+                        </div>
+                    `;
+                    chatBox.appendChild(bubble);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            });
+            <% } %>
         </script>
     <% } %>
+
+    <!-- Global Luxury Footer -->
+    <%- include("../partials/03_footer.ejs") %>
 </body>
 </html>

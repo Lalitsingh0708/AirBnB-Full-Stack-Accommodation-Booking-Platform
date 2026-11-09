@@ -2,6 +2,7 @@ import { Home } from "../models/01_homesModel.js";
 import Booking from "../models/Booking.js";
 import Conversation from "../models/Conversation.js";
 import User from "../models/User.js";
+import { io } from "../app.js";
 
 // GET /host - Host Overview Dashboard (Isolated per host)
 export const getHostDashboard = (req, res) => {
@@ -123,6 +124,27 @@ export const postHostMessageReply = async (req, res) => {
             conversation.lastMessage = messageText.trim();
             conversation.lastMessageAt = new Date();
             await conversation.save();
+
+            // Real-time socket broadcast to Guest & conversation room
+            try {
+                io.to(`conversation_${conversation._id}`).emit("new_message", {
+                    conversationId: String(conversation._id),
+                    message: newMsg,
+                    sender: {
+                        _id: userId,
+                        name: req.user ? req.user.name : "Host",
+                        role: "host",
+                    },
+                });
+                io.to(`user_${conversation.guest}`).emit("incoming_message_notification", {
+                    conversationId: String(conversation._id),
+                    text: newMsg.text,
+                    senderName: req.user ? req.user.name : "Host",
+                    propertyTitle: conversation.propertyTitle,
+                });
+            } catch (sockErr) {
+                console.error("[Socket] Error broadcasting host message:", sockErr);
+            }
         }
         res.redirect(`/host/messages?c=${conversationId}`);
     } catch (err) {

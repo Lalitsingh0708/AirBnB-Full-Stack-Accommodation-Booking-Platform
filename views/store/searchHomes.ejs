@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stays in <%= displayDestination %> &bull; StayNest</title>
+    <title>Stays in <%= displayDestination %> | StayNest</title>
     <meta name="description" content="Explore luxury stays, apartments, and villas in <%= displayDestination %>. View live availability, prices, and interactive map on StayNest." />
     
     <!-- Google Fonts -->
@@ -16,7 +16,7 @@
 
     <style>
         :root {
-            --bg-beige: #FAF7F0;
+            --bg-beige: #FAF8F5;
             --surface-card: #FFFFFF;
             --emerald-dark: #0B1C14;
             --emerald-mid: #143528;
@@ -24,7 +24,7 @@
             --gold-light: #EBD6A7;
             --text-dark: #121A16;
             --text-muted: #717171;
-            --border-light: #EBEBEB;
+            --border-light: #E8E2D5;
             --coral-accent: #E00B41;
             --green-perk: #0E7044;
         }
@@ -36,7 +36,13 @@
         }
 
         body {
-            background-color: #FFFFFF;
+            background-color: var(--bg-beige);
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             min-height: 100vh;
@@ -45,12 +51,14 @@
             overflow-x: hidden;
         }
 
-        /* ── Subheader / Quick Filter Pills Row (Exact Match to Screenshot 1) ── */
+        /* ── Subheader / Quick Filter Pills Row ── */
         .search-filter-subbar {
             position: sticky;
             top: 73px;
             z-index: 90;
-            background: #FFFFFF;
+            background: rgba(250, 248, 245, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border-light);
             padding: 12px 24px;
             display: flex;
@@ -734,6 +742,8 @@
 
             </div>
 
+            <!-- Global Luxury Footer inside listings pane (Airbnb Split-Screen Style) -->
+            <%- include("../partials/03_footer.ejs") %>
         </div>
 
         <!-- ── Right Column: Interactive Leaflet Map with Price Pills ── -->

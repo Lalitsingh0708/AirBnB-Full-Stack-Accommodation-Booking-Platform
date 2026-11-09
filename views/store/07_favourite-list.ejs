@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Saved Stays &bull; StayNest</title>
+    <title>Saved Stays | StayNest</title>
     <meta name="description" content="View your saved favourite vacation homes and villas on StayNest." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,6 +29,12 @@
 
         body {
             background-color: var(--bg-beige);
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             min-height: 100vh;
@@ -190,7 +196,7 @@
             background: var(--emerald-mid);
             color: #FFFFFF;
             text-decoration: none;
-            border-radius: 9999px;
+            border-radius: 10px;
             font-size: 13.5px;
             font-weight: 600;
             display: flex;
@@ -248,9 +254,9 @@
 
     <section class="hero-banner-wrap">
         <div class="hero-banner">
-            <p class="hero-eyebrow">Wishlist &bull; StayNest</p>
+            <p class="hero-eyebrow">Saved Stays | StayNest</p>
             <h1 class="hero-headline">Saved <em>places.</em></h1>
-            <p class="hero-sub">All your bookmarked vacation homes and architectural stays in one curated collection.</p>
+            <p class="hero-sub">All your bookmarked vacation homes and stays saved in one place.</p>
         </div>
     </section>
 
@@ -301,5 +307,8 @@
             </div>
         <% } %>
     </main>
+
+    <!-- Global Luxury Footer -->
+    <%- include("../partials/03_footer.ejs") %>
 </body>
 </html>

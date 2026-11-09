@@ -7,19 +7,24 @@
     <meta name="description" content="StayNest - Premium accommodation and vacation rentals booking platform." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet" />
 
     <style>
         :root {
             --bg-deep: #050c08;
-            --cream-bg: #FAF7F0;
-            --emerald-dark: #0f261b;
-            --emerald-mid: #173829;
-            --gold-accent: #D4AF6A;
+            --cream-bg: #FAF8F5;
+            --emerald-dark: #081B13;
+            --emerald-mid: #103425;
+            --emerald-surface: #143C2C;
+            --gold-accent: #C9A86A;
+            --gold-rich: #D4AF37;
             --gold-light: #EBD6A7;
-            --text-dark: #141A17;
-            --input-border: #D8D2C4;
-            --input-focus: #173829;
+            --text-dark: #0A140F;
+            --text-body: #1E2B24;
+            --text-muted: #4B5A52;
+            --input-border: #BCB3A0;
+            --input-border-dark: #8F9E95;
+            --input-focus: #C9A86A;
             --rake: -7deg;
             --rake-reverse: 7deg;
         }
@@ -103,24 +108,24 @@
 
         /* ─── FORM TYPOGRAPHY & ELEMENTS ──────────────── */
         .form-title-group {
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         .form-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
+            font-size: 32px;
+            font-weight: 800;
+            color: #0A140F;
+            letter-spacing: -0.7px;
             display: inline-block;
             position: relative;
         }
 
         .title-accent-bar {
-            width: 44px;
-            height: 3.5px;
-            background: linear-gradient(90deg, #D4AF6A 0%, #E8C885 100%);
-            box-shadow: 0 1px 6px rgba(212, 175, 106, 0.35);
-            border-radius: 3px;
+            width: 46px;
+            height: 4px;
+            background: linear-gradient(90deg, #C9A86A 0%, #E8C885 50%, #C9A86A 100%);
+            box-shadow: 0 2px 8px rgba(201, 168, 106, 0.45);
+            border-radius: 4px;
             margin-top: 6px;
         }
 
@@ -141,28 +146,28 @@
         /* ─── UNDERLINE INPUT FIELDS ──────────────────── */
         .input-group {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         .input-wrap {
             position: relative;
             display: flex;
             align-items: center;
-            border-bottom: 1.5px solid var(--input-border);
+            border-bottom: 1.8px solid #B8AEA0;
             transform-origin: left center;
             transition: border-color 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
         }
 
         .input-wrap:hover {
-            transform: scale(1.025);
-            border-bottom-color: #D4AF6A;
+            transform: scale(1.02);
+            border-bottom-color: #0F2D20;
         }
 
         .input-wrap:focus-within {
-            transform: scale(1.025);
-            border-bottom-color: #D4AF6A;
-            border-bottom-width: 2px;
-            box-shadow: 0 2px 8px rgba(212, 175, 106, 0.28);
+            transform: scale(1.02);
+            border-bottom-color: #C9A86A;
+            border-bottom-width: 2.2px;
+            box-shadow: 0 3px 10px rgba(201, 168, 106, 0.35);
         }
 
         .input-wrap input {
@@ -172,21 +177,21 @@
             outline: none;
             font-family: 'Inter', sans-serif;
             font-size: 15px;
-            color: var(--text-dark);
-            padding: 10px 32px 10px 0;
-            font-weight: 400;
+            color: #0A140F;
+            padding: 11px 34px 11px 0;
+            font-weight: 500;
         }
 
         .input-wrap input::placeholder {
-            color: #9AA39E;
+            color: #526058;
             font-size: 14.5px;
-            font-weight: 400;
+            font-weight: 500;
         }
 
         .input-icon {
             position: absolute;
             right: 2px;
-            color: #8C9690;
+            color: #2F3E36;
             pointer-events: none;
             display: flex;
             align-items: center;
@@ -196,7 +201,7 @@
 
         .input-wrap:hover .input-icon,
         .input-wrap:focus-within .input-icon {
-            color: #D4AF6A;
+            color: #C9A86A;
         }
 
         .btn-toggle-pw {
@@ -205,7 +210,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #8C9690;
+            color: #2F3E36;
             padding: 4px;
             display: flex;
             align-items: center;
@@ -215,7 +220,7 @@
 
         .btn-toggle-pw:hover,
         .input-wrap:focus-within .btn-toggle-pw {
-            color: #D4AF6A;
+            color: #C9A86A;
         }
 
         /* ─── PASSWORD STRENGTH METER ─────────────────── */
@@ -273,24 +278,24 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 9px 12px;
-            border: 1.5px solid var(--input-border);
+            padding: 10px 14px;
+            border: 1.8px solid #C4BAA7;
             border-radius: 9px;
             cursor: pointer;
-            font-size: 12.5px;
-            font-weight: 500;
-            color: #55625B;
-            background: rgba(255, 255, 255, 0.55);
+            font-size: 13px;
+            font-weight: 600;
+            color: #2D3A33;
+            background: #F4EFE6;
             transition: all 0.2s ease;
             user-select: none;
         }
 
         .role-choice input[type="radio"]:checked + .role-label {
-            border-color: var(--emerald-mid);
-            background: #EBF2ED;
-            color: var(--emerald-mid);
-            font-weight: 600;
-            box-shadow: 0 2px 6px rgba(23, 56, 41, 0.08);
+            border: 1.8px solid #D4AF6A;
+            background: linear-gradient(135deg, #164e39 0%, #226b4e 50%, #17523c 100%);
+            color: #FFFFFF;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(18, 65, 47, 0.25), 0 0 10px rgba(212, 175, 106, 0.28), inset 0 1px 0 rgba(255, 238, 195, 0.35);
         }
 
         /* ─── CHECKBOX & FORGOT PASSWORD ROW ──────────── */
@@ -307,18 +312,18 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            color: #4A5650;
+            color: #17241D;
             user-select: none;
             font-size: 13.5px;
-            font-weight: 400;
+            font-weight: 600;
         }
 
         .checkbox-label input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 17px;
-            height: 17px;
-            border: 1.5px solid #28543E;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #143528;
             border-radius: 4px;
             background: transparent;
             cursor: pointer;
@@ -338,8 +343,8 @@
         }
 
         .checkbox-label input[type="checkbox"]:checked {
-            background: #1B4533;
-            border-color: #1B4533;
+            background: linear-gradient(135deg, #164e39 0%, #226b4e 100%);
+            border-color: #D4AF6A;
         }
 
         .checkbox-label input[type="checkbox"]:checked::before {
@@ -347,55 +352,138 @@
         }
 
         .forgot-link {
-            color: #55625B;
-            font-weight: 500;
+            color: #103425;
+            font-weight: 600;
             text-decoration: underline;
-            text-decoration-color: #D4AF6A;
-            text-underline-offset: 3px;
-            font-size: 13px;
+            text-decoration-color: #C9A86A;
+            text-underline-offset: 3.5px;
+            text-decoration-thickness: 1.5px;
+            font-size: 13.5px;
             transition: color 0.15s, text-decoration-color 0.15s;
         }
 
         .forgot-link:hover {
-            color: #17221C;
-            text-decoration-color: #C59A45;
+            color: #05140D;
+            text-decoration-color: #B58F4A;
         }
 
-        /* ─── PRIMARY BUTTON ──────────────────────────── */
+        /* ─── PRIMARY BUTTON (SAME EMERALD GRADIENT & GOLDEN RIM) ─── */
         .btn-auth-submit {
             width: 100%;
             height: 50px;
-            background: #143528;
+            background: linear-gradient(135deg, #164e39 0%, #226b4e 50%, #17523c 100%);
             color: #FFFFFF;
-            border: none;
+            border: 1.8px solid #D4AF6A;
             border-radius: 9999px;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 15.5px;
+            font-weight: 700;
             font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 18px rgba(18, 48, 35, 0.32);
-            transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 4px 18px rgba(18, 65, 47, 0.28), 0 0 14px rgba(212, 175, 106, 0.32), inset 0 1px 1px rgba(255, 238, 195, 0.45);
+            transition: all 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
             margin-bottom: 18px;
         }
 
         .btn-auth-submit:hover {
-            background: #0E271D;
-            transform: translateY(-1.5px);
-            box-shadow: 0 8px 24px rgba(18, 48, 35, 0.42);
+            background: linear-gradient(135deg, #1b5b43 0%, #2a7c5b 50%, #1c5e45 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 26px rgba(18, 65, 47, 0.38), 0 0 22px rgba(212, 175, 106, 0.48);
+            border-color: #EBD6A7;
         }
 
         .btn-auth-submit:active {
             transform: translateY(0);
-            box-shadow: 0 4px 12px rgba(18, 48, 35, 0.3);
+            box-shadow: 0 2px 8px rgba(18, 65, 47, 0.3);
+        }
+
+        /* ─── GOOGLE DIRECT AUTH BUTTON (LIGHTER EMERALD & ENHANCED GOLDEN SHADE) ─── */
+        .btn-google-continue {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, #164e39 0%, #226b4e 50%, #17523c 100%);
+            border-radius: 9999px;
+            padding: 5px 6px;
+            text-decoration: none;
+            box-shadow: 0 4px 18px rgba(18, 65, 47, 0.28), 0 0 14px rgba(212, 175, 106, 0.32), inset 0 1px 1px rgba(255, 238, 195, 0.45);
+            border: 1.8px solid #D4AF6A;
+            transition: all 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            box-sizing: border-box;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .btn-google-continue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 26px rgba(18, 65, 47, 0.38), 0 0 22px rgba(212, 175, 106, 0.48);
+            background: linear-gradient(135deg, #1b5b43 0%, #2a7c5b 50%, #1c5e45 100%);
+            border-color: #EBD6A7;
+        }
+
+        .btn-google-continue:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(18, 65, 47, 0.3);
+        }
+
+        .google-icon-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            border: 1.8px solid #D4AF6A;
+        }
+
+        .google-btn-text {
+            flex: 1;
+            text-align: center;
+            color: #FFFFFF;
+            font-size: 15.5px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            text-shadow: 0 1px 3px rgba(10, 35, 25, 0.5);
+            padding-right: 38px;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 18px 0 22px 0;
+            position: relative;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1.5px solid #D5CEBE;
+        }
+
+        .auth-divider-text {
+            padding: 0 16px;
+            font-size: 12.5px;
+            color: #2D3A33;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
 
         /* ─── SWITCH PROMPT ───────────────────────────── */
         .auth-switch-text {
-            font-size: 13.5px;
-            color: #6C7771;
+            font-size: 14px;
+            color: #2F3E36;
+            font-weight: 500;
             text-align: left;
         }
 
@@ -405,21 +493,20 @@
             padding: 0;
             margin: 0;
             font-family: inherit;
-            font-size: 13.5px;
-            font-weight: 600;
-            color: #17221C;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0A140F;
             cursor: pointer;
             text-decoration: underline;
-            text-decoration-color: #D4AF6A;
-            text-decoration-thickness: 1.5px;
+            text-decoration-color: #C9A86A;
+            text-decoration-thickness: 2px;
             text-underline-offset: 4px;
-            transition: text-decoration-color 0.2s ease, text-decoration-thickness 0.2s ease;
+            transition: color 0.2s ease, text-decoration-color 0.2s ease;
         }
 
         .switch-link-btn:hover {
-            color: #17221C;
-            text-decoration-color: #C59A45;
-            text-decoration-thickness: 2.5px;
+            color: #103425;
+            text-decoration-color: #B58F4A;
         }
 
         /* ═════════════════════════════════════════════════
@@ -544,17 +631,18 @@
 
         .welcome__title em {
             font-style: italic;
-            color: var(--gold-accent);
+            color: #E5C278;
             font-weight: 400;
             display: block;
+            text-shadow: 0 2px 14px rgba(229, 194, 120, 0.3);
         }
 
         .welcome__desc {
-            font-size: 15px;
-            line-height: 1.68;
-            color: rgba(255, 255, 255, 0.68);
-            max-width: 320px;
-            font-weight: 300;
+            font-size: 15.5px;
+            line-height: 1.72;
+            color: rgba(255, 255, 255, 0.88);
+            max-width: 330px;
+            font-weight: 400;
         }
 
         /* Smooth visibility toggle of messages */
@@ -642,6 +730,23 @@
                     </div>
                 <% } %>
 
+                <!-- Direct Login with Google -->
+                <a href="/auth/google<%= (typeof returnUrl !== 'undefined' && returnUrl) ? '?returnUrl=' + encodeURIComponent(returnUrl) : '' %>" class="btn-google-continue" id="btn-google-login">
+                    <span class="google-icon-circle">
+                        <svg viewBox="0 0 24 24" width="22" height="22">
+                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                        </svg>
+                    </span>
+                    <span class="google-btn-text">Continue with Google</span>
+                </a>
+
+                <div class="auth-divider">
+                    <span class="auth-divider-text">Enter Email</span>
+                </div>
+
                 <form action="/auth/login" method="POST" id="form-login" novalidate>
                     <input type="hidden" name="returnUrl" value="<%= (typeof returnUrl !== 'undefined' && returnUrl) ? returnUrl : '' %>" />
                     <!-- Username / Email -->
@@ -725,6 +830,23 @@
                         <span><%= error %></span>
                     </div>
                 <% } %>
+
+                <!-- Direct Register with Google -->
+                <a href="/auth/google<%= (typeof returnUrl !== 'undefined' && returnUrl) ? '?returnUrl=' + encodeURIComponent(returnUrl) : '' %>" class="btn-google-continue" id="btn-google-register">
+                    <span class="google-icon-circle">
+                        <svg viewBox="0 0 24 24" width="22" height="22">
+                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                        </svg>
+                    </span>
+                    <span class="google-btn-text">Continue with Google</span>
+                </a>
+
+                <div class="auth-divider">
+                    <span class="auth-divider-text">Or register with email</span>
+                </div>
 
                 <form action="/auth/register" method="POST" id="form-register" novalidate>
                     <input type="hidden" name="returnUrl" value="<%= (typeof returnUrl !== 'undefined' && returnUrl) ? returnUrl : '' %>" />

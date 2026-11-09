@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calendar &bull; StayNest Host</title>
+    <title>Host Calendar | StayNest</title>
+    <meta name="description" content="Manage availability and reservations on your StayNest host calendar." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -25,7 +25,13 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: #FAF8F5;
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-main);
             min-height: 100vh;
@@ -320,5 +326,8 @@
 
         window.addEventListener('DOMContentLoaded', renderCalendar);
     </script>
+
+    <!-- Global Luxury Footer -->
+    <%- include("../partials/03_footer.ejs") %>
 </body>
 </html>

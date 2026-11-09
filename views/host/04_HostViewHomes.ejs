@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manage My Stays &bull; StayNest Host</title>
+    <title>Manage Listings | StayNest</title>
+    <meta name="description" content="Manage your property listings, update prices, and view bookings on StayNest." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
@@ -29,6 +29,12 @@
 
         body {
             background-color: var(--bg-beige);
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             min-height: 100vh;
@@ -110,7 +116,7 @@
             padding: 12px 26px;
             background: #FAF7F0;
             color: #122B20;
-            border-radius: 9999px;
+            border-radius: 10px;
             font-size: 13.5px;
             font-weight: 600;
             text-decoration: none;
@@ -132,7 +138,7 @@
             background: rgba(255, 255, 255, 0.1);
             color: #FFFFFF;
             border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 9999px;
+            border-radius: 10px;
             font-size: 13.5px;
             font-weight: 600;
             text-decoration: none;
@@ -278,7 +284,7 @@
         .btn-action {
             flex: 1;
             height: 38px;
-            border-radius: 9999px;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: 600;
             text-decoration: none;
@@ -444,7 +450,7 @@
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 </div>
                 <h3 class="empty-title">No accommodations listed yet</h3>
-                <p class="empty-text">You haven't published any properties under your StayNest host account. Publish your first sanctuary to begin welcoming discerning travelers.</p>
+                <p class="empty-text">You have not published any properties under your StayNest host account yet. Add your first listing to start welcoming guests.</p>
                 <a href="/host/add-home" class="btn-add-new" style="display: inline-flex;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     <span>Publish Your First Stay</span>
@@ -452,5 +458,8 @@
             </div>
         <% } %>
     </main>
+
+    <!-- Global Luxury Footer -->
+    <%- include("../partials/03_footer.ejs") %>
 </body>
 </html>

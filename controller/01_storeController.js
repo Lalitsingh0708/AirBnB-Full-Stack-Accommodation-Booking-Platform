@@ -5,6 +5,15 @@ import mongoose from "mongoose";
 import Conversation from "../models/Conversation.js";
 import Booking from "../models/Booking.js";
 import ReviewModel, { ReviewStore } from "../models/Review.js";
+import Razorpay from "razorpay";
+import crypto from "crypto";
+import { sendBookingConfirmationEmail } from "../utils/emailService.js";
+import { io } from "../app.js";
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID || "rzp_test_SdWJYLLkVxRcTI",
+    key_secret: process.env.RAZORPAY_KEY_SECRET || "64siL8Yh749lLxmStW3FPNI9",
+});
 
 export const getHomesList =  (req , res)=>{
     Home.fetchAll((registeredHome) => {
@@ -253,8 +262,195 @@ export const getCheckout = (req, res) => {
             nights,
             user: req.user,
             currentPage: "checkout",
+            razorpayKeyId: process.env.RAZORPAY_KEY_ID || "rzp_test_SdWJYLLkVxRcTI",
         });
     });
+};
+
+export const postCreateRazorpayOrder = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: "Authentication required" });
+        }
+
+        const { homeId, totalAmount, checkIn, checkOut, guests, totalNights, pricePerNight } = req.body;
+        if (!homeId) {
+            return res.status(400).json({ success: false, message: "Property ID is required" });
+        }
+
+        const parsedAmount = Math.round(Number(totalAmount));
+        if (!parsedAmount || parsedAmount <= 0) {
+            return res.status(400).json({ success: false, message: "Invalid booking amount" });
+        }
+
+        const amountInPaise = parsedAmount * 100;
+        const receiptId = `rcpt_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+
+        const order = await razorpay.orders.create({
+            amount: amountInPaise,
+            currency: "INR",
+            receipt: receiptId,
+            notes: {
+                homeId: String(homeId),
+                guestId: String(req.user._id),
+                checkIn: String(checkIn || ""),
+                checkOut: String(checkOut || ""),
+                guests: String(guests || "1"),
+            },
+        });
+
+        res.json({
+            success: true,
+            orderId: order.id,
+            amount: order.amount,
+            currency: order.currency,
+            keyId: process.env.RAZORPAY_KEY_ID || "rzp_test_SdWJYLLkVxRcTI",
+            receipt: receiptId,
+            user: {
+                name: req.user.name,
+                email: req.user.email,
+                phone: req.user.phone || "",
+            },
+        });
+    } catch (err) {
+        console.error("Razorpay order creation error:", err);
+        res.status(500).json({ success: false, message: "Failed to initiate payment gateway", error: err.message });
+    }
+};
+
+export const postVerifyRazorpayPayment = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: "Authentication required" });
+        }
+
+        const {
+            homeId,
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature,
+            checkIn,
+            checkOut,
+            guests,
+            totalNights,
+            pricePerNight,
+            totalAmount,
+            paymentMethod,
+            specialRequests,
+        } = req.body;
+
+        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+            return res.status(400).json({ success: false, message: "Missing payment verification parameters" });
+        }
+
+        // Verify HMAC SHA256 signature
+        const secret = process.env.RAZORPAY_KEY_SECRET || "64siL8Yh749lLxmStW3FPNI9";
+        const hmac = crypto.createHmac("sha256", secret);
+        hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+        const generatedSignature = hmac.digest("hex");
+
+        if (generatedSignature !== razorpay_signature) {
+            console.error("Signature verification mismatch!");
+            return res.status(400).json({ success: false, message: "Payment verification failed. Invalid signature." });
+        }
+
+        // Find home and create booking record
+        Home.findById(homeId, async (home) => {
+            if (!home) {
+                return res.status(404).json({ success: false, message: "Property not found" });
+            }
+
+            try {
+                const guestUser = req.user;
+                let hostUserId = null;
+                if (home.hostId && mongoose.Types.ObjectId.isValid(home.hostId)) {
+                    hostUserId = home.hostId;
+                } else {
+                    const fallbackHost = await User.findOne({ role: "host" });
+                    if (fallbackHost) hostUserId = fallbackHost._id;
+                }
+
+                const newBooking = new Booking({
+                    property: String(home.id),
+                    guest: guestUser._id,
+                    host: hostUserId,
+                    checkIn: new Date(checkIn || Date.now()),
+                    checkOut: new Date(checkOut || (Date.now() + 86400000)),
+                    guests: Number(guests) || 1,
+                    totalNights: Number(totalNights) || 1,
+                    pricePerNight: Number(pricePerNight) || Number(home.housePrice) || 2620,
+                    serviceFee: 450,
+                    totalAmount: Number(totalAmount) || Math.round(Number(home.housePrice || 2620) * Number(totalNights || 1) + 450),
+                    status: "confirmed",
+                    paymentMethod: paymentMethod || "razorpay",
+                    paymentStatus: "paid",
+                    razorpayOrderId: razorpay_order_id,
+                    razorpayPaymentId: razorpay_payment_id,
+                    razorpaySignature: razorpay_signature,
+                    specialRequests: specialRequests || "",
+                    propertyTitle: home.houseName,
+                    propertyCity: home.city || home.houseAddress || "India",
+                    propertyPhoto: home.housePhoto || (home.photos && home.photos[0]) || "",
+                });
+
+                await newBooking.save();
+
+                // Send Luxury Confirmation Email to Guest
+                if (guestUser.email) {
+                    sendBookingConfirmationEmail(guestUser.email, newBooking, guestUser.name).catch((emailErr) => {
+                        console.error("[StoreController] Failed to send booking confirmation email:", emailErr);
+                    });
+                }
+
+                // Send automatic confirmation message to host in Conversation
+                if (hostUserId) {
+                    try {
+                        let conversation = await Conversation.findOne({
+                            guest: guestUser._id,
+                            property: String(home.id),
+                        });
+                        if (!conversation) {
+                            conversation = new Conversation({
+                                guest: guestUser._id,
+                                host: hostUserId,
+                                property: String(home.id),
+                                propertyTitle: home.houseName,
+                                propertyPhoto: home.housePhoto || (home.photos && home.photos[0]) || "",
+                                messages: [],
+                                lastMessage: "",
+                            });
+                        }
+                        const sysMsg = {
+                            sender: guestUser._id,
+                            senderRole: "guest",
+                            text: `Payment of ₹${newBooking.totalAmount.toLocaleString('en-IN')} received via Razorpay (${razorpay_payment_id}). Reservation Confirmed for ${new Date(checkIn).toLocaleDateString()} to ${new Date(checkOut).toLocaleDateString()} (${totalNights} nights, ${guests} guests).`,
+                            read: false,
+                            createdAt: new Date(),
+                        };
+                        conversation.messages.push(sysMsg);
+                        conversation.lastMessage = sysMsg.text;
+                        conversation.lastMessageAt = new Date();
+                        await conversation.save();
+                    } catch (convErr) {
+                        console.error("Error creating conversation message for booking:", convErr);
+                    }
+                }
+
+                return res.json({
+                    success: true,
+                    bookingId: newBooking._id,
+                    paymentId: razorpay_payment_id,
+                    redirectUrl: "/bookings?booked=true",
+                });
+            } catch (saveErr) {
+                console.error("Error saving verified booking:", saveErr);
+                return res.status(500).json({ success: false, message: "Error completing booking record." });
+            }
+        });
+    } catch (err) {
+        console.error("Payment verification route error:", err);
+        res.status(500).json({ success: false, message: "Server error verifying payment", error: err.message });
+    }
 };
 
 export const postCreateBooking = async (req, res) => {
@@ -289,6 +485,8 @@ export const postCreateBooking = async (req, res) => {
                 if (fallbackHost) hostUserId = fallbackHost._id;
             }
 
+            const isPayOnArrival = paymentMethod === "pay_on_arrival";
+
             const newBooking = new Booking({
                 property: String(home.id),
                 guest: guestUser._id, // Strict per-user isolation
@@ -301,8 +499,8 @@ export const postCreateBooking = async (req, res) => {
                 serviceFee: 450,
                 totalAmount: Number(totalAmount) || Math.round(Number(home.housePrice || 2620) * Number(totalNights || 1) + 450),
                 status: "confirmed",
-                paymentMethod: paymentMethod || "upi",
-                paymentStatus: "paid",
+                paymentMethod: paymentMethod || "pay_on_arrival",
+                paymentStatus: isPayOnArrival ? "pending" : "paid",
                 specialRequests: specialRequests || "",
                 propertyTitle: home.houseName,
                 propertyCity: home.city || home.houseAddress || "India",
@@ -310,6 +508,13 @@ export const postCreateBooking = async (req, res) => {
             });
 
             await newBooking.save();
+
+            // Send Luxury Confirmation Email to Guest
+            if (guestUser.email) {
+                sendBookingConfirmationEmail(guestUser.email, newBooking, guestUser.name).catch((emailErr) => {
+                    console.error("[StoreController] Failed to send booking confirmation email:", emailErr);
+                });
+            }
 
             // Automatic confirmation message to host in Conversation
             if (hostUserId) {
@@ -332,7 +537,7 @@ export const postCreateBooking = async (req, res) => {
                     const sysMsg = {
                         sender: guestUser._id,
                         senderRole: "guest",
-                        text: `🌟 Booking Confirmed! Dates: ${new Date(checkIn).toLocaleDateString()} to ${new Date(checkOut).toLocaleDateString()} (${totalNights} nights, ${guests} guests). Payment via ${paymentMethod ? paymentMethod.toUpperCase() : 'UPI'}.`,
+                        text: `Booking Confirmed. Dates: ${new Date(checkIn).toLocaleDateString()} to ${new Date(checkOut).toLocaleDateString()} (${totalNights} nights, ${guests} guests). Payment via ${paymentMethod ? paymentMethod.toUpperCase() : 'PAY ON ARRIVAL'}.`,
                         read: false,
                         createdAt: new Date(),
                     };
@@ -373,26 +578,34 @@ export const postCancelBooking = async (req, res) => {
     }
 };
 
-export const getFavroutelist = (req, res) => {
-    FavouriteHomes.getFavourite((fav = []) => {
+export const getFavroutelist = async (req, res) => {
+    try {
+        if (!req.user) {
+            const returnUrl = encodeURIComponent(req.originalUrl || "/favourite-list");
+            return res.redirect(`/auth/login?returnUrl=${returnUrl}`);
+        }
+
+        // Get fresh user record with savedProperties from Atlas
+        const user = await User.findById(req.user._id).lean();
+        const savedIds = (user?.savedProperties || user?.customerProfile?.savedProperties || []).map(String);
+
         Home.fetchAll((registeredHome = []) => {
-            // Null check: Handle case if fav is null/undefined
-            const safeFavList = fav || [];
-
-            // Convert all IDs to String to avoid Type Mismatch (e.g., Number vs String)
             const favWithDetails = registeredHome.filter(home => 
-                safeFavList.map(String).includes(String(home.id))
+                savedIds.includes(String(home.id))
             );
-
-            console.log("Matched Favourites:", favWithDetails);
 
             res.render("store/07_favourite-list", {
                 favWithDetails: favWithDetails,
                 pageTitle: "Your Favourites",
-                path: "/favourites"
+                path: "/favourites",
+                currentPage: "favourites",
+                user: req.user
             });
         });
-    });
+    } catch (err) {
+        console.error("Error fetching user favourites:", err);
+        res.redirect("/");
+    }
 };
 
 export const getIndex =  (req , res)=>{
@@ -589,6 +802,27 @@ export const postSendMessageToHost = async (req, res) => {
             conversation.lastMessageAt = new Date();
             await conversation.save();
 
+            // Real-time Socket.io broadcast to Host and conversation room
+            try {
+                io.to(`conversation_${conversation._id}`).emit("new_message", {
+                    conversationId: String(conversation._id),
+                    message: newMsg,
+                    sender: {
+                        _id: req.user._id,
+                        name: req.user.name,
+                        role: "guest",
+                    },
+                });
+                io.to(`user_${hostUser._id}`).emit("incoming_message_notification", {
+                    conversationId: String(conversation._id),
+                    text: newMsg.text,
+                    senderName: req.user.name,
+                    propertyTitle: home.houseName,
+                });
+            } catch (sockErr) {
+                console.error("[Socket] Error broadcasting guest message:", sockErr);
+            }
+
             return res.json({
                 success: true,
                 message: "Message sent to host successfully!",
@@ -625,12 +859,57 @@ export const getPropertyMessages = async (req, res) => {
     }
 }; 
 
-export const postAddToFavourite = (req , res)=>{
-    console.log(req.body) ;
-    FavouriteHomes.addToFavourite(req.body.id , error => {
-        if(error){
-            console.log("Error while marking favourite") ;
+export const postAddToFavourite = async (req, res) => {
+    try {
+        if (!req.user) {
+            if (req.headers["accept"]?.includes("application/json") || req.xhr) {
+                return res.status(401).json({ success: false, redirectUrl: "/auth/login?returnUrl=/favourite-list" });
+            }
+            return res.redirect("/auth/login?returnUrl=/favourite-list");
         }
-        res.redirect("/favourite-list") ;
-    }) ;
-} ;
+
+        const homeId = String(req.body.id || "");
+        if (!homeId) {
+            return res.redirect("back");
+        }
+
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.redirect("/auth/login");
+        }
+
+        if (!Array.isArray(user.savedProperties)) {
+            user.savedProperties = [];
+        }
+
+        const homeIdStr = String(homeId);
+        const index = user.savedProperties.map(String).indexOf(homeIdStr);
+
+        let isSaved = false;
+        if (index > -1) {
+            // Already in favourites -> Toggle OFF (remove)
+            user.savedProperties.splice(index, 1);
+            isSaved = false;
+        } else {
+            // Not in favourites -> Toggle ON (add)
+            user.savedProperties.push(homeIdStr);
+            isSaved = true;
+        }
+
+        // Also sync to customerProfile
+        if (user.customerProfile) {
+            user.customerProfile.savedProperties = user.savedProperties;
+        }
+
+        await user.save();
+
+        if (req.headers["accept"]?.includes("application/json") || req.xhr) {
+            return res.json({ success: true, isSaved: isSaved, totalSaved: user.savedProperties.length });
+        }
+
+        res.redirect("/favourite-list");
+    } catch (err) {
+        console.error("Error in postAddToFavourite:", err);
+        res.redirect("/favourite-list");
+    }
+};

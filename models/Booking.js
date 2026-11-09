@@ -52,13 +52,25 @@ const bookingSchema = new mongoose.Schema(
         },
         paymentMethod: {
             type: String,
-            enum: ["upi", "card", "netbanking", "pay_on_arrival"],
-            default: "upi",
+            enum: ["upi", "card", "netbanking", "pay_on_arrival", "razorpay"],
+            default: "razorpay",
         },
         paymentStatus: {
             type: String,
             enum: ["pending", "paid", "refunded"],
             default: "paid",
+        },
+        razorpayOrderId: {
+            type: String,
+            default: null,
+        },
+        razorpayPaymentId: {
+            type: String,
+            default: null,
+        },
+        razorpaySignature: {
+            type: String,
+            default: null,
         },
         specialRequests: {
             type: String,

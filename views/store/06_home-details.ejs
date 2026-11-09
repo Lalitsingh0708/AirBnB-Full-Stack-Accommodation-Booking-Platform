@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= home.houseName %> &bull; StayNest</title>
-    <meta name="description" content="Book <%= home.houseName %> in <%= home.city || home.houseAddress %> on StayNest. Handpicked sanctuary with premium amenities." />
+    <title><%= home.houseName %> | StayNest</title>
+    <meta name="description" content="Book <%= home.houseName %> in <%= home.city || home.houseAddress %> on StayNest. Verified accommodation with detailed amenities, photos, and direct host booking." />
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,28 +14,41 @@
     <!-- Leaflet CSS for Map Integration -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
+    <!-- GSAP for ReactBits DepthCarousel Integration -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Socket.io for Real-time Host-Guest Chat -->
+    <script src="/socket.io/socket.io.js"></script>
+
     <style>
         :root {
-            --bg-beige: #FAF7F0;
+            --bg-canvas: #FAF8F5;
+            --bg-beige: #FAF8F5;
             --surface-card: #FFFFFF;
-            --surface-subtle: #F6F3EC;
+            --surface-subtle: #F5F1E8;
+            --surface-warm: #F8F5EE;
             --emerald-dark: #0B1C14;
             --emerald-mid: #143528;
             --emerald-accent: #1D4333;
             --emerald-light: #EBF2ED;
+            --emerald-hover: #0d261c;
             --gold-accent: #D4AF6A;
             --gold-glow: #F3E6CD;
             --gold-deep: #B88E3E;
+            --gold-border: #E5D7B7;
             --coral-brand: #E00B41;
-            --text-dark: #222222;
-            --text-muted: #717171;
-            --border-light: #DDDDDD;
-            --border-subtle: #EBEBEB;
-            --radius-xl: 16px;
-            --radius-lg: 12px;
+            --text-dark: #121A16;
+            --text-body: #2C3531;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+            --border-subtle: #EDE8DD;
+            --border-warm: #DFD7C7;
+            --radius-xl: 18px;
+            --radius-lg: 14px;
             --radius-sm: 8px;
-            --shadow-subtle: 0 4px 18px rgba(0, 0, 0, 0.06);
-            --shadow-float: 0 12px 32px rgba(18, 43, 32, 0.12);
+            --shadow-subtle: 0 4px 20px rgba(20, 53, 40, 0.04);
+            --shadow-card: 0 8px 28px rgba(20, 53, 40, 0.06);
+            --shadow-float: 0 16px 40px rgba(18, 43, 32, 0.10);
         }
 
         *, *::before, *::after {
@@ -49,7 +62,13 @@
         }
 
         body {
-            background-color: #FFFFFF;
+            background-color: var(--bg-canvas);
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             min-height: 100vh;
@@ -207,23 +226,26 @@
             transform: scale(1.02);
         }
 
-        /* ── Sticky Sub-Navigation Bar (Matching Screenshot 2) ── */
+        /* ── Sticky Sub-Navigation Bar ── */
         .sticky-subnav {
             position: sticky;
             top: 0;
             z-index: 30;
-            background: #FFFFFF;
-            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(250, 248, 245, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-light);
             display: flex;
             align-items: center;
             gap: 32px;
             padding: 14px 0;
             margin-bottom: 28px;
+            transition: background 0.25s ease, border-color 0.25s ease;
         }
 
         .sticky-subnav-link {
             text-decoration: none;
-            color: #222222;
+            color: var(--text-dark);
             font-size: 14px;
             font-weight: 600;
             position: relative;
@@ -235,6 +257,10 @@
             color: var(--emerald-mid);
         }
 
+        .sticky-subnav-link.active {
+            color: var(--emerald-mid);
+        }
+
         .sticky-subnav-link.active::after {
             content: '';
             position: absolute;
@@ -242,17 +268,18 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: #222222;
+            background: var(--emerald-mid);
             border-radius: 2px;
         }
 
         /* ── Main Two-Column Split Layout ── */
         .details-content-grid {
             display: grid;
-            grid-template-columns: 1fr 370px;
-            gap: 64px;
+            grid-template-columns: minmax(0, 1fr) 370px;
+            gap: 56px;
             align-items: start;
             position: relative;
+            width: 100%;
         }
 
         /* ── Left Column ── */
@@ -260,11 +287,13 @@
             display: flex;
             flex-direction: column;
             gap: 32px;
+            min-width: 0;
+            width: 100%;
         }
 
         .section-divider {
             height: 1px;
-            background-color: var(--border-subtle);
+            background-color: var(--border-light);
             width: 100%;
         }
 
@@ -282,16 +311,28 @@
             font-weight: 400;
         }
 
-        /* ── Guest Favourite Laurel Banner (Screenshots 1 & 2) ── */
+        /* ── Guest Favourite Laurel Banner ── */
         .guest-favourite-card {
             border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
-            padding: 20px 24px;
+            padding: 22px 26px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: #FFFFFF;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 18px rgba(20, 53, 40, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guest-favourite-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--gold-accent) 0%, var(--gold-deep) 100%);
         }
 
         .laurel-left-badge {
@@ -414,7 +455,7 @@
             align-items: center;
             gap: 8px;
             padding: 10px 18px;
-            border-radius: 9999px;
+            border-radius: 10px;
             background: var(--emerald-mid);
             color: #FFFFFF;
             font-size: 13.5px;
@@ -436,7 +477,7 @@
             align-items: center;
             gap: 8px;
             padding: 9px 16px;
-            border-radius: 9999px;
+            border-radius: 10px;
             background: #FAF7F0;
             border: 1px solid var(--gold-accent);
             color: var(--emerald-dark);
@@ -490,11 +531,12 @@
 
         /* Translation Info Notice */
         .translation-banner {
-            background: #F7F7F7;
+            background: #F4EFE6;
+            border: 1px solid var(--border-warm);
             border-radius: var(--radius-lg);
-            padding: 16px 20px;
+            padding: 16px 22px;
             font-size: 14.5px;
-            color: #222222;
+            color: var(--emerald-dark);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -506,7 +548,7 @@
             border: none;
             font-weight: 600;
             text-decoration: underline;
-            color: #222222;
+            color: var(--emerald-mid);
             cursor: pointer;
             font-family: inherit;
             font-size: 14px;
@@ -514,16 +556,16 @@
 
         /* Description Area */
         .description-section h3 {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 600;
-            color: #222222;
+            color: var(--emerald-dark);
             margin-bottom: 14px;
         }
 
         .description-paragraph {
-            font-size: 15px;
-            line-height: 1.65;
-            color: #222222;
+            font-size: 15.5px;
+            line-height: 1.7;
+            color: var(--text-body);
             white-space: pre-line;
         }
 
@@ -536,20 +578,29 @@
         }
 
         .bedroom-card {
-            border: 1px solid var(--border-subtle);
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
-            padding: 20px;
+            padding: 22px;
             background: #FFFFFF;
+            box-shadow: 0 2px 12px rgba(20, 53, 40, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .bedroom-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold-accent);
+            box-shadow: 0 8px 24px rgba(20, 53, 40, 0.07);
         }
 
         .bedroom-card-icon {
             margin-bottom: 16px;
-            color: #222222;
+            color: var(--emerald-mid);
         }
 
         .bedroom-title {
             font-size: 15px;
             font-weight: 600;
+            color: var(--text-dark);
             margin-bottom: 4px;
         }
 
@@ -562,7 +613,7 @@
         .amenities-section h3 {
             font-size: 20px;
             font-weight: 600;
-            color: #222222;
+            color: var(--emerald-dark);
             margin-bottom: 16px;
         }
 
@@ -1183,7 +1234,7 @@
             color: #FFFFFF;
             text-decoration: none;
             padding: 11px 24px;
-            border-radius: 9999px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             white-space: nowrap;
@@ -1194,7 +1245,12 @@
             background: #0B1C14;
             transform: translateY(-1px);
         }
+
+        .review-textarea {
+            width: 100%;
             border: 1px solid #D8D2C4;
+            border-radius: 8px;
+            padding: 12px 14px;
             font-family: inherit;
             font-size: 14.5px;
             line-height: 1.5;
@@ -1215,7 +1271,7 @@
             color: #FFFFFF;
             border: none;
             padding: 11px 26px;
-            border-radius: 9999px;
+            border-radius: 10px;
             font-size: 14.5px;
             font-weight: 600;
             cursor: pointer;
@@ -1293,25 +1349,32 @@
         /* ── Right Column: Sticky Reservation Box (Screenshots 1, 2, 3) ── */
         .sticky-booking-column {
             position: sticky;
-            top: 90px;
-            z-index: 20;
+            top: 100px;
+            z-index: 30;
+            width: 100%;
+            display: block;
         }
 
         .reservation-card {
             background: #FFFFFF;
-            border: 1px solid var(--border-light);
+            border: 1.5px solid var(--border-light);
             border-radius: var(--radius-xl);
-            padding: 24px;
-            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12);
+            padding: 26px 24px;
+            box-shadow: 0 16px 42px -8px rgba(20, 53, 40, 0.09), 0 2px 8px rgba(0, 0, 0, 0.02);
+            position: relative;
         }
 
         .fee-included-tag {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 600;
-            color: #222222;
+            color: var(--emerald-mid);
+            background: var(--emerald-light);
+            border: 1px solid rgba(20, 53, 40, 0.08);
+            padding: 4px 10px;
+            border-radius: 6px;
             margin-bottom: 14px;
         }
 
@@ -1330,48 +1393,56 @@
         }
 
         .price-current {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
-            color: #222222;
+            color: var(--emerald-dark);
+            letter-spacing: -0.3px;
         }
 
         .price-unit {
             font-size: 15px;
-            color: #222222;
-            font-weight: 400;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
-        /* Combined Date & Guests Box */
+        /* Combined Date & Guests Box with warm luxury styling */
         .booking-picker-box {
-            border: 1px solid #B0B0B0;
-            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border-warm);
+            border-radius: 12px;
             overflow: hidden;
             margin-bottom: 18px;
+            background: #FAF8F5;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .booking-picker-box:focus-within {
+            border-color: var(--emerald-mid);
+            box-shadow: 0 0 0 3px rgba(20, 53, 40, 0.1);
         }
 
         .picker-dates-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            border-bottom: 1px solid #B0B0B0;
+            border-bottom: 1.5px solid var(--border-warm);
         }
 
         .picker-cell {
-            padding: 8px 12px;
-            background: #FFFFFF;
+            padding: 9px 12px;
+            background: #FAF8F5;
         }
 
         .picker-cell:first-child {
-            border-right: 1px solid #B0B0B0;
+            border-right: 1.5px solid var(--border-warm);
         }
 
         .picker-cell-label {
             font-size: 10px;
             font-weight: 800;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: #222222;
+            color: var(--emerald-mid);
             display: block;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
         }
 
         .picker-date-input {
@@ -1380,15 +1451,15 @@
             background: transparent;
             font-family: inherit;
             font-size: 13.5px;
-            font-weight: 500;
-            color: #222222;
+            font-weight: 600;
+            color: var(--text-dark);
             outline: none;
             cursor: pointer;
         }
 
         .picker-guests-row {
-            padding: 8px 12px;
-            background: #FFFFFF;
+            padding: 9px 12px;
+            background: #FAF8F5;
             position: relative;
         }
 
@@ -1398,26 +1469,40 @@
             background: transparent;
             font-family: inherit;
             font-size: 14px;
-            font-weight: 500;
-            color: #222222;
+            font-weight: 600;
+            color: var(--text-dark);
             outline: none;
             cursor: pointer;
         }
 
-        /* Reserve Button (Vibrant Pill matching Screenshot 1 & 2) */
+        .cancellation-policy-pill {
+            background: #F6F2E9;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--emerald-mid);
+            text-align: center;
+            margin-bottom: 16px;
+            letter-spacing: -0.1px;
+        }
+
+        /* Reserve Button: Senior Developer Luxury Heritage CTA */
         .btn-reserve-vibrant {
             width: 100%;
-            height: 48px;
-            background: radial-gradient(circle, rgba(235,87,87,1) 0%, rgba(224,11,65,1) 100%);
-            color: #FFFFFF;
-            border: none;
-            border-radius: 8px;
+            height: 50px;
+            background: linear-gradient(135deg, #143528 0%, #0B1C14 100%);
+            color: #FAF7F0;
+            border: 1px solid rgba(212, 175, 106, 0.3);
+            border-radius: 12px;
             font-family: inherit;
             font-size: 16px;
             font-weight: 600;
+            letter-spacing: 0.2px;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(224, 11, 65, 0.35);
-            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(11, 28, 20, 0.22);
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1426,9 +1511,11 @@
         }
 
         .btn-reserve-vibrant:hover {
-            background: #D90038;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(224, 11, 65, 0.45);
+            background: linear-gradient(135deg, #0B1C14 0%, #143528 100%);
+            border-color: var(--gold-accent);
+            transform: translateY(-1.5px);
+            box-shadow: 0 10px 28px rgba(11, 28, 20, 0.35);
+            color: #FFFFFF;
         }
 
         .wont-charge-note {
@@ -1444,7 +1531,7 @@
             flex-direction: column;
             gap: 12px;
             padding-bottom: 18px;
-            border-bottom: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-light);
             margin-bottom: 18px;
         }
 
@@ -1453,21 +1540,22 @@
             align-items: center;
             justify-content: space-between;
             font-size: 14.5px;
-            color: #222222;
+            color: var(--text-dark);
         }
 
         .breakdown-row.total-row {
-            font-size: 16px;
+            font-size: 16.5px;
             font-weight: 700;
+            color: var(--emerald-dark);
             padding-top: 4px;
         }
 
         /* Host Chat & Direct Action in Booking Box */
         .widget-chat-box {
-            background: #FAF7F0;
-            border: 1px solid var(--border-subtle);
+            background: #FAF8F5;
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
-            padding: 14px;
+            padding: 16px;
             text-align: center;
             margin-bottom: 16px;
         }
@@ -1513,68 +1601,261 @@
             cursor: pointer;
         }
 
-        /* ── Fullscreen Photo Gallery Modal ── */
+        /* ── Fullscreen Photo Gallery Modal (High Transparency Glassmorphism) ── */
         .photo-modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            z-index: 1000;
-            overflow-y: auto;
-            backdrop-filter: blur(8px);
+            background: rgba(14, 24, 18, 0.16);
+            z-index: 2000;
+            overflow: hidden;
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .photo-modal-overlay.open {
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
 
         .photo-modal-header {
-            position: sticky;
-            top: 0;
-            background: rgba(0, 0, 0, 0.8);
+            position: relative;
+            background: rgba(255, 255, 255, 0.25);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 18px 36px;
-            color: #FFFFFF;
-            z-index: 20;
+            padding: 16px 36px;
+            color: #121A16;
+            z-index: 3005;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .btn-close-modal {
-            background: none;
-            border: none;
-            color: #FFFFFF;
-            font-size: 15px;
-            font-weight: 600;
+            background: #FFFFFF;
+            border: 1px solid #E2DDD3;
+            color: #143528;
+            font-size: 13.5px;
+            font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 8px 18px;
+            border-radius: 999px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .modal-photo-list {
-            max-width: 900px;
-            margin: 30px auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            padding: 0 20px 60px 20px;
+        .btn-close-modal:hover {
+            background: #143528;
+            border-color: #143528;
+            color: #FAF7F0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(20, 53, 40, 0.22);
         }
 
-        .modal-photo-item img {
+        .depth-carousel-wrapper {
+            position: relative;
+            flex: 1;
             width: 100%;
-            height: auto;
-            max-height: 80vh;
-            object-fit: contain;
-            border-radius: 8px;
-            background: #111111;
+            height: calc(100vh - 75px);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .modal-photo-caption {
-            color: #CCCCCC;
-            font-size: 14px;
-            margin-top: 8px;
-            text-align: center;
+        /* ── ReactBits DepthCarousel Original Architecture ── */
+        .depth-carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: var(--dc-perspective, 1400px);
+            perspective-origin: 50% 50%;
+            touch-action: pan-y;
+            outline: none;
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: grab;
+        }
+
+        .depth-carousel:active {
+            cursor: grabbing;
+        }
+
+        .depth-carousel__stage {
+            position: absolute;
+            inset: 0;
+            transform-style: preserve-3d;
+        }
+
+        .depth-carousel__card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            overflow: hidden;
+            background: #FFFFFF;
+            box-shadow:
+                0 32px 70px -18px rgba(12, 28, 20, 0.42),
+                0 12px 28px -10px rgba(0, 0, 0, 0.2),
+                0 0 0 1.5px rgba(255, 255, 255, 0.85);
+            will-change: transform, opacity, filter;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            border-radius: 24px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .depth-carousel__card:hover {
+            box-shadow:
+                0 38px 80px -15px rgba(20, 53, 40, 0.45),
+                0 16px 36px -10px rgba(0, 0, 0, 0.25),
+                0 0 0 2px #D4AF6A;
+        }
+
+        .depth-carousel__img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+
+        .depth-carousel__tint {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+            background: #0B1C14;
+        }
+
+        .depth-carousel__caption-pill {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            padding: 11px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #121A16;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            pointer-events: none;
+        }
+
+        .depth-carousel__caption-pill span {
+            font-size: 13.5px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            color: #143528;
+        }
+
+        .depth-carousel__caption-pill small {
+            font-size: 12px;
+            color: #B88E3E;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .depth-carousel__arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3000;
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #143528;
+            cursor: pointer;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+            transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .depth-carousel__arrow:hover {
+            background: #143528;
+            border-color: #143528;
+            color: #FAF7F0;
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 12px 30px rgba(20, 53, 40, 0.28);
+        }
+
+        .depth-carousel__arrow:active {
+            transform: translateY(-50%) scale(0.94);
+        }
+
+        .depth-carousel__arrow--prev {
+            left: 36px;
+        }
+
+        .depth-carousel__arrow--next {
+            right: 36px;
+        }
+
+        .depth-carousel__dots {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            gap: 10px;
+            padding: 9px 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .depth-carousel__dot {
+            width: 8px;
+            height: 8px;
+            padding: 0;
+            border: none;
+            border-radius: 999px;
+            background: #D8D2C4;
+            cursor: pointer;
+            transition: width 0.25s ease, background 0.25s ease;
+        }
+
+        .depth-carousel__dot.is-active {
+            width: 26px;
+            background: linear-gradient(90deg, #143528 0%, #226B4E 100%);
+            box-shadow: 0 2px 8px rgba(20, 53, 40, 0.35);
+        }
+
+        @media (max-width: 768px) {
+            .depth-carousel__arrow--prev { left: 12px; }
+            .depth-carousel__arrow--next { right: 12px; }
+            .depth-carousel__arrow { width: 42px; height: 42px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .depth-carousel__card { will-change: auto; }
+            .depth-carousel__arrow, .depth-carousel__dot { transition: none; }
         }
 
         /* ── Live Guest Chat Drawer / Modal ── */
@@ -2037,7 +2318,7 @@
                         </div>
                         <div>
                             <h4 class="highlight-title">Self check-in</h4>
-                            <p class="highlight-subtitle">Check yourself in effortlessly with the lockbox or smart keypad.</p>
+                            <p class="highlight-subtitle">Check yourself in using the key lockbox or smart keypad.</p>
                         </div>
                     </div>
 
@@ -2064,7 +2345,7 @@
 
                 <!-- Description ("About this space") -->
                 <div class="description-section">
-                    <h3>About this sanctuary</h3>
+                    <h3>About this space</h3>
                     <p class="description-paragraph"><%= home.description || "Welcome to our private and spacious home, perfect for families, couples, business travelers, and small groups. Enjoy comfortable bedrooms, a cozy living room, fully equipped kitchen, sparkling clean bathrooms, high-speed Wi-Fi, air conditioning, and TV. Located in a peaceful neighborhood with easy access to shops, restaurants, public transport, and popular attractions." %></p>
                 </div>
 
@@ -2261,46 +2542,62 @@
                     <!-- Horizontal Mentions Tags Carousel matching screenshot -->
                     <div class="guests-mention-pills-row" id="mention-pills-row">
                         <button type="button" class="mention-pill active" onclick="filterReviewsByTag('all', this)">
-                            <span>✨ All</span>
+                            <span>All</span>
                             <span class="mention-pill-count"><%= (typeof reviews !== 'undefined' ? reviews.length : 6) %></span>
                         </button>
                         <button type="button" class="mention-pill" onclick="filterReviewsByTag('River', this)">
-                            <span class="mention-pill-icon">🛶</span>
+                            <span class="mention-pill-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></svg>
+                            </span>
                             <span>River</span>
                             <span class="mention-pill-count">7</span>
                         </button>
                         <button type="button" class="mention-pill" onclick="filterReviewsByTag('Hospitality', this)">
-                            <span class="mention-pill-icon">🎁</span>
+                            <span class="mention-pill-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            </span>
                             <span>Hospitality</span>
                             <span class="mention-pill-count">17</span>
                         </button>
                         <button type="button" class="mention-pill" onclick="filterReviewsByTag('Comfort', this)">
-                            <span class="mention-pill-icon">🛋️</span>
+                            <span class="mention-pill-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                            </span>
                             <span>Comfort</span>
                             <span class="mention-pill-count">7</span>
                         </button>
                         <button type="button" class="mention-pill" onclick="filterReviewsByTag('Cleanliness', this)">
-                            <span class="mention-pill-icon">🧼</span>
+                            <span class="mention-pill-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </span>
                             <span>Cleanliness</span>
                             <span class="mention-pill-count">5</span>
                         </button>
                         <button type="button" class="mention-pill" onclick="filterReviewsByTag('Location', this)">
-                            <span class="mention-pill-icon">📍</span>
+                            <span class="mention-pill-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            </span>
                             <span>Location</span>
                             <span class="mention-pill-count">5</span>
                         </button>
                         <button type="button" class="mention-pill" onclick="filterReviewsByTag('Breakfast', this)">
-                            <span class="mention-pill-icon">🍳</span>
+                            <span class="mention-pill-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                            </span>
                             <span>Breakfast</span>
                             <span class="mention-pill-count">3</span>
                         </button>
                         <button type="button" class="mention-pill" onclick="filterReviewsByTag('View', this)">
-                            <span class="mention-pill-icon">🖼️</span>
+                            <span class="mention-pill-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                            </span>
                             <span>View</span>
                             <span class="mention-pill-count">2</span>
                         </button>
                         <button type="button" class="mention-pill" onclick="filterReviewsByTag('Walkability', this)">
-                            <span class="mention-pill-icon">👟</span>
+                            <span class="mention-pill-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                            </span>
                             <span>Walkability</span>
                             <span class="mention-pill-count">3</span>
                         </button>
@@ -2378,7 +2675,7 @@
                     <div class="add-review-container">
                         <% if (typeof reviewSuccess !== 'undefined' && reviewSuccess) { %>
                             <div class="review-success-toast">
-                                <span>🎉</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                 <span>Thank you, <%= user.name %>! Your verified review has been published and added below.</span>
                             </div>
                         <% } %>
@@ -2428,25 +2725,25 @@
                                 <span style="font-size: 13.5px; font-weight: 600; color: #222; margin-right: 4px;">Highlight:</span>
                                 
                                 <input type="radio" id="tag-hosp" name="tag" value="Hospitality" class="review-tag-radio" checked />
-                                <label for="tag-hosp" class="review-tag-label">🎁 Hospitality</label>
+                                <label for="tag-hosp" class="review-tag-label">Hospitality</label>
 
                                 <input type="radio" id="tag-comfort" name="tag" value="Comfort" class="review-tag-radio" />
-                                <label for="tag-comfort" class="review-tag-label">🛋️ Comfort</label>
+                                <label for="tag-comfort" class="review-tag-label">Comfort</label>
 
                                 <input type="radio" id="tag-clean" name="tag" value="Cleanliness" class="review-tag-radio" />
-                                <label for="tag-clean" class="review-tag-label">🧼 Cleanliness</label>
+                                <label for="tag-clean" class="review-tag-label">Cleanliness</label>
 
                                 <input type="radio" id="tag-loc" name="tag" value="Location" class="review-tag-radio" />
-                                <label for="tag-loc" class="review-tag-label">📍 Location</label>
+                                <label for="tag-loc" class="review-tag-label">Location</label>
 
                                 <input type="radio" id="tag-view" name="tag" value="View" class="review-tag-radio" />
-                                <label for="tag-view" class="review-tag-label">🖼️ View</label>
+                                <label for="tag-view" class="review-tag-label">Scenic View</label>
 
                                 <input type="radio" id="tag-bfast" name="tag" value="Breakfast" class="review-tag-radio" />
-                                <label for="tag-bfast" class="review-tag-label">🍳 Breakfast</label>
+                                <label for="tag-bfast" class="review-tag-label">Breakfast</label>
 
                                 <input type="radio" id="tag-river" name="tag" value="River" class="review-tag-radio" />
-                                <label for="tag-river" class="review-tag-label">🛶 River</label>
+                                <label for="tag-river" class="review-tag-label">Riverside</label>
                             </div>
 
                             <!-- 3. Review Comment Area -->
@@ -2494,7 +2791,7 @@
                     <div id="leaflet-property-map"></div>
 
                     <div class="map-neighborhood-details">
-                        <p><strong>Neighborhood:</strong> Situated in a serene, secure residential district in <%= propertyCity %>. Close to curated fine-dining establishments, organic cafés, and cultural landmarks. Public transit and metro are within 10 minutes reach.</p>
+                        <p><strong>Neighborhood:</strong> Situated in a quiet, accessible residential area in <%= propertyCity %>. Close to restaurants, local cafés, and cultural landmarks. Public transit and metro are within 10 minutes reach.</p>
                     </div>
                 </div>
 
@@ -2506,7 +2803,12 @@
                     
                     <!-- Fee Tag (Screenshot 1) -->
                     <div class="fee-included-tag">
-                        <span style="color: #E00B41;">🏷️</span>
+                        <span style="display: inline-flex; align-items: center; color: #E8234A;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                            </svg>
+                        </span>
                         <span>Prices include all fees</span>
                     </div>
 
@@ -2539,6 +2841,11 @@
                                 <% } %>
                             </select>
                         </div>
+                    </div>
+
+                    <!-- Cancellation Policy Pill (Matching Screenshot 2) -->
+                    <div class="cancellation-policy-pill">
+                        <span>Free cancellation up to 48 hours before check-in</span>
                     </div>
 
                     <!-- Vibrant Reserve Action Button (Screenshot 1) -->
@@ -2590,27 +2897,87 @@
         </div>
     </main>
 
-    <!-- ── Fullscreen Photo Modal ("Show all photos") ── -->
+    <!-- Global Luxury Footer -->
+    <%- include("../partials/03_footer.ejs") %>
+
+    <!-- ── Fullscreen Photo Modal ("Show all photos" with ReactBits DepthCarousel) ── -->
     <div class="photo-modal-overlay" id="photo-gallery-modal">
         <div class="photo-modal-header">
             <button type="button" class="btn-close-modal" onclick="closePhotoModal()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
                 <span>Close gallery</span>
             </button>
-            <span style="font-weight: 600;"><%= home.houseName %> &bull; Photo Tour</span>
-            <div></div>
+            <div style="text-align: center;">
+                <span style="font-weight: 700; font-size: 16px; color: #143528; letter-spacing: -0.3px;"><%= home.houseName %></span>
+                <span style="font-size: 12.5px; color: #526058; display: block; font-weight: 500; margin-top: 1px;">Photo Gallery Tour &bull; Scroll / Drag or use Arrows</span>
+            </div>
+            <div style="width: 120px; display: flex; justify-content: flex-end;">
+                <span id="dc-counter-badge" style="background: rgba(20, 53, 40, 0.08); border: 1px solid rgba(20, 53, 40, 0.18); color: #143528; font-weight: 700; font-size: 12.5px; padding: 5px 14px; border-radius: 999px;">
+                    1 / <%= displayPhotos.length %>
+                </span>
+            </div>
         </div>
 
-        <div class="modal-photo-list">
-            <% displayPhotos.forEach((photoUrl, pIndex) => { %>
-                <div class="modal-photo-item" id="modal-photo-<%= pIndex %>">
-                    <img src="<%= photoUrl %>" alt="Photo <%= pIndex + 1 %> of <%= home.houseName %>" />
-                    <p class="modal-photo-caption">Photo <%= pIndex + 1 %> of <%= displayPhotos.length %> &bull; Sanctuary Space</p>
+        <div class="depth-carousel-wrapper">
+            <div
+                id="staynest-depth-carousel"
+                class="depth-carousel"
+                style="--dc-perspective: 1400px;"
+                role="group"
+                aria-roledescription="carousel"
+                aria-label="StayNest Property Photos 3D Depth Carousel"
+                tabindex="0"
+            >
+                <div class="depth-carousel__stage" id="dc-stage">
+                    <% displayPhotos.forEach((photoUrl, pIndex) => { %>
+                        <div
+                            class="depth-carousel__card"
+                            data-index="<%= pIndex %>"
+                            role="group"
+                            aria-roledescription="slide"
+                            aria-label="<%= pIndex + 1 %> of <%= displayPhotos.length %>"
+                        >
+                            <img class="depth-carousel__img" src="<%= photoUrl %>" alt="Photo <%= pIndex + 1 %> of <%= home.houseName %>" draggable="false" />
+                            <span class="depth-carousel__tint"></span>
+                            <div class="depth-carousel__caption-pill">
+                                <span>Photo <%= pIndex + 1 %> of <%= displayPhotos.length %> &bull; <%= home.placeType || 'Accommodation' %></span>
+                                <small>StayNest</small>
+                            </div>
+                        </div>
+                    <% }); %>
                 </div>
-            <% }); %>
+
+                <% if (displayPhotos.length > 1) { %>
+                    <!-- Previous Arrow -->
+                    <button type="button" class="depth-carousel__arrow depth-carousel__arrow--prev" id="dc-prev-btn" aria-label="Previous slide">
+                        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                            <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <!-- Next Arrow -->
+                    <button type="button" class="depth-carousel__arrow depth-carousel__arrow--next" id="dc-next-btn" aria-label="Next slide">
+                        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                            <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <!-- Indicators Dots -->
+                    <div class="depth-carousel__dots" id="dc-dots" role="tablist" aria-label="Slides">
+                        <% displayPhotos.forEach((_, pIndex) => { %>
+                            <button
+                                type="button"
+                                role="tab"
+                                aria-label="Go to slide <%= pIndex + 1 %>"
+                                class="depth-carousel__dot <%= pIndex === 0 ? 'is-active' : '' %>"
+                                data-dot-index="<%= pIndex %>"
+                            ></button>
+                        <% }); %>
+                    </div>
+                <% } %>
+            </div>
         </div>
     </div>
 
@@ -2787,17 +3154,343 @@
             }
         });
 
+        // ── ReactBits DepthCarousel Engine (Vanilla JS + GSAP Implementation) ──
+        const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+        class StayNestDepthCarousel {
+            constructor(rootEl, options = {}) {
+                this.root = rootEl;
+                if (!this.root) return;
+
+                this.cardEls = Array.from(this.root.querySelectorAll('.depth-carousel__card'));
+                this.overlayEls = Array.from(this.root.querySelectorAll('.depth-carousel__tint'));
+                this.dotEls = Array.from(this.root.querySelectorAll('.depth-carousel__dot'));
+                this.badgeEl = document.getElementById('dc-counter-badge');
+
+                this.count = this.cardEls.length;
+                this.depth = options.depth || 220;
+                this.spread = options.spread || 90;
+                this.tilt = options.tilt || 22;
+                this.tiltDirection = options.tiltDirection || 'right';
+                this.visibleCards = options.visibleCards || 4;
+                this.falloff = options.falloff || 0.2;
+                this.blur = options.blur !== undefined ? options.blur : 6;
+                this.duration = options.duration || 700;
+                this.ease = options.ease || 'power3.out';
+                this.loop = options.loop !== undefined ? options.loop : true;
+                this.cardWidth = options.cardWidth || 420;
+                this.cardHeight = options.cardHeight || 520;
+                this.autoplay = options.autoplay || false;
+                this.autoplayDelay = options.autoplayDelay || 3200;
+
+                this.pos = 0;
+                this.focusIdx = 0;
+                this.active = 0;
+                this.scale = 1;
+                this.tween = null;
+                this.drag = null;
+                this.wheelTimer = null;
+                this.autoTimer = null;
+
+                this.init();
+            }
+
+            init() {
+                if (this.count === 0) return;
+
+                // Set initial card sizes based on viewport
+                this.updateCardDimensions();
+                this.computeScale();
+
+                // Setup layout
+                this.layout(this.pos);
+
+                // Setup event listeners
+                this.setupControls();
+                this.setupResize();
+                this.setupWheel();
+                this.setupPointer();
+                this.setupKeyboard();
+
+                if (this.autoplay) this.startAutoplay();
+            }
+
+            updateCardDimensions() {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                if (w < 600) {
+                    this.cardWidth = Math.min(w * 0.85, 310);
+                    this.cardHeight = Math.min(h * 0.6, 420);
+                } else if (w < 1024) {
+                    this.cardWidth = Math.min(w * 0.65, 380);
+                    this.cardHeight = Math.min(h * 0.68, 480);
+                } else {
+                    this.cardWidth = 460;
+                    this.cardHeight = 560;
+                }
+
+                this.cardEls.forEach(el => {
+                    el.style.width = `${this.cardWidth}px`;
+                    el.style.height = `${this.cardHeight}px`;
+                });
+            }
+
+            computeScale() {
+                const w = this.root.clientWidth || window.innerWidth;
+                const needed = this.cardWidth + Math.abs(this.spread) * 2 + 120;
+                this.scale = clamp(w / needed, 0.45, 1);
+            }
+
+            layout(pos) {
+                const n = this.count;
+                if (!n) return;
+                const dir = this.tiltDirection === 'left' ? -1 : 1;
+                const sc = this.scale;
+
+                for (let i = 0; i < n; i++) {
+                    const el = this.cardEls[i];
+                    if (!el) continue;
+
+                    let d = i - pos;
+                    if (this.loop && n > 1) {
+                        d = ((d % n) + n) % n;
+                        if (d > n / 2) d -= n;
+                    }
+
+                    const back = Math.max(0, d);
+                    const az = Math.abs(d);
+                    const shown = az <= this.visibleCards + 0.5;
+
+                    const tz = -this.depth * d;
+                    const tx = dir * this.spread * d;
+                    const ry = dir * this.tilt * clamp(d, 0, 1);
+
+                    let opacity = d < 0 ? Math.max(0, 1 + d) : 1;
+                    if (!shown) opacity = 0;
+
+                    const brightness = Math.max(0.15, 1 - back * this.falloff);
+                    const blurPx = this.blur > 0 ? Math.min(this.blur, (back / Math.max(1, this.visibleCards)) * this.blur) : 0;
+                    const zi = Math.round(2000 - d * 20);
+
+                    el.style.transform = `translate(-50%, -50%) scale(${sc}) translateX(${tx.toFixed(2)}px) translateZ(${tz.toFixed(2)}px) rotateY(${ry.toFixed(3)}deg)`;
+                    el.style.opacity = opacity.toFixed(3);
+                    el.style.filter = `brightness(${brightness.toFixed(3)}) blur(${blurPx.toFixed(2)}px)`;
+                    el.style.zIndex = String(zi);
+                    el.style.pointerEvents = shown && opacity > 0.05 ? 'auto' : 'none';
+
+                    const ov = this.overlayEls[i];
+                    if (ov) ov.style.opacity = clamp(back * this.falloff * 1.25, 0, 0.86).toFixed(3);
+                }
+            }
+
+            notify(idx) {
+                this.active = idx;
+                this.dotEls.forEach((dot, i) => {
+                    if (i === idx) dot.classList.add('is-active');
+                    else dot.classList.remove('is-active');
+                });
+                if (this.badgeEl) {
+                    this.badgeEl.textContent = `${idx + 1} / ${this.count}`;
+                }
+            }
+
+            tweenTo(target, animate = true) {
+                if (this.tween) this.tween.kill();
+                const proxy = { p: this.pos };
+                const dur = animate ? this.duration / 1000 : 0;
+
+                if (typeof gsap !== 'undefined') {
+                    this.tween = gsap.to(proxy, {
+                        p: target,
+                        duration: dur,
+                        ease: this.ease,
+                        onUpdate: () => {
+                            this.pos = proxy.p;
+                            this.layout(proxy.p);
+                        },
+                        onComplete: () => {
+                            const n = this.count;
+                            if (n > 0) this.pos = ((this.pos % n) + n) % n;
+                            this.layout(this.pos);
+                        }
+                    });
+                } else {
+                    this.pos = target;
+                    const n = this.count;
+                    if (n > 0) this.pos = ((this.pos % n) + n) % n;
+                    this.layout(this.pos);
+                }
+            }
+
+            setFocus(rawIndex, animate = true) {
+                const n = this.count;
+                if (!n) return;
+                const idx = this.loop ? ((rawIndex % n) + n) % n : clamp(rawIndex, 0, n - 1);
+                let delta = idx - this.pos;
+                if (this.loop && n > 1) {
+                    delta = ((delta % n) + n) % n;
+                    if (delta > n / 2) delta -= n;
+                }
+                this.tweenTo(this.pos + delta, animate);
+                if (idx !== this.focusIdx) {
+                    this.focusIdx = idx;
+                    this.notify(idx);
+                }
+            }
+
+            navigateBy(step) {
+                this.setFocus(this.focusIdx + step, true);
+            }
+
+            setupControls() {
+                const prevBtn = document.getElementById('dc-prev-btn');
+                const nextBtn = document.getElementById('dc-next-btn');
+                if (prevBtn) prevBtn.addEventListener('click', () => this.navigateBy(-1));
+                if (nextBtn) nextBtn.addEventListener('click', () => this.navigateBy(1));
+
+                this.dotEls.forEach((dot, i) => {
+                    dot.addEventListener('click', () => this.setFocus(i, true));
+                });
+
+                this.cardEls.forEach((card, i) => {
+                    card.addEventListener('click', () => {
+                        if (this.drag && this.drag.moved) return;
+                        this.setFocus(i, true);
+                    });
+                });
+            }
+
+            setupResize() {
+                window.addEventListener('resize', () => {
+                    this.updateCardDimensions();
+                    this.computeScale();
+                    this.layout(this.pos);
+                });
+            }
+
+            setupWheel() {
+                this.root.addEventListener('wheel', e => {
+                    if (this.count < 2) return;
+                    e.preventDefault();
+                    if (this.tween) this.tween.kill();
+                    const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                    const delta = e.deltaMode === 1 ? raw * 24 : raw;
+                    const step = clamp(delta / (this.cardWidth * 0.9), -0.6, 0.6);
+                    this.pos += step;
+                    this.layout(this.pos);
+                    if (this.wheelTimer) clearTimeout(this.wheelTimer);
+                    this.wheelTimer = setTimeout(() => this.setFocus(Math.round(this.pos), true), 130);
+                }, { passive: false });
+            }
+
+            setupPointer() {
+                this.root.addEventListener('pointerdown', e => {
+                    if (this.count < 2) return;
+                    if (this.tween) this.tween.kill();
+                    this.drag = {
+                        x: e.clientX,
+                        startPos: this.pos,
+                        lastX: e.clientX,
+                        lastT: performance.now(),
+                        v: 0,
+                        moved: false,
+                        id: e.pointerId
+                    };
+                });
+
+                window.addEventListener('pointermove', e => {
+                    if (!this.drag) return;
+                    const stepPx = Math.max(this.cardWidth * 0.55 * this.scale, 40);
+                    const dx = e.clientX - this.drag.x;
+                    if (!this.drag.moved && Math.abs(dx) > 4) {
+                        this.drag.moved = true;
+                    }
+                    if (!this.drag.moved) return;
+                    const now = performance.now();
+                    const dt = Math.max(now - this.drag.lastT, 1);
+                    this.drag.v = (e.clientX - this.drag.lastX) / dt;
+                    this.drag.lastX = e.clientX;
+                    this.drag.lastT = now;
+                    this.pos = this.drag.startPos - dx / stepPx;
+                    this.layout(this.pos);
+                });
+
+                window.addEventListener('pointerup', () => {
+                    if (!this.drag) return;
+                    const wasMoved = this.drag.moved;
+                    const v = this.drag.v;
+                    this.drag = null;
+                    if (!wasMoved) return;
+                    const stepPx = Math.max(this.cardWidth * 0.55 * this.scale, 40);
+                    const projected = this.pos - (v * 180) / stepPx;
+                    this.setFocus(Math.round(projected), true);
+                });
+            }
+
+            setupKeyboard() {
+                this.root.addEventListener('keydown', e => {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.navigateBy(-1);
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        this.navigateBy(1);
+                    }
+                });
+            }
+
+            startAutoplay() {
+                let hovered = false;
+                const stop = () => {
+                    if (this.autoTimer) clearInterval(this.autoTimer);
+                    this.autoTimer = null;
+                };
+                const start = () => {
+                    stop();
+                    this.autoTimer = setInterval(() => {
+                        if (!hovered) this.navigateBy(1);
+                    }, Math.max(this.autoplayDelay, 1200));
+                };
+
+                this.root.addEventListener('mouseenter', () => hovered = true);
+                this.root.addEventListener('mouseleave', () => hovered = false);
+                start();
+            }
+        }
+
+        let globalDepthCarousel = null;
+
         // ── Full Photo Lightbox Modal Handlers ──
-        function openPhotoModal(index) {
+        function openPhotoModal(index = 0) {
             const modal = document.getElementById('photo-gallery-modal');
             if (modal) {
                 modal.classList.add('open');
                 document.body.style.overflow = 'hidden';
-                if (index !== undefined) {
-                    const targetEl = document.getElementById('modal-photo-' + index);
-                    if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'smooth' });
+
+                const carouselEl = document.getElementById('staynest-depth-carousel');
+                if (carouselEl) {
+                    if (!globalDepthCarousel) {
+                        globalDepthCarousel = new StayNestDepthCarousel(carouselEl, {
+                            depth: 240,
+                            spread: 100,
+                            tilt: 24,
+                            tiltDirection: 'right',
+                            perspective: 1400,
+                            visibleCards: 4,
+                            falloff: 0.22,
+                            blur: 6,
+                            duration: 700,
+                            ease: 'power3.out',
+                            autoplay: false,
+                            loop: true
+                        });
                     }
+                    setTimeout(() => {
+                        globalDepthCarousel.updateCardDimensions();
+                        globalDepthCarousel.computeScale();
+                        globalDepthCarousel.setFocus(index, false);
+                        carouselEl.focus();
+                    }, 50);
                 }
             }
         }
@@ -2895,6 +3588,39 @@
             div.textContent = str;
             return div.innerHTML;
         }
+
+        // ── Real-time Socket.io Chat Listener ──
+        <% if (user) { %>
+        (function initLiveGuestChat() {
+            try {
+                const guestSocket = io();
+                guestSocket.on('connect', () => {
+                    guestSocket.emit('join_user', '<%= user._id %>');
+                    <% if (conversation) { %>
+                    guestSocket.emit('join_conversation', '<%= conversation._id %>');
+                    <% } %>
+                });
+
+                guestSocket.on('new_message', (data) => {
+                    if (data.message && data.message.senderRole === 'host') {
+                        const stream = document.getElementById('chat-stream');
+                        if (stream) {
+                            const bubble = document.createElement('div');
+                            bubble.className = 'chat-bubble host';
+                            bubble.innerHTML = `
+                                <p>${escapeHtml(data.message.text)}</p>
+                                <div class="chat-bubble-time">Just now</div>
+                            `;
+                            stream.appendChild(bubble);
+                            stream.scrollTop = stream.scrollHeight;
+                        }
+                    }
+                });
+            } catch (sockErr) {
+                console.warn('[Socket] Live chat listener unavailable:', sockErr);
+            }
+        })();
+        <% } %>
 
         // ── Reservation Calculator & Calendar Sync ──
         function calculateBookingTotal() {

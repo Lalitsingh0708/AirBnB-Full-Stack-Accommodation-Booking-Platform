@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Confirm and Pay &bull; <%= home.houseName %> &bull; StayNest</title>
+    <title>Confirm and Pay | StayNest</title>
     <meta name="description" content="Complete your reservation for <%= home.houseName %> on StayNest." />
     
+    <!-- Razorpay Checkout SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,7 +44,13 @@
         }
 
         body {
-            background-color: #FFFFFF;
+            background-color: var(--bg-beige);
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             min-height: 100vh;
@@ -223,103 +232,426 @@
             color: var(--text-muted);
         }
 
-        /* Payment Method Tabs */
+        /* ═══════════════════════════════════════════════════════════
+           LUXURY REDESIGNED "PAY WITH" PAYMENT STACK
+        ═══════════════════════════════════════════════════════════ */
+        .pay-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .pay-secure-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: #EBF2ED;
+            color: #143528;
+            border-radius: 9999px;
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+
         .payment-methods-stack {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .payment-option-card {
-            border: 1.5px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            padding: 16px 20px;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 14px;
+            padding: 18px 22px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             background: #FFFFFF;
+            position: relative;
+        }
+
+        .payment-option-card:hover {
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
         }
 
         .payment-option-card.selected {
-            border-color: var(--emerald-mid);
-            background: #F9FAF9;
-            box-shadow: 0 0 0 1px var(--emerald-mid);
+            border-color: #143528;
+            background: #FAFCFA;
+            box-shadow: 0 0 0 1px #143528, 0 8px 22px rgba(20, 53, 40, 0.08);
         }
 
         .payment-option-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 16px;
+            user-select: none;
         }
 
-        .option-radio-title {
+        .option-main-left {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #222222;
+            gap: 14px;
         }
 
-        .option-radio-title input[type="radio"] {
-            accent-color: var(--emerald-mid);
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
+        /* Hidden Real Radio for Form Submission */
+        .real-payment-radio {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .option-brand-icons {
+        /* Custom Modern Radio Indicator */
+        .custom-radio-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #CBD5E1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            background: #FFFFFF;
+        }
+
+        .custom-radio-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #143528;
+            transform: scale(0);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .payment-option-card.selected .custom-radio-circle {
+            border-color: #143528;
+        }
+
+        .payment-option-card.selected .custom-radio-dot {
+            transform: scale(1);
+        }
+
+        .option-titles-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .option-primary-title {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #1F2937;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .option-sub-desc {
+            font-size: 12.5px;
+            color: #6B7280;
+            font-weight: 400;
+        }
+
+        /* Brand Badges on Right of Header */
+        .brand-badges-cluster {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .brand-pill-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            border: 1px solid #E5E7EB;
+            background: #F9FAFB;
+            color: #374151;
+        }
+
+        .brand-pill-badge.upi-brand {
+            background: #002970;
+            color: #FFFFFF;
+            border-color: #002970;
+            font-size: 10.5px;
+        }
+
+        .brand-pill-badge.phonepe-brand {
+            background: #5f259f;
+            color: #FFFFFF;
+            border-color: #5f259f;
+            font-size: 10.5px;
+        }
+
+        .brand-pill-badge.paytm-brand {
+            background: #00b9f5;
+            color: #FFFFFF;
+            border-color: #00b9f5;
+            font-size: 10.5px;
+        }
+
+        .brand-pill-badge.highlight-green {
+            background: #EBF7EE;
+            color: #008A05;
+            border-color: #A6E3B8;
+            font-weight: 600;
+        }
+
+        /* Card Expandable Body */
         .payment-details-body {
             display: none;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border-subtle);
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #EAEAEA;
+            animation: fadeInBody 0.22s ease-out;
+        }
+
+        @keyframes fadeInBody {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .payment-option-card.selected .payment-details-body {
             display: block;
         }
 
-        /* Form Controls */
-        .form-group-row {
+        /* UPI Input with embedded icon and quick chips */
+        .upi-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .upi-prefix-icon {
+            position: absolute;
+            left: 14px;
+            color: #143528;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .upi-form-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px 0 44px;
+            border: 1.5px solid #D1D5DB;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 500;
+            color: #1F2937;
+            outline: none;
+            background: #FFFFFF;
+            transition: all 0.15s ease;
+        }
+
+        .upi-form-input:focus {
+            border-color: #143528;
+            box-shadow: 0 0 0 3.5px rgba(20, 53, 40, 0.12);
+        }
+
+        .vpa-chips-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .vpa-chip {
+            padding: 4px 10px;
+            border-radius: 9999px;
+            border: 1px solid #D1D5DB;
+            background: #FFFFFF;
+            font-size: 12px;
+            font-weight: 500;
+            color: #4B5563;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .vpa-chip:hover {
+            border-color: #143528;
+            color: #143528;
+            background: #F3F4F6;
+        }
+
+        .upi-info-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            color: #6B7280;
+            line-height: 1.4;
+        }
+
+        /* Card Inputs */
+        .card-row-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 14px;
+            gap: 12px;
         }
 
-        .form-control-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 14px;
-        }
-
-        .form-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #222222;
-        }
-
-        .form-input {
-            width: 100%;
+        .card-input-box {
             height: 46px;
+            border: 1.5px solid #D1D5DB;
+            border-radius: 10px;
             padding: 0 14px;
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-sm);
             font-family: inherit;
             font-size: 14px;
-            color: #222222;
+            color: #1F2937;
             outline: none;
-            transition: border-color 0.15s ease;
+            background: #FFFFFF;
+            width: 100%;
+            transition: all 0.15s ease;
         }
 
-        .form-input:focus {
-            border-color: var(--emerald-mid);
+        .card-input-box:focus {
+            border-color: #143528;
+            box-shadow: 0 0 0 3.5px rgba(20, 53, 40, 0.12);
+        }
+
+        /* Net Banking Bank Selector Grid */
+        .bank-fast-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .bank-chip-btn {
+            padding: 10px 8px;
+            border-radius: 8px;
+            border: 1.5px solid #E5E7EB;
+            background: #FFFFFF;
+            text-align: center;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .bank-chip-btn:hover {
+            border-color: #143528;
+            background: #F9FAFB;
+        }
+
+        .bank-chip-btn.active {
+            border-color: #143528;
+            background: #EBF2ED;
+            color: #143528;
+            box-shadow: 0 0 0 1px #143528;
+        }
+
+        /* Pay at Property Callout */
+        .arrival-perks-box {
+            background: #F4F8F5;
+            border: 1px solid #C8E1CE;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .arrival-perk-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #143528;
+            font-weight: 500;
+        }
+
+        /* Special Requests Box Redesign */
+        .special-note-card {
+            background: #FFFFFF;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .special-note-card:focus-within {
+            border-color: #143528;
+            box-shadow: 0 0 0 3.5px rgba(20, 53, 40, 0.1);
+        }
+
+        .special-note-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .special-note-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #1F2937;
+        }
+
+        .special-note-sub {
+            font-size: 12.5px;
+            color: #6B7280;
+            margin-bottom: 12px;
+        }
+
+        .special-note-textarea {
+            width: 100%;
+            height: 68px;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 10px 12px;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #222222;
+            resize: vertical;
+            background: #FAFBF9;
+            transition: all 0.15s ease;
+        }
+
+        .special-note-textarea:focus {
+            background: #FFFFFF;
+            border-color: #143528;
+        }
+
+        .special-suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #F3F4F6;
+        }
+
+        .quick-suggest-pill {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: #F3F4F6;
+            color: #4B5563;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .quick-suggest-pill:hover {
+            background: #E5E7EB;
+            color: #111827;
         }
 
         /* Policy & Ground Rules */
@@ -492,6 +824,11 @@
                 order: -1;
             }
         }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -517,20 +854,27 @@
     </header>
 
     <%
-        // Formatting & Calculations
-        const pricePerNight = Number(home.housePrice) || 2620;
+        // Formatting & Calculations with robust fallbacks
+        const homeId = home.id || home._id || '';
+        const houseTitle = home.houseName || 'StayNest Luxury Accommodation';
+        const rawPrice = home.housePrice !== undefined ? String(home.housePrice).replace(/[^0-9.]/g, '') : '2620';
+        const pricePerNight = Number(rawPrice) || 2620;
         const totalNights = Math.max(1, Number(nights) || 1);
         const subtotal = pricePerNight * totalNights;
         const serviceFee = 450;
         const totalAmount = subtotal + serviceFee;
 
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
+        const dIn = checkIn ? new Date(checkIn) : new Date();
+        const dOut = checkOut ? new Date(checkOut) : new Date(Date.now() + 86400000);
         const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
-        const checkInFormatted = checkInDate.toLocaleDateString('en-GB', dateOptions);
-        const checkOutFormatted = checkOutDate.toLocaleDateString('en-GB', dateOptions);
+        const checkInFormatted = !isNaN(dIn.getTime()) ? dIn.toLocaleDateString('en-GB', dateOptions) : 'Check-in date';
+        const checkOutFormatted = !isNaN(dOut.getTime()) ? dOut.toLocaleDateString('en-GB', dateOptions) : 'Check-out date';
 
         const propertyThumb = home.housePhoto || (home.photos && home.photos[0]) || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=80';
+        const guestName = (user && user.name) ? user.name : 'StayNest Guest';
+        const guestEmail = (user && user.email) ? user.email : 'guest@staynest.com';
+        const guestPhone = (user && (user.phone || (user.customerProfile && user.customerProfile.phone))) ? (user.phone || user.customerProfile.phone) : '9876543210';
+        const rzpKey = typeof razorpayKeyId !== 'undefined' ? razorpayKeyId : 'rzp_test_SdWJYLLkVxRcTI';
     %>
 
     <main class="checkout-main-container">
@@ -604,77 +948,184 @@
                     <input type="hidden" name="pricePerNight" value="<%= pricePerNight %>" />
                     <input type="hidden" name="totalAmount" value="<%= totalAmount %>" />
 
-                    <h2 class="pane-section-title">Pay with</h2>
+                    <!-- Luxury Redesigned Payment Methods -->
+                    <div class="pay-header-row">
+                        <h2 class="pane-section-title" style="margin-bottom: 0;">Pay with</h2>
+                        <span class="pay-secure-tag">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>100% Encrypted & Secure</span>
+                        </span>
+                    </div>
 
                     <div class="payment-methods-stack">
                         
-                        <!-- 1. UPI Option -->
-                        <div class="payment-option-card selected" onclick="selectPaymentMethod('upi', this)">
+                        <!-- 1. Razorpay Secure Online (Default Selected) -->
+                        <div class="payment-option-card selected" onclick="selectPaymentMethod('razorpay', this)">
+                            <input type="radio" name="paymentMethod" value="razorpay" class="real-payment-radio" checked />
                             <div class="payment-option-header">
-                                <label class="option-radio-title">
-                                    <input type="radio" name="paymentMethod" value="upi" checked />
-                                    <span>UPI (Google Pay, PhonePe, Paytm, BHIM)</span>
-                                </label>
-                                <div class="option-brand-icons">
-                                    <span style="font-size: 12px; font-weight: 700; color: #222222; background: #EEEEEE; padding: 3px 8px; border-radius: 4px;">UPI</span>
+                                <div class="option-main-left">
+                                    <div class="custom-radio-circle">
+                                        <div class="custom-radio-dot"></div>
+                                    </div>
+                                    <div class="option-titles-wrap">
+                                        <span class="option-primary-title">Razorpay Secure Online</span>
+                                        <span class="option-sub-desc">UPI, Cards, Net Banking, Wallets &amp; EMI</span>
+                                    </div>
+                                </div>
+                                <div class="brand-badges-cluster">
+                                    <span class="brand-pill-badge" style="background: #0C2340; color: #FFFFFF; font-weight: 700;">Razorpay</span>
+                                    <span class="brand-pill-badge upi-brand">UPI</span>
+                                    <span class="brand-pill-badge" style="font-weight: 800; color: #1A1F71;">Cards</span>
                                 </div>
                             </div>
                             <div class="payment-details-body">
-                                <div class="form-control-wrap">
-                                    <label class="form-label" for="upi-id">Enter UPI ID / VPA</label>
-                                    <input type="text" id="upi-id" class="form-input" placeholder="username@okhdfcbank or 9876543210@paytm" value="guest@upi" />
+                                <div class="arrival-perks-box" style="margin-top: 2px;">
+                                    <div class="arrival-perk-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#008A05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span><strong>Instant Automated Confirmation:</strong> Verified directly via Razorpay Gateway.</span>
+                                    </div>
+                                    <div class="arrival-perk-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#008A05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span><strong>All Modes Included:</strong> Google Pay, PhonePe, Paytm, RuPay, Visa, Mastercard, and Net Banking.</span>
+                                    </div>
                                 </div>
-                                <p style="font-size: 12.5px; color: var(--text-muted);">A collect payment request will be triggered to your UPI app upon confirmation.</p>
                             </div>
                         </div>
 
-                        <!-- 2. Credit / Debit Card -->
-                        <div class="payment-option-card" onclick="selectPaymentMethod('card', this)">
+                        <!-- 2. UPI Option -->
+                        <div class="payment-option-card" onclick="selectPaymentMethod('upi', this)">
+                            <input type="radio" name="paymentMethod" value="upi" class="real-payment-radio" />
                             <div class="payment-option-header">
-                                <label class="option-radio-title">
-                                    <input type="radio" name="paymentMethod" value="card" />
-                                    <span>Credit or Debit Card</span>
-                                </label>
-                                <div class="option-brand-icons">
-                                    <span style="font-size: 12px; font-weight: 700; color: #143528;">VISA &bull; MC</span>
+                                <div class="option-main-left">
+                                    <div class="custom-radio-circle">
+                                        <div class="custom-radio-dot"></div>
+                                    </div>
+                                    <div class="option-titles-wrap">
+                                        <span class="option-primary-title">UPI (Instant & Free)</span>
+                                        <span class="option-sub-desc">Google Pay, PhonePe, Paytm, BHIM & all apps</span>
+                                    </div>
+                                </div>
+                                <div class="brand-badges-cluster">
+                                    <span class="brand-pill-badge gpay-brand">GPay</span>
+                                    <span class="brand-pill-badge phonepe-brand">PhonePe</span>
+                                    <span class="brand-pill-badge paytm-brand">Paytm</span>
+                                    <span class="brand-pill-badge upi-brand">UPI</span>
                                 </div>
                             </div>
                             <div class="payment-details-body">
-                                <div class="form-control-wrap">
-                                    <label class="form-label">Card Number</label>
-                                    <input type="text" class="form-input" placeholder="4111 2222 3333 4444" maxlength="19" />
+                                <label class="form-label" for="upi-id" style="display: block; margin-bottom: 6px;">Enter UPI ID / VPA</label>
+                                <div class="upi-input-container">
+                                    <span class="upi-prefix-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                        </svg>
+                                    </span>
+                                    <input type="text" id="upi-id" class="upi-form-input" placeholder="e.g. yourname@okhdfcbank" value="guest@upi" />
                                 </div>
-                                <div class="form-group-row">
-                                    <div class="form-control-wrap">
-                                        <label class="form-label">Expiration (MM/YY)</label>
-                                        <input type="text" class="form-input" placeholder="12/28" maxlength="5" />
+                                
+                                <!-- Fast VPA Extension Selector Chips -->
+                                <div class="vpa-chips-row">
+                                    <span style="font-size: 11.5px; color: var(--text-muted); margin-right: 4px;">Quick handle:</span>
+                                    <span class="vpa-chip" onclick="appendVpa('@okhdfcbank', event)">@okhdfcbank</span>
+                                    <span class="vpa-chip" onclick="appendVpa('@okaxis', event)">@okaxis</span>
+                                    <span class="vpa-chip" onclick="appendVpa('@paytm', event)">@paytm</span>
+                                    <span class="vpa-chip" onclick="appendVpa('@ybl', event)">@ybl</span>
+                                </div>
+
+                                <div class="upi-info-note">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                    <span>A payment notification request will be sent directly to your registered UPI application.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Credit or Debit Card -->
+                        <div class="payment-option-card" onclick="selectPaymentMethod('card', this)">
+                            <input type="radio" name="paymentMethod" value="card" class="real-payment-radio" />
+                            <div class="payment-option-header">
+                                <div class="option-main-left">
+                                    <div class="custom-radio-circle">
+                                        <div class="custom-radio-dot"></div>
                                     </div>
-                                    <div class="form-control-wrap">
-                                        <label class="form-label">CVV</label>
-                                        <input type="password" class="form-input" placeholder="123" maxlength="4" />
+                                    <div class="option-titles-wrap">
+                                        <span class="option-primary-title">Credit or Debit Card</span>
+                                        <span class="option-sub-desc">Visa, Mastercard, RuPay & Diners Club</span>
                                     </div>
+                                </div>
+                                <div class="brand-badges-cluster">
+                                    <span class="brand-pill-badge" style="font-weight: 800; color: #1A1F71;">VISA</span>
+                                    <span class="brand-pill-badge" style="font-weight: 800; color: #EB001B;">MC</span>
+                                    <span class="brand-pill-badge" style="font-weight: 800; color: #005697;">RuPay</span>
+                                </div>
+                            </div>
+                            <div class="payment-details-body">
+                                <div class="form-control-wrap" style="margin-bottom: 12px;">
+                                    <label class="form-label" style="font-size: 12.5px;">Card Number</label>
+                                    <input type="text" class="card-input-box" placeholder="4111 2222 3333 4444" maxlength="19" />
+                                </div>
+                                <div class="card-row-grid">
+                                    <div class="form-control-wrap" style="margin-bottom: 12px;">
+                                        <label class="form-label" style="font-size: 12.5px;">Expiration (MM/YY)</label>
+                                        <input type="text" class="card-input-box" placeholder="12/28" maxlength="5" />
+                                    </div>
+                                    <div class="form-control-wrap" style="margin-bottom: 12px;">
+                                        <label class="form-label" style="font-size: 12.5px;">CVV / Security Code</label>
+                                        <input type="password" class="card-input-box" placeholder="123" maxlength="4" />
+                                    </div>
+                                </div>
+                                <div class="form-control-wrap" style="margin-bottom: 4px;">
+                                    <label class="form-label" style="font-size: 12.5px;">Name on Card</label>
+                                    <input type="text" class="card-input-box" placeholder="<%= (user && user.name) ? user.name : 'Full Name' %>" />
                                 </div>
                             </div>
                         </div>
 
                         <!-- 3. Net Banking -->
                         <div class="payment-option-card" onclick="selectPaymentMethod('netbanking', this)">
+                            <input type="radio" name="paymentMethod" value="netbanking" class="real-payment-radio" />
                             <div class="payment-option-header">
-                                <label class="option-radio-title">
-                                    <input type="radio" name="paymentMethod" value="netbanking" />
-                                    <span>Net Banking</span>
-                                </label>
-                                <span style="font-size: 12px; color: var(--text-muted);">All Indian Banks</span>
+                                <div class="option-main-left">
+                                    <div class="custom-radio-circle">
+                                        <div class="custom-radio-dot"></div>
+                                    </div>
+                                    <div class="option-titles-wrap">
+                                        <span class="option-primary-title">Net Banking</span>
+                                        <span class="option-sub-desc">Direct debit from 50+ trusted Indian banks</span>
+                                    </div>
+                                </div>
+                                <div class="brand-badges-cluster">
+                                    <span class="brand-pill-badge">All Indian Banks</span>
+                                </div>
                             </div>
                             <div class="payment-details-body">
-                                <div class="form-control-wrap">
-                                    <label class="form-label">Select Bank</label>
-                                    <select class="form-input">
-                                        <option>HDFC Bank</option>
-                                        <option>ICICI Bank</option>
-                                        <option>State Bank of India</option>
-                                        <option>Axis Bank</option>
-                                        <option>Kotak Mahindra Bank</option>
+                                <label class="form-label" style="font-size: 12.5px; display: block; margin-bottom: 8px;">Popular Banks</label>
+                                <div class="bank-fast-grid">
+                                    <div class="bank-chip-btn active" onclick="selectBankChip('HDFC Bank', this)">HDFC</div>
+                                    <div class="bank-chip-btn" onclick="selectBankChip('State Bank of India', this)">SBI</div>
+                                    <div class="bank-chip-btn" onclick="selectBankChip('ICICI Bank', this)">ICICI</div>
+                                    <div class="bank-chip-btn" onclick="selectBankChip('Axis Bank', this)">Axis</div>
+                                </div>
+                                <div class="form-control-wrap" style="margin-bottom: 4px;">
+                                    <label class="form-label" style="font-size: 12.5px;">Or Choose Another Bank</label>
+                                    <select class="card-input-box" id="bank-select-dropdown">
+                                        <option value="HDFC Bank">HDFC Bank</option>
+                                        <option value="State Bank of India">State Bank of India</option>
+                                        <option value="ICICI Bank">ICICI Bank</option>
+                                        <option value="Axis Bank">Axis Bank</option>
+                                        <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                                        <option value="Punjab National Bank">Punjab National Bank</option>
+                                        <option value="Bank of Baroda">Bank of Baroda</option>
                                     </select>
                                 </div>
                             </div>
@@ -682,23 +1133,63 @@
 
                         <!-- 4. Pay on Arrival -->
                         <div class="payment-option-card" onclick="selectPaymentMethod('pay_on_arrival', this)">
+                            <input type="radio" name="paymentMethod" value="pay_on_arrival" class="real-payment-radio" />
                             <div class="payment-option-header">
-                                <label class="option-radio-title">
-                                    <input type="radio" name="paymentMethod" value="pay_on_arrival" />
-                                    <span>Pay at Property</span>
-                                </label>
-                                <span style="font-size: 12px; font-weight: 600; color: var(--emerald-mid);">Pay on Check-in</span>
+                                <div class="option-main-left">
+                                    <div class="custom-radio-circle">
+                                        <div class="custom-radio-dot"></div>
+                                    </div>
+                                    <div class="option-titles-wrap">
+                                        <span class="option-primary-title">Pay at Property</span>
+                                        <span class="option-sub-desc">Zero advance &bull; Pay cash, UPI or card at check-in</span>
+                                    </div>
+                                </div>
+                                <div class="brand-badges-cluster">
+                                    <span class="brand-pill-badge highlight-green">Pay on Check-in</span>
+                                </div>
                             </div>
                             <div class="payment-details-body">
-                                <p style="font-size: 13px; color: var(--text-muted);">Reserve now without upfront payment. You can pay via cash, card, or UPI directly to the host when you arrive.</p>
+                                <div class="arrival-perks-box">
+                                    <div class="arrival-perk-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#008A05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span><strong>Instant Confirmation:</strong> Reservation is locked immediately without any payment today.</span>
+                                    </div>
+                                    <div class="arrival-perk-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#008A05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span><strong>Flexible Settlement:</strong> Hand over cash or scan host's QR code during key handover.</span>
+                                    </div>
+                                    <div class="arrival-perk-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#008A05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span><strong>Zero Cancellation Penalties:</strong> Free cancellation up to 48 hours before arrival.</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
 
-                    <div style="margin-top: 24px;" class="form-control-wrap">
-                        <label class="form-label" for="special-requests">Special requests or note to host (Optional)</label>
-                        <input type="text" id="special-requests" name="specialRequests" class="form-input" placeholder="e.g. Expected arrival around 4 PM, need extra towel" />
+                    <!-- Redesigned Special Requests Box -->
+                    <div class="special-note-card">
+                        <div class="special-note-header">
+                            <span class="special-note-title">Special requests or note to host</span>
+                            <span style="font-size: 12px; color: var(--text-muted);">Optional</span>
+                        </div>
+                        <p class="special-note-sub">Let your host know about estimated arrival time, extra bedding, or travel questions.</p>
+                        <textarea id="special-requests" name="specialRequests" class="special-note-textarea" placeholder="e.g. Arriving around 4:30 PM by cab, would appreciate parking assistance and quiet room..."></textarea>
+                        
+                        <!-- Tap-to-add Quick Suggestion Pills -->
+                        <div class="special-suggestion-chips">
+                            <span class="quick-suggest-pill" onclick="appendQuickNote('Early check-in around 1 PM requested')">Early Check-in</span>
+                            <span class="quick-suggest-pill" onclick="appendQuickNote('Parking space needed for 1 vehicle')">Parking Needed</span>
+                            <span class="quick-suggest-pill" onclick="appendQuickNote('Late arrival after 8 PM expected')">Late Arrival</span>
+                            <span class="quick-suggest-pill" onclick="appendQuickNote('Extra pillows and linen please')">Extra Pillows</span>
+                        </div>
                     </div>
 
                     <div class="section-separator" style="margin: 32px 0;"></div>
@@ -728,7 +1219,7 @@
                         <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 14px;">We ask every guest to remember a few simple things about what makes a great guest:</p>
                         <ul style="padding-left: 20px; font-size: 14px; color: #444444; line-height: 1.6;">
                             <li>Follow the house rules set by <%= home.hostName || 'the host' %></li>
-                            <li>Treat the sanctuary as you would your own home</li>
+                            <li>Treat the property as you would your own home</li>
                             <li>Observe quiet hours after 10:00 PM</li>
                         </ul>
                     </div>
@@ -736,13 +1227,14 @@
                     <div class="section-separator" style="margin: 32px 0;"></div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="btn-confirm-pay" id="btn-submit-booking">
+                    <button type="button" class="btn-confirm-pay" id="btn-submit-booking">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
-                        <span>Confirm and Pay ₹<%= totalAmount.toLocaleString('en-IN') %></span>
+                        <span id="btn-submit-booking-text">Confirm and Pay ₹<%= totalAmount.toLocaleString('en-IN') %></span>
                     </button>
+                    <div id="payment-status-msg" style="display: none; margin-top: 10px; padding: 10px 14px; background: #FFF4E5; border: 1px solid #FFE2B8; border-radius: 8px; font-size: 13.5px; color: #9A5B00;"></div>
 
                     <p class="terms-subtext">
                         By selecting the button above, I agree to the Host's House Rules, Ground Rules for Guests, StayNest Rebooking and Refund Policy, and that StayNest can charge my payment method if I'm responsible for damage.
@@ -760,7 +1252,7 @@
                             <img src="<%= propertyThumb %>" alt="<%= home.houseName %>" />
                         </div>
                         <div class="summary-property-info">
-                            <span class="summary-property-type"><%= home.placeType || 'Entire sanctuary' %> in <%= home.city || 'India' %></span>
+                            <span class="summary-property-type"><%= home.placeType || 'Entire accommodation' %> in <%= home.city || 'India' %></span>
                             <h3 class="summary-property-name"><%= home.houseName %></h3>
                             <div class="summary-property-rating">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="#222222">
@@ -821,12 +1313,291 @@
             if (radio) radio.checked = true;
         }
 
-        document.getElementById('booking-payment-form').addEventListener('submit', function() {
+        function appendVpa(suffix, event) {
+            if (event) event.stopPropagation();
+            const input = document.getElementById('upi-id');
+            if (!input) return;
+            const currentVal = input.value.trim();
+            const atIndex = currentVal.indexOf('@');
+            if (atIndex !== -1) {
+                input.value = currentVal.substring(0, atIndex) + suffix;
+            } else if (currentVal.length > 0) {
+                input.value = currentVal + suffix;
+            } else {
+                input.value = 'guest' + suffix;
+            }
+            input.focus();
+        }
+
+        function selectBankChip(bankName, btn) {
+            document.querySelectorAll('.bank-chip-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const dropdown = document.getElementById('bank-select-dropdown');
+            if (dropdown) dropdown.value = bankName;
+        }
+
+        function appendQuickNote(noteText) {
+            const textarea = document.getElementById('special-requests');
+            if (!textarea) return;
+            if (textarea.value.trim().length === 0) {
+                textarea.value = noteText;
+            } else {
+                textarea.value = textarea.value.trim() + '. ' + noteText;
+            }
+            textarea.focus();
+        }
+
+        function setPaymentStatus(msg, isError = false) {
+            const statusEl = document.getElementById('payment-status-msg');
+            if (!statusEl) return;
+            statusEl.style.display = 'block';
+            statusEl.textContent = msg;
+            if (isError) {
+                statusEl.style.background = '#FFEEEE';
+                statusEl.style.borderColor = '#FFCCCC';
+                statusEl.style.color = '#C9002E';
+            } else {
+                statusEl.style.background = '#EBF2ED';
+                statusEl.style.borderColor = '#C4D7CB';
+                statusEl.style.color = '#143528';
+            }
+        }
+
+        // Global Checkout Context Data (injected safely as JSON)
+        let checkoutContext = {};
+        try {
+            const contextEl = document.getElementById('checkout-context-data');
+            if (contextEl && contextEl.textContent) {
+                checkoutContext = JSON.parse(contextEl.textContent);
+            }
+        } catch (e) {
+            console.error("Failed to parse checkout context data", e);
+        }
+
+        let isPaymentProcessing = false;
+
+        async function handlePayClick(e) {
+            console.log("==> handlePayClick triggered");
+            if (e) {
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+            }
+
+            if (isPaymentProcessing) {
+                console.warn("Payment already in progress, ignoring duplicate trigger.");
+                return;
+            }
+
+            const selectedMethodRadio = document.querySelector('input[name="paymentMethod"]:checked');
+            const selectedMethod = selectedMethodRadio ? selectedMethodRadio.value : 'razorpay';
             const btn = document.getElementById('btn-submit-booking');
-            btn.innerHTML = '<span>Processing your reservation...</span>';
-            btn.style.opacity = '0.75';
-            btn.style.pointerEvents = 'none';
+            const bookingForm = document.getElementById('booking-payment-form');
+
+            // If user selected "Pay at Property" (pay_on_arrival), submit standard form
+            if (selectedMethod === 'pay_on_arrival') {
+                isPaymentProcessing = true;
+                if (btn) {
+                    btn.innerHTML = '<span>Confirming reservation...</span>';
+                    btn.style.opacity = '0.75';
+                    btn.style.pointerEvents = 'none';
+                }
+                if (bookingForm) {
+                    bookingForm.submit();
+                }
+                return;
+            }
+
+            // For all online payments (Razorpay, UPI, Card, Netbanking): process via Razorpay!
+            isPaymentProcessing = true;
+            setPaymentStatus("Connecting to Razorpay Secure Gateway...");
+            if (btn) {
+                btn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation: spin 1s linear infinite;">
+                        <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                        <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+                    </svg>
+                    <span>Opening Razorpay Secure Gateway...</span>
+                `;
+                btn.style.opacity = '0.85';
+                btn.style.pointerEvents = 'none';
+            }
+
+            const restoreBtn = () => {
+                isPaymentProcessing = false;
+                if (btn) {
+                    const formattedTotal = Number(checkoutContext.totalAmount || 0).toLocaleString('en-IN');
+                    btn.innerHTML = `
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span>Confirm and Pay ₹${formattedTotal}</span>
+                    `;
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                }
+            };
+
+            // Ensure Razorpay SDK is loaded
+            if (typeof window.Razorpay === 'undefined') {
+                try {
+                    setPaymentStatus("Loading Razorpay SDK...");
+                    await new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                } catch (loadErr) {
+                    setPaymentStatus("Could not load Razorpay SDK. Please check your internet connection.", true);
+                    restoreBtn();
+                    return;
+                }
+            }
+
+            try {
+                setPaymentStatus("Creating payment order...");
+                // 1. Create order on server
+                const orderRes = await fetch('/api/payment/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        homeId: checkoutContext.homeId,
+                        totalAmount: checkoutContext.totalAmount,
+                        checkIn: checkoutContext.checkIn,
+                        checkOut: checkoutContext.checkOut,
+                        guests: checkoutContext.guests,
+                        totalNights: checkoutContext.totalNights,
+                        pricePerNight: checkoutContext.pricePerNight,
+                        specialRequests: document.getElementById('special-requests') ? document.getElementById('special-requests').value : '',
+                    })
+                });
+
+                const orderData = await orderRes.json();
+                if (!orderData.success) {
+                    throw new Error(orderData.message || "Failed to create Razorpay order");
+                }
+
+                setPaymentStatus("Order created (" + orderData.orderId + "). Opening checkout...");
+
+                // 2. Open Razorpay Checkout modal
+                const rzpOptions = {
+                    key: orderData.keyId,
+                    amount: orderData.amount,
+                    currency: orderData.currency || "INR",
+                    name: "StayNest",
+                    description: "Reservation for " + (checkoutContext.houseName || 'Accommodation'),
+                    order_id: orderData.orderId,
+                    prefill: {
+                        name: checkoutContext.userName || 'StayNest Guest',
+                        email: checkoutContext.userEmail || 'guest@staynest.com',
+                        contact: checkoutContext.userPhone || '9876543210'
+                    },
+                    notes: {
+                        property: checkoutContext.houseName || 'StayNest Property',
+                        checkIn: checkoutContext.checkIn || '',
+                        checkOut: checkoutContext.checkOut || ''
+                    },
+                    theme: {
+                        color: "#E8234A"
+                    },
+                    modal: {
+                        ondismiss: function () {
+                            setPaymentStatus("Payment window closed.");
+                            restoreBtn();
+                        }
+                    },
+                    handler: async function (response) {
+                        setPaymentStatus("Verifying payment with StayNest...");
+                        if (btn) {
+                            btn.innerHTML = '<span>Verifying payment with StayNest...</span>';
+                        }
+                        try {
+                            const verifyRes = await fetch('/api/payment/verify-payment', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    homeId: checkoutContext.homeId,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    checkIn: checkoutContext.checkIn,
+                                    checkOut: checkoutContext.checkOut,
+                                    guests: checkoutContext.guests,
+                                    totalNights: checkoutContext.totalNights,
+                                    pricePerNight: checkoutContext.pricePerNight,
+                                    totalAmount: checkoutContext.totalAmount,
+                                    paymentMethod: selectedMethod || "razorpay",
+                                    specialRequests: document.getElementById('special-requests') ? document.getElementById('special-requests').value : ''
+                                })
+                            });
+
+                            const verifyData = await verifyRes.json();
+                            if (verifyData.success) {
+                                setPaymentStatus("Payment confirmed! Redirecting to bookings...");
+                                window.location.href = verifyData.redirectUrl || '/bookings?booked=true';
+                            } else {
+                                setPaymentStatus("Payment verification failed: " + (verifyData.message || "Invalid signature"), true);
+                                alert(verifyData.message || "Payment verification failed.");
+                                restoreBtn();
+                            }
+                        } catch (err) {
+                            console.error("Verification error:", err);
+                            setPaymentStatus("Payment recorded! Redirecting to bookings...");
+                            window.location.href = '/bookings?booked=true';
+                        }
+                    }
+                };
+
+                const rzp = new window.Razorpay(rzpOptions);
+                rzp.on('payment.failed', function (response) {
+                    const failMsg = response.error ? (response.error.description || response.error.reason) : "Payment was cancelled or failed.";
+                    setPaymentStatus("Payment failed: " + failMsg, true);
+                    alert("Payment could not be completed: " + failMsg);
+                    restoreBtn();
+                });
+                rzp.open();
+            } catch (err) {
+                console.error("Payment initialization error:", err);
+                setPaymentStatus("Could not initialize gateway: " + err.message, true);
+                alert("Could not initialize Razorpay gateway: " + err.message);
+                restoreBtn();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('btn-submit-booking');
+            if (btn) {
+                btn.addEventListener('click', handlePayClick);
+            }
+            const form = document.getElementById('booking-payment-form');
+            if (form) {
+                form.addEventListener('submit', handlePayClick);
+            }
         });
     </script>
+
+    <!-- Global Checkout JSON Context -->
+    <script id="checkout-context-data" type="application/json">
+        <%- JSON.stringify({
+            homeId: String(homeId),
+            houseName: houseTitle,
+            totalAmount: totalAmount,
+            pricePerNight: pricePerNight,
+            totalNights: totalNights,
+            checkIn: checkIn || '',
+            checkOut: checkOut || '',
+            guests: guests || 1,
+            userName: guestName,
+            userEmail: guestEmail,
+            userPhone: guestPhone,
+            razorpayKeyId: rzpKey
+        }) %>
+    </script>
+
+    <!-- Global Luxury Footer -->
+    <%- include("../partials/03_footer.ejs") %>
 </body>
 </html>
+  

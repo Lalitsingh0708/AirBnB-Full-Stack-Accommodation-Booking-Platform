@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Set up your StayNest listing &bull; Become a Host</title>
+    <title>List Your Home | StayNest</title>
+    <meta name="description" content="Set up your property listing, photos, and pricing on StayNest." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
@@ -32,6 +33,12 @@
 
         body {
             background-color: var(--bg-beige);
+            background-image: 
+                radial-gradient(ellipse 90% 40% at 50% -10%, rgba(212, 175, 106, 0.07), transparent 70%),
+                radial-gradient(circle at 95% 85%, rgba(20, 53, 40, 0.035), transparent 45%),
+                radial-gradient(rgba(180, 160, 135, 0.16) 0.75px, transparent 0.75px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            background-attachment: fixed;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             min-height: 100vh;
@@ -4605,12 +4612,12 @@
 
                 <!-- Fast Curated 5-Photo Collections -->
                 <div class="airbnb-photo-curations">
-                    <span class="curations-label">⚡ Fast sample sets: Load 5 curated high-res photos:</span>
+                    <span class="curations-label">Preset sample sets: Load 5 high-res photos:</span>
                     <div class="curations-chips">
-                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('waterfront')">⛵ Boat &amp; Waterfront</button>
-                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('villa')">✨ Luxury Villa</button>
-                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('cottage')">🏡 Modern Cottage</button>
-                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('chalet')">🏔️ Alpine Chalet</button>
+                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('waterfront')">Waterfront &amp; Lake</button>
+                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('villa')">Luxury Villa</button>
+                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('cottage')">Modern Cottage</button>
+                        <button type="button" class="curation-chip" onclick="applyCurated5PhotoSet('chalet')">Mountain Chalet</button>
                     </div>
                 </div>
 
@@ -6925,7 +6932,7 @@
                     // Step 10 is Photo input (Step 2.2)
                     const count = (wizardState.photos && wizardState.photos.length) || 0;
                     if (count < 5) {
-                        alert("You’ll need 5 photos to get started. You can upload photos or pick one of our instant curated collections.");
+                        alert("You’ll need 5 photos to get started. You can upload photos or pick one of our preset sample sets.");
                         return;
                     }
                     wizardState.housePhoto = wizardState.photos[0];
@@ -6935,7 +6942,7 @@
                     // Step 11 is Title input
                     const title = document.getElementById('input-title').value.trim();
                     if (!title) {
-                        alert('Please provide a title for your sanctuary.');
+                        alert('Please provide a title for your property.');
                         document.getElementById('input-title').focus();
                         return;
                     }

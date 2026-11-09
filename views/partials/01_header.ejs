@@ -6,6 +6,11 @@
      - Floating Luxury Search Pill: Where (Destinations), When (Dates), Who (Guests)
      - Profile Pill Widget with Hamburger & User Avatar Circle
 ═══════════════════════════════════════════════════════════ -->
+<%
+    const isDetailsPage = (typeof currentPage !== 'undefined' && currentPage === 'home-details');
+    const isSearchPage = (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage);
+    const showCompactPill = isSearchPage;
+%>
 <header class="staynest-global-header" id="staynest-header">
     <div class="header-main-row">
         
@@ -122,22 +127,27 @@
                     <% } %>
                 </div>
 
-                <!-- 2. Compact Search Bar Pill (Exact Match to Airbnb Screenshot: 🏠 Anywhere • Anytime • Add guests + 🔍) -->
+                <!-- 2. Compact Search Bar Pill (Anywhere • Anytime • Add guests) -->
                 <!-- Smoothly transitions in when user scrolls down! -->
-                <div class="header-compact-pill-box <%= (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage) ? 'compact-pill--force-show' : '' %>" id="compact-search-trigger" onclick="handleCompactPillClick(event)" role="button" tabindex="0" aria-label="Search stays">
-                    <span class="compact-pill-item compact-pill-item--dest">
-                        <span class="compact-pill-icon">🏠</span>
+                <div class="header-compact-pill-box <%= showCompactPill ? 'compact-pill--force-show' : '' %>" id="compact-search-trigger" onclick="handleCompactSegmentClick('where', event)" role="button" tabindex="0" aria-label="Search stays">
+                    <span class="compact-pill-item compact-pill-item--dest" onclick="handleCompactSegmentClick('where', event)" title="Search anywhere">
+                        <span class="compact-pill-icon">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </span>
                         <strong class="compact-pill-strong"><%= (typeof searchQuery !== 'undefined' && searchQuery.destination) ? searchQuery.destination : 'Anywhere' %></strong>
                     </span>
                     <span class="compact-pill-divider"></span>
-                    <span class="compact-pill-item compact-pill-item--dates">
+                    <span class="compact-pill-item compact-pill-item--dates" onclick="handleCompactSegmentClick('when', event)" title="Choose dates">
                         <%= (typeof searchQuery !== 'undefined' && searchQuery.dates) ? searchQuery.dates : 'Anytime' %>
                     </span>
                     <span class="compact-pill-divider"></span>
-                    <span class="compact-pill-item compact-pill-item--guests">
+                    <span class="compact-pill-item compact-pill-item--guests" onclick="handleCompactSegmentClick('who', event)" title="Add guests">
                         <%= (typeof searchQuery !== 'undefined' && searchQuery.guests && Number(searchQuery.guests) > 0) ? (searchQuery.guests + ' guests') : 'Add guests' %>
                     </span>
-                    <div class="compact-pill-circle-btn">
+                    <div class="compact-pill-circle-btn" onclick="handleCompactSegmentClick('where', event)" aria-label="Search">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -236,7 +246,7 @@
                         <a href="/auth/login" class="dropdown-item dropdown-item--primary">Log in</a>
                         <a href="/auth/register" class="dropdown-item">Sign up</a>
                         <div class="dropdown-divider"></div>
-                        <a href="/auth/register" class="dropdown-item">Host your sanctuary</a>
+                        <a href="/auth/register" class="dropdown-item">Host your home</a>
                         <a href="/terms" class="dropdown-item">Help Centre</a>
                     <% } %>
                 </div>
@@ -245,8 +255,9 @@
 
     </div>
 
+    <% if (!isDetailsPage) { %>
     <!-- 4. Floating Luxury Search Bar (Matching Screenshot: Where • When • Who + Search Icon) -->
-    <div class="header-search-bar-row <%= (typeof isSearchResultsPage !== 'undefined' && isSearchResultsPage) ? 'search-bar-row--collapsed' : '' %>" id="header-search-bar-row">
+    <div class="header-search-bar-row <%= (showCompactPill) ? 'search-bar-row--collapsed' : '' %>" id="header-search-bar-row">
         <form class="floating-search-pill" action="/search" method="GET" id="global-search-form">
             
             <!-- Section 1: Where with Airbnb-style Suggestions Dropdown Popover -->
@@ -266,10 +277,43 @@
 
                 <!-- Floating Suggestions Dropdown Popover (Exact Match to Airbnb Reference) -->
                 <div class="destination-suggestions-popup" id="where-suggestions-popup" role="listbox" aria-label="Suggested destinations" onclick="event.stopPropagation()">
-                    <div class="suggestions-header-label">Suggested destinations</div>
                     <div class="suggestions-list-scroll">
 
-                        <!-- 1. Nearby (Live Geolocation Detection) -->
+                        <!-- 1. Recent Searches (Exact Match to Screenshot) -->
+                        <div class="suggestions-header-label">Recent searches</div>
+                        
+                        <div class="suggestion-item" onclick="selectDestinationOption('New Delhi', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-recent">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#222222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"></path>
+                                    <circle cx="9" cy="9" r="1"></circle>
+                                    <circle cx="15" cy="9" r="1"></circle>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">New Delhi</span>
+                                <span class="suggestion-subtitle">Month in Sep</span>
+                            </div>
+                        </div>
+
+                        <div class="suggestion-item" onclick="selectDestinationOption('Chandigarh', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-recent">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#222222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"></path>
+                                    <circle cx="9" cy="9" r="1"></circle>
+                                    <circle cx="15" cy="9" r="1"></circle>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Chandigarh</span>
+                                <span class="suggestion-subtitle">23 to 24 Oct &bull; 2 guests</span>
+                            </div>
+                        </div>
+
+                        <!-- 2. Suggested Destinations Header (Screenshot) -->
+                        <div class="suggestions-header-label" style="margin-top: 14px;">Suggested destinations</div>
+
+                        <!-- Nearby (Live Geolocation Detection) -->
                         <div class="suggestion-item suggestion-item--nearby" id="suggestion-item-nearby" onclick="detectLiveUserLocation(event)" role="option" tabindex="0">
                             <div class="suggestion-icon-box icon-nearby" id="nearby-icon-wrap">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
@@ -283,56 +327,55 @@
                             </div>
                         </div>
 
-                        <!-- 2. Chandigarh -->
-                        <div class="suggestion-item" onclick="selectDestinationOption('Chandigarh', event)" role="option" tabindex="0">
+                        <!-- Manali, Himachal Pradesh -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Manali', event)" role="option" tabindex="0">
                             <div class="suggestion-icon-box icon-green">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"></path>
-                                    <circle cx="9" cy="9" r="1"></circle>
-                                    <circle cx="15" cy="9" r="1"></circle>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+                                    <path d="M12 11l2 3"></path>
+                                    <path d="M7 16l3-2"></path>
                                 </svg>
                             </div>
                             <div class="suggestion-text-box">
-                                <span class="suggestion-title">Chandigarh</span>
-                                <span class="suggestion-subtitle">Near you</span>
+                                <span class="suggestion-title">Manali, Himachal Pradesh</span>
+                                <span class="suggestion-subtitle">Guests interested in Chandigarh also looked here</span>
                             </div>
                         </div>
 
-                        <!-- 3. New Delhi, Delhi -->
-                        <div class="suggestion-item" onclick="selectDestinationOption('Delhi', event)" role="option" tabindex="0">
-                            <div class="suggestion-icon-box icon-green">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 22h16V7l-8-5-8 5v15z"></path>
-                                    <path d="M9 22v-8h6v8"></path>
-                                    <line x1="9" y1="10" x2="9" y2="10.01"></line>
-                                    <line x1="15" y1="10" x2="15" y2="10.01"></line>
-                                </svg>
-                            </div>
-                            <div class="suggestion-text-box">
-                                <span class="suggestion-title">New Delhi, Delhi</span>
-                                <span class="suggestion-subtitle">For sights like India Gate</span>
-                            </div>
-                        </div>
-
-                        <!-- 4. North Goa, Goa -->
-                        <div class="suggestion-item" onclick="selectDestinationOption('Goa', event)" role="option" tabindex="0">
+                        <!-- Shimla, Himachal Pradesh -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Shimla', event)" role="option" tabindex="0">
                             <div class="suggestion-icon-box icon-amber">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                    <path d="M2 19c2-1 4-1 6 0s4 1 6 0 4-1 6 0"></path>
-                                    <path d="M2 15c2-1 4-1 6 0s4 1 6 0 4-1 6 0"></path>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+                                    <path d="M10 18l2-3 2 3"></path>
                                 </svg>
                             </div>
                             <div class="suggestion-text-box">
-                                <span class="suggestion-title">North Goa, Goa</span>
-                                <span class="suggestion-subtitle">Popular beach destination</span>
+                                <span class="suggestion-title">Shimla, Himachal Pradesh</span>
+                                <span class="suggestion-subtitle">For nature lovers</span>
                             </div>
                         </div>
 
-                        <!-- 5. Gurugram, Haryana -->
+                        <!-- Zirakpur, Punjab -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Zirakpur', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-rose">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                                    <line x1="8" y1="6" x2="16" y2="6"></line>
+                                    <line x1="8" y1="10" x2="16" y2="10"></line>
+                                    <line x1="8" y1="14" x2="16" y2="14"></line>
+                                </svg>
+                            </div>
+                            <div class="suggestion-text-box">
+                                <span class="suggestion-title">Zirakpur, Punjab</span>
+                                <span class="suggestion-subtitle">Guests interested in Chandigarh also looked here</span>
+                            </div>
+                        </div>
+
+                        <!-- Gurugram, Haryana -->
                         <div class="suggestion-item" onclick="selectDestinationOption('Gurugram', event)" role="option" tabindex="0">
                             <div class="suggestion-icon-box icon-neutral">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="3" width="7" height="18" rx="1"></rect>
                                     <rect x="14" y="8" width="7" height="13" rx="1"></rect>
                                     <line x1="6" y1="7" x2="7" y2="7"></line>
@@ -346,56 +389,24 @@
                             </div>
                         </div>
 
-                        <!-- 6. Dehradun, Uttarakhand -->
-                        <div class="suggestion-item" onclick="selectDestinationOption('Dehradun', event)" role="option" tabindex="0">
-                            <div class="suggestion-icon-box icon-forest">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
-                                    <path d="M10 18l2-3 2 3"></path>
+                        <!-- North Goa, Goa -->
+                        <div class="suggestion-item" onclick="selectDestinationOption('Goa', event)" role="option" tabindex="0">
+                            <div class="suggestion-icon-box icon-amber">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                    <path d="M2 19c2-1 4-1 6 0s4 1 6 0 4-1 6 0"></path>
                                 </svg>
                             </div>
                             <div class="suggestion-text-box">
-                                <span class="suggestion-title">Dehradun, Uttarakhand</span>
-                                <span class="suggestion-subtitle">For nature lovers</span>
+                                <span class="suggestion-title">North Goa, Goa</span>
+                                <span class="suggestion-subtitle">Popular beach destination</span>
                             </div>
                         </div>
 
-                        <!-- 7. Noida, Uttar Pradesh -->
-                        <div class="suggestion-item" onclick="selectDestinationOption('Noida', event)" role="option" tabindex="0">
-                            <div class="suggestion-icon-box icon-rose">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="4" y="2" width="16" height="20" rx="2"></rect>
-                                    <line x1="8" y1="6" x2="16" y2="6"></line>
-                                    <line x1="8" y1="10" x2="16" y2="10"></line>
-                                    <line x1="8" y1="14" x2="16" y2="14"></line>
-                                    <line x1="8" y1="18" x2="16" y2="18"></line>
-                                </svg>
-                            </div>
-                            <div class="suggestion-text-box">
-                                <span class="suggestion-title">Noida, Uttar Pradesh</span>
-                                <span class="suggestion-subtitle">Popular destination</span>
-                            </div>
-                        </div>
-
-                        <!-- 8. Manali, Himachal Pradesh (Verified Stays in App!) -->
-                        <div class="suggestion-item" onclick="selectDestinationOption('Manali', event)" role="option" tabindex="0">
-                            <div class="suggestion-icon-box icon-ice">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
-                                    <path d="M12 11l2 3"></path>
-                                    <path d="M7 16l3-2"></path>
-                                </svg>
-                            </div>
-                            <div class="suggestion-text-box">
-                                <span class="suggestion-title">Manali, Himachal Pradesh</span>
-                                <span class="suggestion-subtitle">Snowy mountain sanctuaries &bull; Available now</span>
-                            </div>
-                        </div>
-
-                        <!-- 9. Agra & Jaipur (Verified Stays in App!) -->
+                        <!-- Agra & Jaipur -->
                         <div class="suggestion-item" onclick="selectDestinationOption('Agra', event)" role="option" tabindex="0">
                             <div class="suggestion-icon-box icon-gold">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 2a3 3 0 0 0-3 3c0 1.5 3 4 3 4s3-2.5 3-4a3 3 0 0 0-3-3z"></path>
                                     <path d="M4 22h16V10H4v12z"></path>
                                 </svg>
@@ -405,6 +416,9 @@
                                 <span class="suggestion-subtitle">Royal heritage villas &bull; Available now</span>
                             </div>
                         </div>
+
+                        <!-- Dynamic Nominatim Location Results (Priority India & Local Proximity) -->
+                        <div id="dynamic-dest-results" style="display: none;"></div>
 
                     </div>
                 </div>
@@ -720,6 +734,7 @@
             </div>
         </form>
     </div>
+    <% } %>
 </header>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -730,9 +745,11 @@
         position: sticky;
         top: 0;
         z-index: 1000;
-        background: #FFFFFF;
-        border-bottom: 1px solid #EBEBEB;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        background: rgba(250, 248, 245, 0.94);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(226, 218, 204, 0.85);
+        box-shadow: 0 2px 12px rgba(20, 53, 40, 0.03);
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
         transition: box-shadow 0.35s cubic-bezier(0.2, 0, 0, 1), 
                     border-color 0.35s cubic-bezier(0.2, 0, 0, 1),
@@ -741,8 +758,9 @@
     }
 
     .staynest-global-header.header--scrolled {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        border-bottom-color: #E2E2E2;
+        box-shadow: 0 4px 20px rgba(20, 53, 40, 0.08);
+        border-bottom-color: rgba(212, 175, 106, 0.35);
+        background: rgba(250, 248, 245, 0.97);
     }
 
     /* ── Top Row ── */
@@ -821,6 +839,13 @@
         transform: translateY(-12px) scale(0.92);
         pointer-events: none;
         visibility: hidden;
+    }
+
+    .staynest-global-header.header--scrolled.search-temporarily-open .header-modes-strip {
+        opacity: 1 !important;
+        transform: translateY(0) scale(1) !important;
+        pointer-events: auto !important;
+        visibility: visible !important;
     }
 
     .mode-tab-item {
@@ -1122,6 +1147,14 @@
         visibility: visible !important;
     }
 
+    .header-compact-pill-box.compact-pill--force-show ~ .header-modes-strip,
+    .staynest-global-header:has(.header-compact-pill-box.compact-pill--force-show) .header-modes-strip {
+        opacity: 0 !important;
+        transform: translateY(-12px) scale(0.92) !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
+    }
+
     .header-compact-pill-box:hover {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 6px 18px rgba(0, 0, 0, 0.1);
         border-color: #B0B0B0;
@@ -1264,6 +1297,21 @@
         border-color: #B0B0B0;
     }
 
+    /* Authentic Airbnb active pill container with white capsule focus */
+    .floating-search-pill.has-active-segment {
+        background: #EBEBEB;
+        border-color: #E2E2E2;
+        box-shadow: 0 4px 22px rgba(0, 0, 0, 0.12);
+    }
+
+    .floating-search-pill.has-active-segment .search-segment-box {
+        background: transparent;
+    }
+
+    .floating-search-pill.has-active-segment .search-segment-box:hover {
+        background: rgba(0, 0, 0, 0.04);
+    }
+
     .search-segment-box {
         flex: 1;
         padding: 6px 14px;
@@ -1280,9 +1328,15 @@
         background: #F2F2F2;
     }
 
-    .search-segment-box.is-active {
-        background: #FFFFFF;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.14);
+    .search-segment-box.is-active,
+    .floating-search-pill.has-active-segment .search-segment-box.is-active {
+        background: #FFFFFF !important;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.16) !important;
+    }
+
+    .floating-search-pill.has-active-segment .search-segment-box.is-active + .search-segment-divider,
+    .floating-search-pill.has-active-segment .search-segment-divider:has(+ .search-segment-box.is-active) {
+        opacity: 0;
     }
 
     /* ── Destination Suggestions Popover (Exact Match to Airbnb Screenshot) ── */
@@ -1385,6 +1439,12 @@
     }
 
     /* Icon Box Color Variants Matching Screenshot */
+    .icon-recent {
+        background: #F4F4F4;
+        color: #222222;
+        border: 1px solid #EBEBEB;
+    }
+
     .icon-nearby {
         background: #EEF4FD;
         color: #1E6BE6;
@@ -2180,6 +2240,11 @@
 
         // Close popups when clicking outside
         document.addEventListener('click', function (e) {
+            const compactTrigger = document.getElementById('compact-search-trigger');
+            if (compactTrigger && compactTrigger.contains(e.target)) {
+                return;
+            }
+
             const segWhere = document.getElementById('segment-where');
             const wherePopup = document.getElementById('where-suggestions-popup');
             if (segWhere && wherePopup && !segWhere.contains(e.target)) {
@@ -2229,8 +2294,10 @@
         closeWhoPopup();
         const popup = document.getElementById('where-suggestions-popup');
         const segWhere = document.getElementById('segment-where');
+        const pill = document.querySelector('.floating-search-pill');
         if (popup) popup.classList.add('is-open');
         if (segWhere) segWhere.classList.add('is-active');
+        if (pill) pill.classList.add('has-active-segment');
     }
 
     function closeWhereSuggestions() {
@@ -2238,7 +2305,11 @@
         const segWhere = document.getElementById('segment-where');
         if (popup) popup.classList.remove('is-open');
         if (segWhere) segWhere.classList.remove('is-active');
+        updatePillActiveSegmentState();
     }
+
+    let destAutocompleteTimer = null;
+    let userGeoCoords = null;
 
     function handleWhereInput(val) {
         openWhereSuggestions();
@@ -2246,7 +2317,7 @@
             filterListings(val);
         }
         const q = (val || '').toLowerCase().trim();
-        const items = document.querySelectorAll('.suggestion-item:not(.suggestion-item--nearby)');
+        const items = document.querySelectorAll('.suggestion-item:not(.suggestion-item--nearby):not(.dynamic-loc-item)');
         items.forEach(item => {
             const text = item.textContent.toLowerCase();
             if (!q || text.includes(q)) {
@@ -2255,6 +2326,77 @@
                 item.style.display = 'none';
             }
         });
+
+        clearTimeout(destAutocompleteTimer);
+        const dynContainer = document.getElementById('dynamic-dest-results');
+        if (!q || q.length < 2) {
+            if (dynContainer) {
+                dynContainer.innerHTML = '';
+                dynContainer.style.display = 'none';
+            }
+            return;
+        }
+
+        destAutocompleteTimer = setTimeout(async () => {
+            try {
+                let viewboxParam = '';
+                if (userGeoCoords) {
+                    const left = (userGeoCoords.lng - 3.5).toFixed(4);
+                    const right = (userGeoCoords.lng + 3.5).toFixed(4);
+                    const top = (userGeoCoords.lat + 3.5).toFixed(4);
+                    const bottom = (userGeoCoords.lat - 3.5).toFixed(4);
+                    viewboxParam = `&viewbox=${left},${top},${right},${bottom}`;
+                }
+
+                // Tier 1: Local India priority search with dynamic coordinates viewbox
+                let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&countrycodes=in${viewboxParam}&addressdetails=1&limit=5`;
+                let res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+                let data = [];
+                if (res.ok) {
+                    data = await res.json();
+                }
+
+                // Tier 2: Unbiased Global Fallback if no local results found
+                if (!data || data.length === 0) {
+                    const globalUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&addressdetails=1&limit=5`;
+                    const gRes = await fetch(globalUrl, { headers: { 'Accept-Language': 'en' } });
+                    if (gRes.ok) {
+                        data = await gRes.json();
+                    }
+                }
+
+                if (dynContainer && data && data.length > 0) {
+                    let html = '<div class="suggestions-header-label" style="margin-top: 14px;">Matching places</div>';
+                    data.forEach(item => {
+                        const addr = item.address || {};
+                        const primaryName = addr.amenity || addr.building || addr.university || addr.college || addr.suburb || addr.city || addr.town || item.name || item.display_name.split(',')[0];
+                        const secondaryName = [addr.city || addr.state_district, addr.state, addr.country].filter(Boolean).join(', ') || item.display_name;
+                        const safeTitle = primaryName.replace(/'/g, "\\'");
+                        html += `
+                            <div class="suggestion-item dynamic-loc-item" onclick="selectDestinationOption('${safeTitle}', event)" role="option" tabindex="0">
+                                <div class="suggestion-icon-box icon-nearby">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                </div>
+                                <div class="suggestion-text-box">
+                                    <span class="suggestion-title">${primaryName}</span>
+                                    <span class="suggestion-subtitle">${secondaryName}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    dynContainer.innerHTML = html;
+                    dynContainer.style.display = 'block';
+                } else if (dynContainer) {
+                    dynContainer.innerHTML = '';
+                    dynContainer.style.display = 'none';
+                }
+            } catch (err) {
+                console.warn('Autocomplete fetch error:', err);
+            }
+        }, 220);
     }
 
     function selectDestinationOption(destName, e) {
@@ -2285,6 +2427,7 @@
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     const { latitude, longitude } = position.coords;
+                    userGeoCoords = { lat: latitude, lng: longitude };
                     try {
                         const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
                             headers: { 'Accept-Language': 'en' }
@@ -2354,8 +2497,10 @@
         closeWhoPopup();
         const popup = document.getElementById('when-datepicker-popup');
         const segWhen = document.getElementById('segment-when');
+        const pill = document.querySelector('.floating-search-pill');
         if (popup) popup.classList.add('is-open');
         if (segWhen) segWhen.classList.add('is-active');
+        if (pill) pill.classList.add('has-active-segment');
         renderDualCalendars();
     }
 
@@ -2364,6 +2509,7 @@
         const segWhen = document.getElementById('segment-when');
         if (popup) popup.classList.remove('is-open');
         if (segWhen) segWhen.classList.remove('is-active');
+        updatePillActiveSegmentState();
     }
 
     function switchWhenTab(tabName, e) {
@@ -2588,8 +2734,10 @@
         closeWhenDatepicker();
         const popup = document.getElementById('who-guests-popup');
         const segWho = document.getElementById('segment-who');
+        const pill = document.querySelector('.floating-search-pill');
         if (popup) popup.classList.add('is-open');
         if (segWho) segWho.classList.add('is-active');
+        if (pill) pill.classList.add('has-active-segment');
     }
 
     function closeWhoPopup() {
@@ -2597,6 +2745,18 @@
         const segWho = document.getElementById('segment-who');
         if (popup) popup.classList.remove('is-open');
         if (segWho) segWho.classList.remove('is-active');
+        updatePillActiveSegmentState();
+    }
+
+    function updatePillActiveSegmentState() {
+        const pill = document.querySelector('.floating-search-pill');
+        const segWhere = document.getElementById('segment-where');
+        const segWhen = document.getElementById('segment-when');
+        const segWho = document.getElementById('segment-who');
+        const hasActive = (segWhere && segWhere.classList.contains('is-active')) ||
+                          (segWhen && segWhen.classList.contains('is-active')) ||
+                          (segWho && segWho.classList.contains('is-active'));
+        if (pill) pill.classList.toggle('has-active-segment', !!hasActive);
     }
 
     function updateGuestCount(type, delta, e) {
@@ -2689,49 +2849,100 @@
         if (scrollY > 38 && !isNavbarScrolled) {
             isNavbarScrolled = true;
             header.classList.add('header--scrolled');
-            closeExpandedSearch();
         } else if (scrollY < 12 && isNavbarScrolled) {
             isNavbarScrolled = false;
             header.classList.remove('header--scrolled');
-            closeExpandedSearch();
-        } else if (isNavbarScrolled && header.classList.contains('search-temporarily-open')) {
-            closeExpandedSearch();
+            closeExpandedSearch('scrolled-back-to-top');
+        } else if (header.classList.contains('search-temporarily-open')) {
+            if (isExpandingSearch) return; // Prevent layout shift during animation from auto-closing!
+            // Only auto-close if user actively scrolls by more than 100px
+            if (Math.abs(scrollY - expandedAtScrollY) > 100) {
+                closeExpandedSearch('user-scrolled-past-threshold');
+            }
         }
     }
 
-    // Clicking the compact pill in scrolled state toggles expansion of full search bar
-    function handleCompactPillClick(e) {
-        if (e) e.stopPropagation();
+    let expandedAtScrollY = 0;
+    let isExpandingSearch = false;
+    let expandCooldownTimer = null;
+
+    // Individual segment click handlers for compact pill: Anywhere, Anytime, Add guests
+    function handleCompactSegmentClick(target, e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         const header = document.getElementById('staynest-header');
         const searchRow = document.getElementById('header-search-bar-row');
         if (!searchRow || !header) return;
 
-        if (searchRow.classList.contains('header-search-bar-row--temporarily-expanded')) {
-            closeExpandedSearch();
-        } else {
-            openExpandedSearch();
-        }
+        openExpandedSearch(target || 'where');
     }
 
-    function openExpandedSearch() {
+    function handleCompactPillClick(e) {
+        handleCompactSegmentClick('where', e);
+    }
+
+    function openExpandedSearch(target) {
+        target = target || 'where';
         const header = document.getElementById('staynest-header');
         const searchRow = document.getElementById('header-search-bar-row');
-        if (header) header.classList.add('search-temporarily-open');
-        if (searchRow) searchRow.classList.add('header-search-bar-row--temporarily-expanded');
+        const pill = document.querySelector('.floating-search-pill');
+        if (!header || !searchRow) return;
+
+        isExpandingSearch = true;
+        if (expandCooldownTimer) clearTimeout(expandCooldownTimer);
+        expandCooldownTimer = setTimeout(() => {
+            isExpandingSearch = false;
+            expandedAtScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        }, 500);
+
+        expandedAtScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        header.classList.add('search-temporarily-open');
+        searchRow.classList.add('header-search-bar-row--temporarily-expanded');
+        if (pill) pill.classList.add('has-active-segment');
+
+        // Clear active state on all segments first
+        document.querySelectorAll('.search-segment-box').forEach(el => el.classList.remove('is-active'));
+
         setTimeout(() => {
-            const destInput = document.getElementById('input-dest');
-            if (destInput) {
-                destInput.focus();
+            if (target === 'when') {
+                closeWhereSuggestions();
+                closeWhoPopup();
+                const segWhen = document.getElementById('segment-when');
+                const whenPopup = document.getElementById('when-datepicker-popup');
+                if (segWhen) segWhen.classList.add('is-active');
+                if (whenPopup) whenPopup.classList.add('is-open');
+                renderDualCalendars();
+            } else if (target === 'who') {
+                closeWhereSuggestions();
+                closeWhenDatepicker();
+                const segWho = document.getElementById('segment-who');
+                const whoPopup = document.getElementById('who-guests-popup');
+                if (segWho) segWho.classList.add('is-active');
+                if (whoPopup) whoPopup.classList.add('is-open');
+            } else {
+                // target === 'where'
+                closeWhenDatepicker();
+                closeWhoPopup();
+                const segWhere = document.getElementById('segment-where');
+                const destInput = document.getElementById('input-dest');
+                if (segWhere) segWhere.classList.add('is-active');
+                if (destInput) destInput.focus({ preventScroll: true });
                 openWhereSuggestions();
             }
-        }, 90);
+        }, 50);
     }
 
     function closeExpandedSearch() {
         const header = document.getElementById('staynest-header');
         const searchRow = document.getElementById('header-search-bar-row');
+        const pill = document.querySelector('.floating-search-pill');
         if (header) header.classList.remove('search-temporarily-open');
         if (searchRow) searchRow.classList.remove('header-search-bar-row--temporarily-expanded');
+        if (pill) pill.classList.remove('has-active-segment');
+        document.querySelectorAll('.search-segment-box').forEach(el => el.classList.remove('is-active'));
+
         closeWhereSuggestions();
         closeWhenDatepicker();
         closeWhoPopup();
