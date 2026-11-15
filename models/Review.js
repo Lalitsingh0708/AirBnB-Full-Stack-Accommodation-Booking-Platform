@@ -34,6 +34,42 @@ const reviewSchema = new mongoose.Schema(
             max: 5,
             default: 5,
         },
+        cleanliness: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 5,
+        },
+        accuracy: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 5,
+        },
+        checkIn: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 5,
+        },
+        communication: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 5,
+        },
+        location: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 5,
+        },
+        value: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 5,
+        },
         comment: {
             type: String,
             required: true,
@@ -178,7 +214,76 @@ export class ReviewStore {
         return combined.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
+    static calculateCategoryScores(reviews) {
+        if (!reviews || reviews.length === 0) {
+            return {
+                cleanliness: 4.9,
+                accuracy: 5.0,
+                checkIn: 4.9,
+                communication: 5.0,
+                location: 4.8,
+                value: 4.9,
+                overall: 4.9
+            };
+        }
+
+        let cSum = 0, aSum = 0, chSum = 0, comSum = 0, locSum = 0, valSum = 0, totalRating = 0;
+        reviews.forEach(r => {
+            const rOverall = Number(r.rating) || 5;
+            totalRating += rOverall;
+            cSum += Number(r.cleanliness) || rOverall;
+            aSum += Number(r.accuracy) || rOverall;
+            chSum += Number(r.checkIn) || rOverall;
+            comSum += Number(r.communication) || rOverall;
+            locSum += Number(r.location) || rOverall;
+            valSum += Number(r.value) || rOverall;
+        });
+
+        const count = reviews.length;
+        return {
+            cleanliness: Number((cSum / count).toFixed(1)),
+            accuracy: Number((aSum / count).toFixed(1)),
+            checkIn: Number((chSum / count).toFixed(1)),
+            communication: Number((comSum / count).toFixed(1)),
+            location: Number((locSum / count).toFixed(1)),
+            value: Number((valSum / count).toFixed(1)),
+            overall: Number((totalRating / count).toFixed(2))
+        };
+    }
+
+    static async deleteReview(reviewId, userId) {
+        // Remove from file
+        const fileReviews = getFileReviews();
+        const filtered = fileReviews.filter(r => {
+            const matchId = String(r.id || r._id) === String(reviewId);
+            const matchUser = !userId || String(r.guestId) === String(userId);
+            return !(matchId && matchUser);
+        });
+        saveFileReviews(filtered);
+
+        // Remove from DB if available
+        try {
+            await ReviewModel.deleteOne({
+                _id: reviewId,
+                ...(userId ? { guestId: userId } : {})
+            });
+        } catch (e) {
+            console.error("Error deleting review from Mongo:", e.message);
+        }
+        return true;
+    }
+
     static async addReview(reviewData) {
+        const cleanliness = Number(reviewData.cleanliness) || Number(reviewData.rating) || 5;
+        const accuracy = Number(reviewData.accuracy) || Number(reviewData.rating) || 5;
+        const checkIn = Number(reviewData.checkIn) || Number(reviewData.rating) || 5;
+        const communication = Number(reviewData.communication) || Number(reviewData.rating) || 5;
+        const location = Number(reviewData.location) || Number(reviewData.rating) || 5;
+        const value = Number(reviewData.value) || Number(reviewData.rating) || 5;
+        
+        // Compute overall rating as average of categories or passed rating
+        const rating = Number(reviewData.rating) || Number(((cleanliness + accuracy + checkIn + communication + location + value) / 6).toFixed(1)) || 5;
+
         const newReviewObj = {
             id: Date.now().toString(),
             propertyId: String(reviewData.propertyId),
@@ -187,7 +292,13 @@ export class ReviewStore {
             guestAvatar: reviewData.guestAvatar || "",
             guestTenure: reviewData.guestTenure || "Guest on StayNest",
             isVerifiedStay: reviewData.isVerifiedStay !== undefined ? Boolean(reviewData.isVerifiedStay) : true,
-            rating: Number(reviewData.rating) || 5,
+            rating: rating,
+            cleanliness: cleanliness,
+            accuracy: accuracy,
+            checkIn: checkIn,
+            communication: communication,
+            location: location,
+            value: value,
             comment: reviewData.comment || "",
             tag: reviewData.tag || "Hospitality",
             createdAt: new Date().toISOString()
@@ -208,6 +319,12 @@ export class ReviewStore {
                 guestTenure: newReviewObj.guestTenure,
                 isVerifiedStay: newReviewObj.isVerifiedStay,
                 rating: newReviewObj.rating,
+                cleanliness: newReviewObj.cleanliness,
+                accuracy: newReviewObj.accuracy,
+                checkIn: newReviewObj.checkIn,
+                communication: newReviewObj.communication,
+                location: newReviewObj.location,
+                value: newReviewObj.value,
                 comment: newReviewObj.comment,
                 tag: newReviewObj.tag,
                 createdAt: new Date()

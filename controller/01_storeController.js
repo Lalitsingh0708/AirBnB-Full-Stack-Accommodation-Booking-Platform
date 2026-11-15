@@ -670,9 +670,8 @@ export const getHomeDetails = (req , res)=>{
             console.error("Error loading reviews:", revErr);
         }
 
-        let totalRating = 0;
-        propertyReviews.forEach(r => { totalRating += (Number(r.rating) || 5); });
-        const avgRating = propertyReviews.length > 0 ? (totalRating / propertyReviews.length) : 5.0;
+        const categoryScores = ReviewStore.calculateCategoryScores(propertyReviews);
+        const avgRating = categoryScores.overall || 5.0;
 
         res.render("store/06_home-details", { 
             home: home, 
@@ -680,10 +679,12 @@ export const getHomeDetails = (req , res)=>{
             conversation: initialConversation,
             reviews: propertyReviews,
             averageRating: avgRating,
+            categoryScores: categoryScores,
             totalReviews: propertyReviews.length,
             user: req.user,
             userHasBooked: userHasBooked,
             reviewSuccess: req.query.reviewed === "true",
+            reviewDeleted: req.query.deleted === "true",
             currentPage: "home-details"
         }) ;
     })   ; 
@@ -691,7 +692,17 @@ export const getHomeDetails = (req , res)=>{
 
 export const postAddReview = async (req, res) => {
     const homeId = req.params.id;
-    const { rating, comment, tag } = req.body;
+    const { 
+        rating, 
+        cleanliness, 
+        accuracy, 
+        checkIn, 
+        communication, 
+        location, 
+        value, 
+        comment, 
+        tag 
+    } = req.body;
 
     // Strict authentication check: Only logged-in users can write a review!
     if (!req.user) {
@@ -730,6 +741,12 @@ export const postAddReview = async (req, res) => {
             guestTenure: reviewerTenure,
             isVerifiedStay: isVerifiedStay,
             rating: Number(rating) || 5,
+            cleanliness: Number(cleanliness) || Number(rating) || 5,
+            accuracy: Number(accuracy) || Number(rating) || 5,
+            checkIn: Number(checkIn) || Number(rating) || 5,
+            communication: Number(communication) || Number(rating) || 5,
+            location: Number(location) || Number(rating) || 5,
+            value: Number(value) || Number(rating) || 5,
             comment: comment.trim(),
             tag: tag || "Hospitality"
         });
@@ -738,6 +755,23 @@ export const postAddReview = async (req, res) => {
     }
 
     res.redirect(`/homes/${homeId}?reviewed=true#reviews`);
+}; 
+
+export const postDeleteReview = async (req, res) => {
+    const homeId = req.params.id;
+    const reviewId = req.params.reviewId;
+
+    if (!req.user) {
+        return res.redirect(`/homes/${homeId}#reviews`);
+    }
+
+    try {
+        await ReviewStore.deleteReview(reviewId, req.user._id);
+    } catch (err) {
+        console.error("Error deleting review:", err);
+    }
+
+    res.redirect(`/homes/${homeId}?deleted=true#reviews`);
 }; 
 
 export const postSendMessageToHost = async (req, res) => {

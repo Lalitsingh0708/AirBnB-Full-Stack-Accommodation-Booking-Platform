@@ -788,6 +788,145 @@
             margin-top: 4px;
         }
 
+        /* ── Airbnb Signature Rating Categories Scorecard ── */
+        .rating-categories-breakdown-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(226, 218, 204, 0.9);
+            border-radius: 20px;
+            padding: 24px 28px;
+            margin: 20px 0 28px 0;
+            box-shadow: 0 4px 18px rgba(20, 53, 40, 0.04);
+        }
+
+        .rating-categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 40px;
+        }
+
+        .rating-category-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .category-meta-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14.5px;
+            font-weight: 500;
+            color: #222222;
+        }
+
+        .category-icon {
+            font-size: 16px;
+            width: 22px;
+            display: inline-flex;
+            justify-content: center;
+        }
+
+        .category-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            max-width: 200px;
+            justify-content: flex-end;
+        }
+
+        .category-progress-track {
+            flex: 1;
+            height: 5px;
+            background: #EBEBEB;
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .category-progress-fill {
+            height: 100%;
+            background: #143528;
+            border-radius: 9999px;
+            transition: width 0.6s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .category-score {
+            font-size: 14px;
+            font-weight: 700;
+            color: #143528;
+            min-width: 24px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        @media (max-width: 640px) {
+            .rating-categories-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .category-bar-right {
+                max-width: 140px;
+            }
+        }
+
+        /* Category Sliders in Submission Form */
+        .category-rating-sliders-block {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px 24px;
+            background: #FDFBF7;
+            border: 1px solid rgba(212, 175, 106, 0.35);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin: 16px 0;
+        }
+
+        .category-rating-slider-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .category-rating-slider-item label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            color: #222222;
+        }
+
+        .category-rating-slider-item label span {
+            color: #143528;
+            font-weight: 700;
+        }
+
+        .category-rating-slider-item input[type="range"] {
+            accent-color: #143528;
+            cursor: pointer;
+            height: 6px;
+        }
+
+        .btn-delete-review {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            color: #C93B2B;
+            font-size: 12.5px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .btn-delete-review:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
         /* ── Guests Mention & Reviews Section (Matching Screenshot) ── */
         .guests-mention-header-wrap {
             margin-top: 24px;
@@ -2533,6 +2672,95 @@
                     </p>
                 </div>
 
+                <!-- Airbnb Signature Category Ratings Breakdown Grid -->
+                <div class="rating-categories-breakdown-card">
+                    <div class="rating-categories-grid">
+                        <!-- Cleanliness -->
+                        <div class="rating-category-row">
+                            <div class="category-meta-left">
+                                <span class="category-icon">✨</span>
+                                <span class="category-name">Cleanliness</span>
+                            </div>
+                            <div class="category-bar-right">
+                                <div class="category-progress-track">
+                                    <div class="category-progress-fill" style="width: <%= (((typeof categoryScores !== 'undefined' && categoryScores.cleanliness) ? categoryScores.cleanliness : 4.9) / 5) * 100 %>%"></div>
+                                </div>
+                                <span class="category-score"><%= ((typeof categoryScores !== 'undefined' && categoryScores.cleanliness) ? categoryScores.cleanliness : 4.9).toFixed(1) %></span>
+                            </div>
+                        </div>
+
+                        <!-- Accuracy -->
+                        <div class="rating-category-row">
+                            <div class="category-meta-left">
+                                <span class="category-icon">🎯</span>
+                                <span class="category-name">Accuracy</span>
+                            </div>
+                            <div class="category-bar-right">
+                                <div class="category-progress-track">
+                                    <div class="category-progress-fill" style="width: <%= (((typeof categoryScores !== 'undefined' && categoryScores.accuracy) ? categoryScores.accuracy : 5.0) / 5) * 100 %>%"></div>
+                                </div>
+                                <span class="category-score"><%= ((typeof categoryScores !== 'undefined' && categoryScores.accuracy) ? categoryScores.accuracy : 5.0).toFixed(1) %></span>
+                            </div>
+                        </div>
+
+                        <!-- Check-in -->
+                        <div class="rating-category-row">
+                            <div class="category-meta-left">
+                                <span class="category-icon">🔑</span>
+                                <span class="category-name">Check-in</span>
+                            </div>
+                            <div class="category-bar-right">
+                                <div class="category-progress-track">
+                                    <div class="category-progress-fill" style="width: <%= (((typeof categoryScores !== 'undefined' && categoryScores.checkIn) ? categoryScores.checkIn : 4.9) / 5) * 100 %>%"></div>
+                                </div>
+                                <span class="category-score"><%= ((typeof categoryScores !== 'undefined' && categoryScores.checkIn) ? categoryScores.checkIn : 4.9).toFixed(1) %></span>
+                            </div>
+                        </div>
+
+                        <!-- Communication -->
+                        <div class="rating-category-row">
+                            <div class="category-meta-left">
+                                <span class="category-icon">💬</span>
+                                <span class="category-name">Communication</span>
+                            </div>
+                            <div class="category-bar-right">
+                                <div class="category-progress-track">
+                                    <div class="category-progress-fill" style="width: <%= (((typeof categoryScores !== 'undefined' && categoryScores.communication) ? categoryScores.communication : 5.0) / 5) * 100 %>%"></div>
+                                </div>
+                                <span class="category-score"><%= ((typeof categoryScores !== 'undefined' && categoryScores.communication) ? categoryScores.communication : 5.0).toFixed(1) %></span>
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="rating-category-row">
+                            <div class="category-meta-left">
+                                <span class="category-icon">📍</span>
+                                <span class="category-name">Location</span>
+                            </div>
+                            <div class="category-bar-right">
+                                <div class="category-progress-track">
+                                    <div class="category-progress-fill" style="width: <%= (((typeof categoryScores !== 'undefined' && categoryScores.location) ? categoryScores.location : 4.8) / 5) * 100 %>%"></div>
+                                </div>
+                                <span class="category-score"><%= ((typeof categoryScores !== 'undefined' && categoryScores.location) ? categoryScores.location : 4.8).toFixed(1) %></span>
+                            </div>
+                        </div>
+
+                        <!-- Value -->
+                        <div class="rating-category-row">
+                            <div class="category-meta-left">
+                                <span class="category-icon">🏷️</span>
+                                <span class="category-name">Value</span>
+                            </div>
+                            <div class="category-bar-right">
+                                <div class="category-progress-track">
+                                    <div class="category-progress-fill" style="width: <%= (((typeof categoryScores !== 'undefined' && categoryScores.value) ? categoryScores.value : 4.9) / 5) * 100 %>%"></div>
+                                </div>
+                                <span class="category-score"><%= ((typeof categoryScores !== 'undefined' && categoryScores.value) ? categoryScores.value : 4.9).toFixed(1) %></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ═══════════════════════════════════════════════════════════
                      GUESTS MENTION TAGS & REVIEWS FEED (Exact Match to Screenshot)
                 ═══════════════════════════════════════════════════════════ -->
@@ -2663,6 +2891,15 @@
                             <% if (rev.comment && rev.comment.length > 180) { %>
                                 <button type="button" class="review-show-more-btn" onclick="toggleReviewExpand(this, '<%= idx %>')">Show more</button>
                             <% } %>
+
+                            <% if (typeof user !== 'undefined' && user && rev.guestId && (String(user._id) === String(rev.guestId) || user.role === 'admin')) { %>
+                                <form action="/homes/<%= home.id %>/review/<%= rev._id || rev.id %>/delete" method="POST" style="margin-top: 8px;" onsubmit="return confirm('Are you sure you want to delete your review?');">
+                                    <button type="submit" class="btn-delete-review">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                        Delete my review
+                                    </button>
+                                </form>
+                            <% } %>
                         </div>
                     <% }); %>
                 </div>
@@ -2677,6 +2914,11 @@
                             <div class="review-success-toast">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                 <span>Thank you, <%= user.name %>! Your verified review has been published and added below.</span>
+                            </div>
+                        <% } %>
+                        <% if (typeof reviewDeleted !== 'undefined' && reviewDeleted) { %>
+                            <div class="review-success-toast" style="background: rgba(201, 59, 43, 0.08); border-color: rgba(201, 59, 43, 0.3); color: #C93B2B;">
+                                <span>Your review was removed successfully.</span>
                             </div>
                         <% } %>
 
@@ -2744,6 +2986,34 @@
 
                                 <input type="radio" id="tag-river" name="tag" value="River" class="review-tag-radio" />
                                 <label for="tag-river" class="review-tag-label">Riverside</label>
+                            </div>
+
+                            <!-- Detailed Category Rating Sliders (Cleanliness, Accuracy, Check-in, Communication, Location, Value) -->
+                            <div class="category-rating-sliders-block">
+                                <div class="category-rating-slider-item">
+                                    <label>Cleanliness <span id="val-clean">5.0 ★</span></label>
+                                    <input type="range" name="cleanliness" min="1" max="5" step="0.5" value="5" oninput="updateSubRating('clean', this.value)" />
+                                </div>
+                                <div class="category-rating-slider-item">
+                                    <label>Accuracy <span id="val-acc">5.0 ★</span></label>
+                                    <input type="range" name="accuracy" min="1" max="5" step="0.5" value="5" oninput="updateSubRating('acc', this.value)" />
+                                </div>
+                                <div class="category-rating-slider-item">
+                                    <label>Check-in <span id="val-checkin">5.0 ★</span></label>
+                                    <input type="range" name="checkIn" min="1" max="5" step="0.5" value="5" oninput="updateSubRating('checkin', this.value)" />
+                                </div>
+                                <div class="category-rating-slider-item">
+                                    <label>Communication <span id="val-comm">5.0 ★</span></label>
+                                    <input type="range" name="communication" min="1" max="5" step="0.5" value="5" oninput="updateSubRating('comm', this.value)" />
+                                </div>
+                                <div class="category-rating-slider-item">
+                                    <label>Location <span id="val-loc">5.0 ★</span></label>
+                                    <input type="range" name="location" min="1" max="5" step="0.5" value="5" oninput="updateSubRating('loc', this.value)" />
+                                </div>
+                                <div class="category-rating-slider-item">
+                                    <label>Value for Money <span id="val-val">5.0 ★</span></label>
+                                    <input type="range" name="value" min="1" max="5" step="0.5" value="5" oninput="updateSubRating('val', this.value)" />
+                                </div>
                             </div>
 
                             <!-- 3. Review Comment Area -->
@@ -3683,6 +3953,37 @@
             };
             const feedback = document.getElementById('rating-text-feedback');
             if (feedback) feedback.innerHTML = labels[star] || `${star}.0`;
+        }
+
+        const subRatings = {
+            clean: 5,
+            acc: 5,
+            checkin: 5,
+            comm: 5,
+            loc: 5,
+            val: 5
+        };
+
+        function updateSubRating(cat, val) {
+            subRatings[cat] = Number(val);
+            const valSpan = document.getElementById(`val-${cat}`);
+            if (valSpan) valSpan.textContent = `${Number(val).toFixed(1)} ★`;
+
+            // Average across categories
+            const vals = Object.values(subRatings);
+            const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+            const roundedStar = Math.max(1, Math.min(5, Math.round(avg)));
+            
+            const input = document.getElementById('review-rating-val');
+            if (input) input.value = avg.toFixed(1);
+
+            const buttons = document.querySelectorAll('#star-picker-icons .star-pick-btn');
+            buttons.forEach((btn, idx) => {
+                btn.style.color = (idx < roundedStar) ? '#D4AF6A' : '#CCCCCC';
+            });
+
+            const feedback = document.getElementById('rating-text-feedback');
+            if (feedback) feedback.innerHTML = `${avg.toFixed(1)} &bull; ${avg >= 4.8 ? 'Exceptional' : avg >= 4 ? 'Very Good' : avg >= 3 ? 'Average' : 'Fair'}`;
         }
 
         function filterReviewsByTag(tag, btn) {

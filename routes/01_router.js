@@ -16,6 +16,7 @@ import {
     postCreateBooking,
     postCancelBooking,
     postAddReview,
+    postDeleteReview,
     postCreateRazorpayOrder,
     postVerifyRazorpayPayment,
 } from "../controller/01_storeController.js";
@@ -39,6 +40,7 @@ UserRouter.get("/favourite-list", protect, getFavroutelist);
 UserRouter.get("/index", postAddHome);
 UserRouter.get("/homes/:id", getHomeDetails);
 UserRouter.post("/homes/:id/review", protect, postAddReview);
+UserRouter.post("/homes/:id/review/:reviewId/delete", protect, postDeleteReview);
 UserRouter.get("/homes/:id/messages", getPropertyMessages);
 UserRouter.post("/homes/:id/message", postSendMessageToHost);
 UserRouter.post("/favourite", protect, postAddToFavourite);
