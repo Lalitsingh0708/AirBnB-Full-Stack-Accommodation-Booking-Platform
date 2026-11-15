@@ -495,11 +495,11 @@
                     <div class="meta-list">
                         <div class="meta-list-row">
                             <span>Primary Guest</span>
-                            <span><%= user.name %></span>
+                            <span><%= (typeof user !== 'undefined' && user && user.name) ? user.name : (booking.guestName || 'StayNest Guest') %></span>
                         </div>
                         <div class="meta-list-row">
                             <span>Registered Email</span>
-                            <span><%= user.email %></span>
+                            <span><%= (typeof user !== 'undefined' && user && user.email) ? user.email : (booking.guestEmail || 'guest@staynest.com') %></span>
                         </div>
                         <div class="meta-list-row">
                             <span>Total Guests</span>

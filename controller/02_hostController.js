@@ -2,7 +2,7 @@ import { Home } from "../models/01_homesModel.js";
 import Booking from "../models/Booking.js";
 import Conversation from "../models/Conversation.js";
 import User from "../models/User.js";
-import { io } from "../app.js";
+import { io } from "../utils/socket.js";
 
 // GET /host - Host Overview Dashboard (Isolated per host with Revenue Analytics)
 export const getHostDashboard = (req, res) => {

@@ -7,6 +7,7 @@ import { Server } from "socket.io";
 
 import connectDB from "./config/db.js";
 import paths from "./utils/pathUtil.js";
+import { setIO } from "./utils/socket.js";
 
 import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/01_router.js";
@@ -57,6 +58,7 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     },
 });
+setIO(io);
 
 io.on("connection", (socket) => {
     socket.on("join_user", (userId) => {

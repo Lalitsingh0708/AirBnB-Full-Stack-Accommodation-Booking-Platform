@@ -1,10 +1,16 @@
+<%
+    const dest = typeof displayDestination !== 'undefined' ? displayDestination : 'India';
+    const query = typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : {};
+    const center = typeof mapCenter !== 'undefined' && mapCenter ? mapCenter : { lat: 20.5937, lng: 78.9629, zoom: 12 };
+    const homesList = typeof registeredHome !== 'undefined' && registeredHome ? registeredHome : [];
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stays in <%= displayDestination %> | StayNest</title>
-    <meta name="description" content="Explore luxury stays, apartments, and villas in <%= displayDestination %>. View live availability, prices, and interactive map on StayNest." />
+    <title>Stays in <%= dest %> | StayNest</title>
+    <meta name="description" content="Explore luxury stays, apartments, and villas in <%= dest %>. View live availability, prices, and interactive map on StayNest." />
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -587,32 +593,32 @@
         </a>
 
         <!-- Washing machine -->
-        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'washing_machine' ? '' : 'washing_machine') }).toString() %>" 
-           class="filter-chip-btn <%= (searchQuery.amenity === 'washing_machine') ? 'active' : '' %>">
+        <a href="/search?<%= new URLSearchParams({ ...query, amenity: (query.amenity === 'washing_machine' ? '' : 'washing_machine') }).toString() %>" 
+           class="filter-chip-btn <%= (query.amenity === 'washing_machine') ? 'active' : '' %>">
             <span>Washing machine</span>
         </a>
 
         <!-- Wifi -->
-        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'wifi' ? '' : 'wifi') }).toString() %>" 
-           class="filter-chip-btn <%= (searchQuery.amenity === 'wifi') ? 'active' : '' %>">
+        <a href="/search?<%= new URLSearchParams({ ...query, amenity: (query.amenity === 'wifi' ? '' : 'wifi') }).toString() %>" 
+           class="filter-chip-btn <%= (query.amenity === 'wifi') ? 'active' : '' %>">
             <span>Wifi</span>
         </a>
 
         <!-- Kitchen -->
-        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'kitchen' ? '' : 'kitchen') }).toString() %>" 
-           class="filter-chip-btn <%= (searchQuery.amenity === 'kitchen') ? 'active' : '' %>">
+        <a href="/search?<%= new URLSearchParams({ ...query, amenity: (query.amenity === 'kitchen' ? '' : 'kitchen') }).toString() %>" 
+           class="filter-chip-btn <%= (query.amenity === 'kitchen') ? 'active' : '' %>">
             <span>Kitchen</span>
         </a>
 
         <!-- 1+ bathrooms -->
-        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'bathrooms' ? '' : 'bathrooms') }).toString() %>" 
-           class="filter-chip-btn <%= (searchQuery.amenity === 'bathrooms') ? 'active' : '' %>">
+        <a href="/search?<%= new URLSearchParams({ ...query, amenity: (query.amenity === 'bathrooms' ? '' : 'bathrooms') }).toString() %>" 
+           class="filter-chip-btn <%= (query.amenity === 'bathrooms') ? 'active' : '' %>">
             <span>1+ bathrooms</span>
         </a>
 
         <!-- Air conditioning -->
-        <a href="/search?<%= new URLSearchParams({ ...searchQuery, amenity: (searchQuery.amenity === 'ac' ? '' : 'ac') }).toString() %>" 
-           class="filter-chip-btn <%= (searchQuery.amenity === 'ac') ? 'active' : '' %>">
+        <a href="/search?<%= new URLSearchParams({ ...query, amenity: (query.amenity === 'ac' ? '' : 'ac') }).toString() %>" 
+           class="filter-chip-btn <%= (query.amenity === 'ac') ? 'active' : '' %>">
             <span>Air conditioning</span>
         </a>
 
@@ -627,7 +633,7 @@
             <!-- Header Row: Title & Price Tag Pill (Matching Screenshot 1) -->
             <div class="results-header-row">
                 <h1 class="results-count-title">
-                    Over <%= (registeredHome.length > 5 ? '1,000' : (registeredHome.length || '0')) %> homes in <%= displayDestination %>
+                    Over <%= (homesList.length > 5 ? '1,000' : (homesList.length || '0')) %> homes in <%= dest %>
                 </h1>
                 <div class="all-fees-pill">
                     <svg class="all-fees-tag-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -640,8 +646,8 @@
             <!-- Homes Grid: 2 Columns Matching Screenshot 1 -->
             <div class="search-homes-grid" id="search-homes-grid">
                 
-                <% if (registeredHome && registeredHome.length > 0) { %>
-                    <% registeredHome.forEach((home, index) => { %>
+                <% if (homesList && homesList.length > 0) { %>
+                    <% homesList.forEach((home, index) => { %>
                         <div class="search-stay-card" 
                              id="stay-card-<%= home.id %>"
                              data-home-id="<%= home.id %>"
@@ -684,7 +690,7 @@
                                 <!-- Line 1: Property Type & City + Rating -->
                                 <div class="card-title-row">
                                     <span class="card-property-title">
-                                        <%= home.propertyType || 'Flat' %> in <%= home.city || displayDestination %>
+                                        <%= home.propertyType || 'Flat' %> in <%= home.city || dest %>
                                     </span>
                                     <span class="card-rating-badge">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
@@ -706,7 +712,7 @@
 
                                 <!-- Line 4: Dates -->
                                 <span class="card-date-range">
-                                    <%= (searchQuery.dates && searchQuery.dates.trim()) ? searchQuery.dates : '1–29 Sept' %>
+                                    <%= (query.dates && query.dates.trim()) ? query.dates : '1–29 Sept' %>
                                 </span>
 
                                 <!-- Line 5: Pricing with monthly/nightly discount strikethrough -->
@@ -734,7 +740,7 @@
                 <% } else { %>
                     <!-- Empty State with Reset Search button -->
                     <div class="empty-search-box">
-                        <h3>No stays found in "<%= displayDestination %>"</h3>
+                        <h3>No stays found in "<%= dest %>"</h3>
                         <p>Try searching for a different destination like "New Delhi", "Manali", "Agra", or "Gurugram".</p>
                         <a href="/search?destination=New+Delhi" class="empty-reset-btn">View Homes in New Delhi</a>
                     </div>
@@ -778,8 +784,8 @@
     <!-- Interactive Map Script & Linkage -->
     <script>
         // Server data for map
-        const mapCenter = <%- JSON.stringify(mapCenter) %>;
-        const rawHomes = <%- JSON.stringify(registeredHome) %>;
+        const mapCenter = <%- JSON.stringify(center) %>;
+        const rawHomes = <%- JSON.stringify(homesList) %>;
         const markersMap = {};
         let leafletMap = null;
 

@@ -626,12 +626,12 @@
     <!-- Leaflet Map JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
-        const rawHomes = <%- JSON.stringify((typeof registeredHome !== 'undefined' ? registeredHome : []).map(h => ({
-            id: h.id,
-            houseName: h.houseName,
-            housePrice: h.housePrice,
-            housePhoto: h.housePhoto,
-            houseAddress: h.houseAddress,
+        const rawHomes = <%- JSON.stringify((typeof registeredHome !== 'undefined' && Array.isArray(registeredHome) ? registeredHome : []).filter(Boolean).map(h => ({
+            id: h.id || h._id || '',
+            houseName: h.houseName || '',
+            housePrice: h.housePrice || 0,
+            housePhoto: h.housePhoto || (h.photos && h.photos[0]) || '',
+            houseAddress: h.houseAddress || '',
             city: h.city || (h.houseAddress ? h.houseAddress.split(',').pop().trim() : 'India'),
             mapLat: h.mapLat || null,
             mapLng: h.mapLng || null

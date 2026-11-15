@@ -196,7 +196,7 @@
             <h1 class="auth-title">Welcome back</h1>
             <p class="auth-sub">Sign in to your account</p>
 
-            <% if (error) { %>
+            <% if (typeof error !== 'undefined' && error) { %>
                 <div class="error-box"><%= error %></div>
             <% } %>
 
@@ -224,7 +224,7 @@
                         type="email"
                         id="email"
                         name="email"
-                        value="<%= formData.email || '' %>"
+                        value="<%= (typeof formData !== 'undefined' && formData && formData.email) ? formData.email : '' %>"
                         placeholder="you@example.com"
                         required
                         autocomplete="email"

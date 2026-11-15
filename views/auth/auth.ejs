@@ -1,9 +1,15 @@
+<%
+    const authMode = typeof mode !== 'undefined' ? mode : 'login';
+    const authError = typeof error !== 'undefined' ? error : null;
+    const authFormData = (typeof formData !== 'undefined' && formData) ? formData : {};
+    const authReturnUrl = (typeof returnUrl !== 'undefined' && returnUrl) ? returnUrl : '';
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= mode === 'login' ? 'Sign In' : 'Create Account' %> | StayNest</title>
+    <title><%= authMode === 'login' ? 'Sign In' : 'Create Account' %> | StayNest</title>
     <meta name="description" content="StayNest - Premium accommodation and vacation rentals booking platform." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -711,7 +717,7 @@
     <!-- ══════════════════════════════════════════════════
          PURE FULL-PAGE AUTH SHELL (100vw x 100vh, NO MARGINS)
     ══════════════════════════════════════════════════ -->
-    <main class="auth-card" id="auth-card" data-mode="<%= mode %>">
+    <main class="auth-card" id="auth-card" data-mode="<%= authMode %>">
 
         <!-- ══════════════════════════════════════════════
              1. SIGN IN FORM PANE (Left 50vw)
@@ -723,15 +729,15 @@
                     <div class="title-accent-bar"></div>
                 </div>
 
-                <% if (mode === 'login' && error) { %>
+                <% if (authMode === 'login' && authError) { %>
                     <div class="error-alert" role="alert">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                        <span><%= error %></span>
+                        <span><%= authError %></span>
                     </div>
                 <% } %>
 
                 <!-- Direct Login with Google -->
-                <a href="/auth/google<%= (typeof returnUrl !== 'undefined' && returnUrl) ? '?returnUrl=' + encodeURIComponent(returnUrl) : '' %>" class="btn-google-continue" id="btn-google-login">
+                <a href="/auth/google<%= authReturnUrl ? '?returnUrl=' + encodeURIComponent(authReturnUrl) : '' %>" class="btn-google-continue" id="btn-google-login">
                     <span class="google-icon-circle">
                         <svg viewBox="0 0 24 24" width="22" height="22">
                             <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
@@ -748,7 +754,7 @@
                 </div>
 
                 <form action="/auth/login" method="POST" id="form-login" novalidate>
-                    <input type="hidden" name="returnUrl" value="<%= (typeof returnUrl !== 'undefined' && returnUrl) ? returnUrl : '' %>" />
+                    <input type="hidden" name="returnUrl" value="<%= authReturnUrl %>" />
                     <!-- Username / Email -->
                     <div class="input-group">
                         <div class="input-wrap">
@@ -756,7 +762,7 @@
                                 type="email" 
                                 id="login-email" 
                                 name="email" 
-                                value="<%= (mode === 'login' && formData && formData.email) ? formData.email : '' %>"
+                                value="<%= (authMode === 'login' && authFormData && authFormData.email) ? authFormData.email : '' %>"
                                 placeholder="Username or email" 
                                 required 
                                 autocomplete="username"
@@ -824,15 +830,15 @@
                     <div class="title-accent-bar"></div>
                 </div>
 
-                <% if (mode === 'register' && error) { %>
+                <% if (authMode === 'register' && authError) { %>
                     <div class="error-alert" role="alert">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                        <span><%= error %></span>
+                        <span><%= authError %></span>
                     </div>
                 <% } %>
 
                 <!-- Direct Register with Google -->
-                <a href="/auth/google<%= (typeof returnUrl !== 'undefined' && returnUrl) ? '?returnUrl=' + encodeURIComponent(returnUrl) : '' %>" class="btn-google-continue" id="btn-google-register">
+                <a href="/auth/google<%= authReturnUrl ? '?returnUrl=' + encodeURIComponent(authReturnUrl) : '' %>" class="btn-google-continue" id="btn-google-register">
                     <span class="google-icon-circle">
                         <svg viewBox="0 0 24 24" width="22" height="22">
                             <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
@@ -849,7 +855,7 @@
                 </div>
 
                 <form action="/auth/register" method="POST" id="form-register" novalidate>
-                    <input type="hidden" name="returnUrl" value="<%= (typeof returnUrl !== 'undefined' && returnUrl) ? returnUrl : '' %>" />
+                    <input type="hidden" name="returnUrl" value="<%= authReturnUrl %>" />
                     <!-- Full Name -->
                     <div class="input-group">
                         <div class="input-wrap">
@@ -857,7 +863,7 @@
                                 type="text" 
                                 id="reg-name" 
                                 name="name" 
-                                value="<%= (mode === 'register' && formData && formData.name) ? formData.name : '' %>"
+                                value="<%= (authMode === 'register' && authFormData && authFormData.name) ? authFormData.name : '' %>"
                                 placeholder="Full name" 
                                 required 
                                 autocomplete="name"
@@ -878,7 +884,7 @@
                                 type="email" 
                                 id="reg-email" 
                                 name="email" 
-                                value="<%= (mode === 'register' && formData && formData.email) ? formData.email : '' %>"
+                                value="<%= (authMode === 'register' && authFormData && authFormData.email) ? authFormData.email : '' %>"
                                 placeholder="Email address" 
                                 required 
                                 autocomplete="email"
@@ -928,14 +934,14 @@
                     <div class="role-selector">
                         <div class="role-choice">
                             <input type="radio" id="role-guest" name="role" value="guest"
-                                <%= (!formData || !formData.role || formData.role === 'guest') ? 'checked' : '' %> />
+                                <%= (!authFormData || !authFormData.role || authFormData.role === 'guest') ? 'checked' : '' %> />
                             <label for="role-guest" class="role-label">
                                 <span>Book stays (Guest)</span>
                             </label>
                         </div>
                         <div class="role-choice">
                             <input type="radio" id="role-host" name="role" value="host"
-                                <%= (formData && formData.role === 'host') ? 'checked' : '' %> />
+                                <%= (authFormData && authFormData.role === 'host') ? 'checked' : '' %> />
                             <label for="role-host" class="role-label">
                                 <span>List place (Host)</span>
                             </label>

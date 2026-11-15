@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Confirm and Pay | StayNest</title>
-    <meta name="description" content="Complete your reservation for <%= home.houseName %> on StayNest." />
+    <meta name="description" content="Complete your reservation for <%= (typeof home !== 'undefined' && home && home.houseName) ? home.houseName : 'StayNest' %> on StayNest." />
     
     <!-- Razorpay Checkout SDK -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -855,25 +855,31 @@
 
     <%
         // Formatting & Calculations with robust fallbacks
-        const homeId = home.id || home._id || '';
-        const houseTitle = home.houseName || 'StayNest Luxury Accommodation';
-        const rawPrice = home.housePrice !== undefined ? String(home.housePrice).replace(/[^0-9.]/g, '') : '2620';
+        const curHome = (typeof home !== 'undefined' && home) ? home : {};
+        const homeId = curHome.id || curHome._id || '';
+        const houseTitle = curHome.houseName || 'StayNest Luxury Accommodation';
+        const rawPrice = curHome.housePrice !== undefined ? String(curHome.housePrice).replace(/[^0-9.]/g, '') : '2620';
         const pricePerNight = Number(rawPrice) || 2620;
-        const totalNights = Math.max(1, Number(nights) || 1);
+        const totalNights = Math.max(1, Number(typeof nights !== 'undefined' ? nights : 1) || 1);
         const subtotal = pricePerNight * totalNights;
         const serviceFee = 450;
         const totalAmount = subtotal + serviceFee;
 
-        const dIn = checkIn ? new Date(checkIn) : new Date();
-        const dOut = checkOut ? new Date(checkOut) : new Date(Date.now() + 86400000);
+        const curCheckIn = (typeof checkIn !== 'undefined' && checkIn) ? checkIn : null;
+        const curCheckOut = (typeof checkOut !== 'undefined' && checkOut) ? checkOut : null;
+        const curGuests = (typeof guests !== 'undefined' && guests) ? guests : 1;
+
+        const dIn = curCheckIn ? new Date(curCheckIn) : new Date();
+        const dOut = curCheckOut ? new Date(curCheckOut) : new Date(Date.now() + 86400000);
         const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
         const checkInFormatted = !isNaN(dIn.getTime()) ? dIn.toLocaleDateString('en-GB', dateOptions) : 'Check-in date';
         const checkOutFormatted = !isNaN(dOut.getTime()) ? dOut.toLocaleDateString('en-GB', dateOptions) : 'Check-out date';
 
-        const propertyThumb = home.housePhoto || (home.photos && home.photos[0]) || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=80';
-        const guestName = (user && user.name) ? user.name : 'StayNest Guest';
-        const guestEmail = (user && user.email) ? user.email : 'guest@staynest.com';
-        const guestPhone = (user && (user.phone || (user.customerProfile && user.customerProfile.phone))) ? (user.phone || user.customerProfile.phone) : '9876543210';
+        const propertyThumb = curHome.housePhoto || (curHome.photos && curHome.photos[0]) || 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=80';
+        const curUser = (typeof user !== 'undefined' && user) ? user : null;
+        const guestName = (curUser && curUser.name) ? curUser.name : 'StayNest Guest';
+        const guestEmail = (curUser && curUser.email) ? curUser.email : 'guest@staynest.com';
+        const guestPhone = (curUser && (curUser.phone || (curUser.customerProfile && curUser.customerProfile.phone))) ? (curUser.phone || curUser.customerProfile.phone) : '9876543210';
         const rzpKey = typeof razorpayKeyId !== 'undefined' ? razorpayKeyId : 'rzp_test_SdWJYLLkVxRcTI';
     %>
 
@@ -909,9 +915,9 @@
                     <div class="trip-item-row">
                         <div>
                             <div class="trip-item-label">Guests</div>
-                            <div class="trip-item-sub"><%= guests %> <%= guests === 1 ? 'guest' : 'guests' %></div>
+                            <div class="trip-item-sub"><%= curGuests %> <%= curGuests === 1 ? 'guest' : 'guests' %></div>
                         </div>
-                        <a href="/homes/<%= home.id %>" class="btn-edit-trip">Edit</a>
+                        <a href="/homes/<%= homeId %>" class="btn-edit-trip">Edit</a>
                     </div>
                 </div>
 
@@ -923,16 +929,16 @@
                     <div class="guest-auth-card">
                         <div class="guest-auth-info">
                             <div class="guest-avatar-small">
-                                <%= (user && user.name) ? user.name.substring(0, 2).toUpperCase() : 'G' %>
+                                <%= guestName.substring(0, 2).toUpperCase() %>
                             </div>
                             <div>
-                                <div class="guest-info-name"><%= (user && user.name) ? user.name : 'StayNest Guest' %></div>
-                                <div class="guest-info-email"><%= (user && user.email) ? user.email : '' %> &bull; Authenticated Account</div>
+                                <div class="guest-info-name"><%= guestName %></div>
+                                <div class="guest-info-email"><%= guestEmail %> &bull; Authenticated Account</div>
                             </div>
                         </div>
                         <div style="text-align: right;">
                             <span style="display: block; font-size: 13px; font-weight: 600; color: #008A05; margin-bottom: 2px;">✓ Verified Account</span>
-                            <a href="/auth/login?returnUrl=/book/<%= home.id %>" style="font-size: 12px; color: var(--text-muted); text-decoration: underline;">Switch account</a>
+                            <a href="/auth/login?returnUrl=/book/<%= homeId %>" style="font-size: 12px; color: var(--text-muted); text-decoration: underline;">Switch account</a>
                         </div>
                     </div>
                 </div>
@@ -940,10 +946,10 @@
                 <div class="section-separator"></div>
 
                 <!-- Payment Form -->
-                <form id="booking-payment-form" action="/book/<%= home.id %>" method="POST">
-                    <input type="hidden" name="checkIn" value="<%= checkIn %>" />
-                    <input type="hidden" name="checkOut" value="<%= checkOut %>" />
-                    <input type="hidden" name="guests" value="<%= guests %>" />
+                <form id="booking-payment-form" action="/book/<%= homeId %>" method="POST">
+                    <input type="hidden" name="checkIn" value="<%= curCheckIn || '' %>" />
+                    <input type="hidden" name="checkOut" value="<%= curCheckOut || '' %>" />
+                    <input type="hidden" name="guests" value="<%= curGuests %>" />
                     <input type="hidden" name="totalNights" value="<%= totalNights %>" />
                     <input type="hidden" name="pricePerNight" value="<%= pricePerNight %>" />
                     <input type="hidden" name="totalAmount" value="<%= totalAmount %>" />
@@ -1586,9 +1592,9 @@
             totalAmount: totalAmount,
             pricePerNight: pricePerNight,
             totalNights: totalNights,
-            checkIn: checkIn || '',
-            checkOut: checkOut || '',
-            guests: guests || 1,
+            checkIn: curCheckIn || '',
+            checkOut: curCheckOut || '',
+            guests: curGuests || 1,
             userName: guestName,
             userEmail: guestEmail,
             userPhone: guestPhone,

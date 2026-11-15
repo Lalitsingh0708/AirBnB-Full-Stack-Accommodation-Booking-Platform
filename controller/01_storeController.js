@@ -9,7 +9,7 @@ import Razorpay from "razorpay";
 import crypto from "crypto";
 import QRCode from "qrcode";
 import { sendBookingConfirmationEmail } from "../utils/emailService.js";
-import { io } from "../app.js";
+import { io } from "../utils/socket.js";
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID || "rzp_test_SdWJYLLkVxRcTI",

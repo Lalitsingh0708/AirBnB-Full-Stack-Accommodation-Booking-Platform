@@ -184,7 +184,7 @@
             <h1 class="auth-title">Create your account</h1>
             <p class="auth-sub">Book stays or list your property</p>
 
-            <% if (error) { %>
+            <% if (typeof error !== 'undefined' && error) { %>
                 <div class="error-box"><%= error %></div>
             <% } %>
 
@@ -195,7 +195,7 @@
                         type="text"
                         id="name"
                         name="name"
-                        value="<%= formData.name || '' %>"
+                        value="<%= (typeof formData !== 'undefined' && formData && formData.name) ? formData.name : '' %>"
                         placeholder="Rahul Sharma"
                         required
                         autocomplete="name"
@@ -207,7 +207,7 @@
                         type="email"
                         id="email"
                         name="email"
-                        value="<%= formData.email || '' %>"
+                        value="<%= (typeof formData !== 'undefined' && formData && formData.email) ? formData.email : '' %>"
                         placeholder="you@example.com"
                         required
                         autocomplete="email"
@@ -234,7 +234,7 @@
                                 id="role-guest"
                                 name="role"
                                 value="guest"
-                                <%= (!formData.role || formData.role === 'guest') ? 'checked' : '' %>
+                                <%= (typeof formData === 'undefined' || !formData || !formData.role || formData.role === 'guest') ? 'checked' : '' %>
                             />
                             <label for="role-guest" class="role-label">
                                 <span class="role-title">Book stays</span>
@@ -247,7 +247,7 @@
                                 id="role-host"
                                 name="role"
                                 value="host"
-                                <%= formData.role === 'host' ? 'checked' : '' %>
+                                <%= (typeof formData !== 'undefined' && formData && formData.role === 'host') ? 'checked' : '' %>
                             />
                             <label for="role-host" class="role-label">
                                 <span class="role-title">List property</span>
