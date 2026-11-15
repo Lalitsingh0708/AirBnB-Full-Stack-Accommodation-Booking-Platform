@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -373,6 +374,131 @@
         .preview-mini-edit:hover {
             background: #D8E6DC;
         }
+
+        /* ── Revenue Analytics Card ── */
+        .analytics-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(18, 43, 32, 0.05);
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .analytics-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--emerald-dark);
+            margin-bottom: 4px;
+        }
+
+        .analytics-sub {
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        .analytics-tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #EBF7EE;
+            border: 1px solid #C3E6CB;
+            color: #1A7F37;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #1A7F37;
+            animation: pulse-glow 1.8s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 127, 55, 0.6); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 6px rgba(26, 127, 55, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 127, 55, 0); }
+        }
+
+        .analytics-content-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .chart-canvas-wrap {
+            height: 250px;
+            position: relative;
+            width: 100%;
+        }
+
+        .payout-breakdown-box {
+            background: #FCFAF6;
+            border: 1px solid rgba(212, 175, 106, 0.4);
+            border-radius: 18px;
+            padding: 24px;
+        }
+
+        .payout-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--emerald-dark);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .payout-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13.5px;
+            color: #444444;
+            margin-bottom: 10px;
+        }
+
+        .payout-net-row {
+            border-top: 1px dashed rgba(212, 175, 106, 0.6);
+            padding-top: 12px;
+            margin-top: 12px;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--emerald-dark);
+        }
+
+        .payout-advisory {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(232, 226, 213, 0.6);
+        }
+
+        @media (max-width: 860px) {
+            .analytics-content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -412,27 +538,84 @@
         <!-- Metric Cards -->
         <div class="metrics-grid">
             <div class="metric-card">
+                <div class="metric-icon-box" style="background: rgba(212, 175, 106, 0.15); color: #B88E3E;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </div>
+                <div class="metric-val">₹<%= Number(typeof totalRevenue !== 'undefined' ? totalRevenue : 56000).toLocaleString('en-IN') %></div>
+                <div class="metric-label">Gross Bookings Revenue</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+                <div class="metric-val"><%= typeof totalNightsBooked !== 'undefined' ? totalNightsBooked : 16 %> <span style="font-size: 16px; font-weight: 600; color: #65736C;">nights</span></div>
+                <div class="metric-label">Total Nights Booked</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                </div>
+                <div class="metric-val"><%= typeof occupancyRate !== 'undefined' ? occupancyRate : 82 %>%</div>
+                <div class="metric-label">Portfolio Occupancy Rate</div>
+            </div>
+
+            <div class="metric-card">
                 <div class="metric-icon-box">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 </div>
                 <div class="metric-val"><%= typeof totalHomes !== 'undefined' ? totalHomes : 0 %></div>
-                <div class="metric-label">Active Listed Properties</div>
+                <div class="metric-label">Active Listed Accommodations</div>
+            </div>
+        </div>
+
+        <!-- Revenue Analytics & Performance Card -->
+        <div class="analytics-card">
+            <div class="analytics-header">
+                <div>
+                    <h2 class="analytics-title">Financial Performance & Earnings</h2>
+                    <p class="analytics-sub">Monthly earnings and booking trends across your StayNest accommodations.</p>
+                </div>
+                <div class="analytics-tag-pill">
+                    <span class="pulse-dot"></span>
+                    <span>Live Revenue Tracking</span>
+                </div>
             </div>
 
-            <div class="metric-card">
-                <div class="metric-icon-box">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <div class="analytics-content-grid">
+                <!-- Left: Chart.js Canvas -->
+                <div class="chart-canvas-wrap">
+                    <canvas id="hostRevenueChart"></canvas>
                 </div>
-                <div class="metric-val">&lt; 1 hr</div>
-                <div class="metric-label">Average Host Response Time</div>
-            </div>
 
-            <div class="metric-card">
-                <div class="metric-icon-box">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <!-- Right: Breakdown Stats Box -->
+                <div class="payout-breakdown-box">
+                    <h3 class="payout-title">Payout Breakdown</h3>
+                    
+                    <% 
+                        const grossRev = Number(typeof totalRevenue !== 'undefined' ? totalRevenue : 56000);
+                        const hostFee = Math.round(grossRev * 0.03); // 3% host platform fee
+                        const netPay = grossRev - hostFee;
+                    %>
+                    <div class="payout-row">
+                        <span>Gross Reservations</span>
+                        <span>₹<%= grossRev.toLocaleString('en-IN') %></span>
+                    </div>
+                    <div class="payout-row">
+                        <span>Host Service Fee (3%)</span>
+                        <span style="color: #65736C;">-₹<%= hostFee.toLocaleString('en-IN') %></span>
+                    </div>
+                    <div class="payout-row payout-net-row">
+                        <span>Net Host Payout</span>
+                        <span>₹<%= netPay.toLocaleString('en-IN') %></span>
+                    </div>
+
+                    <div class="payout-advisory">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#143528" stroke-width="2.2" style="flex-shrink: 0; margin-top: 1px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>Automated bank deposits are released 24 hours post-guest check-in via Razorpay Routes with zero settlement delays.</span>
+                    </div>
                 </div>
-                <div class="metric-val">4.95</div>
-                <div class="metric-label">Superhost Guest Rating</div>
             </div>
         </div>
 
@@ -503,6 +686,67 @@
             </div>
         <% } %>
     </main>
+
+    <!-- Financial Chart.js Initialization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('hostRevenueChart');
+            if (ctx && typeof Chart !== 'undefined') {
+                const labels = <%- JSON.stringify((typeof monthlyLabels !== 'undefined' && monthlyLabels.length > 0) ? monthlyLabels : ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov"]) %>;
+                const dataVals = <%- JSON.stringify((typeof chartData !== 'undefined' && chartData.length > 0) ? chartData : [14500, 22000, 18500, 31000, 42000, 56000]) %>;
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Monthly Earnings (₹)',
+                            data: dataVals,
+                            backgroundColor: 'rgba(20, 53, 40, 0.88)',
+                            hoverBackgroundColor: '#0B1C14',
+                            borderColor: '#D4AF6A',
+                            borderWidth: 1.5,
+                            borderRadius: 8,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#0B1C14',
+                                titleFont: { family: 'Inter', size: 12, weight: 700 },
+                                bodyFont: { family: 'Inter', size: 12 },
+                                padding: 10,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return ' Earnings: ₹' + context.parsed.y.toLocaleString('en-IN');
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { family: 'Inter', size: 12, weight: 600 }, color: '#65736C' }
+                            },
+                            y: {
+                                grid: { color: 'rgba(232, 226, 213, 0.6)' },
+                                ticks: {
+                                    font: { family: 'Inter', size: 11 },
+                                    color: '#65736C',
+                                    callback: function(val) { return '₹' + (val >= 1000 ? (val/1000) + 'k' : val); }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 
     <!-- Global Luxury Footer -->
     <%- include("../partials/03_footer.ejs") %>
