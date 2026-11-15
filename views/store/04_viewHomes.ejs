@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
     
+    <!-- Leaflet CSS for Interactive Map View -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    
     <style>
         :root {
             --bg-beige: #FAF7F0;
@@ -406,6 +409,90 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ── Floating Map Toggle Button (Airbnb Signature) ── */
+        .floating-map-toggle-wrap {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        .floating-map-toggle-btn {
+            pointer-events: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #222222;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 13px 22px;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+            user-select: none;
+        }
+
+        .floating-map-toggle-btn:hover {
+            transform: scale(1.05);
+            background: #000000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+        }
+
+        .homepage-map-container {
+            max-width: 1320px;
+            margin: 20px auto 40px auto;
+            padding: 0 20px;
+            width: 100%;
+            height: calc(85vh - 120px);
+            min-height: 520px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 30px rgba(20, 53, 40, 0.08);
+        }
+
+        #homepage-leaflet-map {
+            width: 100%;
+            height: 100%;
+            border-radius: 24px;
+        }
+
+        .leaflet-price-pill-container {
+            background: transparent;
+            border: none;
+        }
+
+        .map-price-pill {
+            background: #FFFFFF;
+            color: #222222;
+            font-weight: 800;
+            font-size: 13px;
+            padding: 6px 11px;
+            border-radius: 28px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            text-align: center;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            cursor: pointer;
+        }
+
+        .map-price-pill:hover, .map-price-pill.active {
+            background: #143528;
+            color: #FAF8F5;
+            border-color: #D4AF6A;
+            transform: scale(1.1);
+        }
+
+        .leaflet-control-attribution {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -520,6 +607,148 @@
             </div>
         <% } %>
     </main>
+
+    <!-- Interactive Leaflet Map View (Toggled via floating pill) -->
+    <div id="homepage-map-wrap" class="homepage-map-container" style="display: none;">
+        <div id="homepage-leaflet-map"></div>
+    </div>
+
+    <!-- Floating Map Toggle Button (Airbnb Signature) -->
+    <div class="floating-map-toggle-wrap">
+        <button type="button" class="floating-map-toggle-btn" id="floating-map-toggle" onclick="toggleMapView()">
+            <span id="map-toggle-text">Show map</span>
+            <span id="map-toggle-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+            </span>
+        </button>
+    </div>
+
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script>
+        const rawHomes = <%- JSON.stringify((typeof registeredHome !== 'undefined' ? registeredHome : []).map(h => ({
+            id: h.id,
+            houseName: h.houseName,
+            housePrice: h.housePrice,
+            housePhoto: h.housePhoto,
+            houseAddress: h.houseAddress,
+            city: h.city || (h.houseAddress ? h.houseAddress.split(',').pop().trim() : 'India'),
+            mapLat: h.mapLat || null,
+            mapLng: h.mapLng || null
+        }))) %>;
+
+        const cityCoordinates = {
+            'delhi': [28.6139, 77.2090],
+            'new delhi': [28.6139, 77.2090],
+            'mumbai': [19.0760, 72.8777],
+            'goa': [15.2993, 74.1240],
+            'bengaluru': [12.9716, 77.5946],
+            'bangalore': [12.9716, 77.5946],
+            'hyderabad': [17.3850, 78.4867],
+            'jaipur': [26.9124, 75.7873],
+            'agra': [27.1767, 78.0081],
+            'manali': [32.2432, 77.1892],
+            'shimla': [31.1048, 77.1734],
+            'udaipur': [24.5854, 73.7125],
+            'rishikesh': [30.0869, 78.2676],
+            'chandigarh': [30.7333, 76.7794]
+        };
+
+        let homepageMap = null;
+        let isMapViewActive = false;
+
+        function toggleMapView() {
+            const gridEl = document.querySelector('.listings-main');
+            const mapWrap = document.getElementById('homepage-map-wrap');
+            const toggleText = document.getElementById('map-toggle-text');
+            const toggleIcon = document.getElementById('map-toggle-icon');
+
+            isMapViewActive = !isMapViewActive;
+
+            if (isMapViewActive) {
+                if (gridEl) gridEl.style.display = 'none';
+                if (mapWrap) mapWrap.style.display = 'block';
+                toggleText.textContent = 'Show list';
+                toggleIcon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>`;
+
+                if (!homepageMap) {
+                    initHomepageMap();
+                } else {
+                    setTimeout(() => {
+                        homepageMap.invalidateSize();
+                    }, 100);
+                }
+            } else {
+                if (gridEl) gridEl.style.display = 'block';
+                if (mapWrap) mapWrap.style.display = 'none';
+                toggleText.textContent = 'Show map';
+                toggleIcon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>`;
+            }
+        }
+
+        function initHomepageMap() {
+            homepageMap = L.map('homepage-leaflet-map', {
+                center: [22.5937, 78.9629],
+                zoom: 5,
+                zoomControl: true,
+                attributionControl: false
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(homepageMap);
+
+            const boundsGroup = [];
+
+            rawHomes.forEach((home, idx) => {
+                let lat = Number(home.mapLat);
+                let lng = Number(home.mapLng);
+
+                const cityKey = (home.city || '').toLowerCase().trim();
+                for (const [ck, coords] of Object.entries(cityCoordinates)) {
+                    if (cityKey.includes(ck) || (home.houseAddress || '').toLowerCase().includes(ck)) {
+                        lat = coords[0] + (idx * 0.008);
+                        lng = coords[1] + (idx * 0.008);
+                        break;
+                    }
+                }
+
+                if (!lat || !lng) {
+                    lat = 28.6139 + (idx * 0.015);
+                    lng = 77.2090 + (idx * 0.015);
+                }
+
+                const priceNum = Number(home.housePrice) || 3500;
+                const formattedPrice = priceNum.toLocaleString('en-IN');
+
+                const priceIcon = L.divIcon({
+                    className: 'leaflet-price-pill-container',
+                    html: `<div class="map-price-pill" id="home-pill-${home.id}">₹${formattedPrice}</div>`,
+                    iconSize: [80, 32],
+                    iconAnchor: [40, 16]
+                });
+
+                const marker = L.marker([lat, lng], { icon: priceIcon }).addTo(homepageMap);
+                boundsGroup.push([lat, lng]);
+
+                const popupContent = `
+                    <div style="width: 220px; font-family: 'Inter', sans-serif;">
+                        <img src="${home.housePhoto}" style="width: 100%; height: 125px; object-fit: cover; border-radius: 10px; margin-bottom: 8px;" onerror="this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=80';" />
+                        <div style="font-weight: 700; font-size: 14px; margin-bottom: 3px; color: #111;">${home.houseName}</div>
+                        <div style="color: #717171; font-size: 12px; margin-bottom: 6px;">${home.city || home.houseAddress}</div>
+                        <div style="font-weight: 700; font-size: 14px; color: #143528; display: flex; justify-content: space-between; align-items: center;">
+                            <span>₹${formattedPrice} <span style="font-weight: 400; font-size: 12px;">/ night</span></span>
+                            <a href="/homes/${home.id}" style="color: #143528; text-decoration: none; font-size: 12.5px; font-weight: 700;">View &rarr;</a>
+                        </div>
+                    </div>
+                `;
+                marker.bindPopup(popupContent, { offset: [0, -10] });
+            });
+
+            if (boundsGroup.length > 0) {
+                homepageMap.fitBounds(boundsGroup, { padding: [50, 50], maxZoom: 14 });
+            }
+        }
 
     <!-- Client Filter Logic -->
     <script>
