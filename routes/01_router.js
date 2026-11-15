@@ -8,6 +8,7 @@ import {
     getHomeDetails,
     getHomesList,
     getBookings,
+    getBookingVoucher,
     getFavroutelist,
     getIndex,
     postSendMessageToHost,
@@ -31,6 +32,7 @@ UserRouter.use(express.static(path.join(paths, "public")));
 UserRouter.get("/", postAddHome);  // postAddHome gives me the list of the all homes which are listed on the portal 
 UserRouter.get("/search", getSearchResults);
 UserRouter.get("/bookings", protect, getBookings);
+UserRouter.get("/bookings/:id/voucher", protect, getBookingVoucher);
 UserRouter.post("/bookings/cancel/:id", protect, postCancelBooking);
 UserRouter.get("/book/:id", protect, getCheckout);
 UserRouter.post("/book/:id", protect, postCreateBooking);

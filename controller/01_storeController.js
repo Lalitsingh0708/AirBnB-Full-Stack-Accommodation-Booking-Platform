@@ -7,6 +7,7 @@ import Booking from "../models/Booking.js";
 import ReviewModel, { ReviewStore } from "../models/Review.js";
 import Razorpay from "razorpay";
 import crypto from "crypto";
+import QRCode from "qrcode";
 import { sendBookingConfirmationEmail } from "../utils/emailService.js";
 import { io } from "../app.js";
 
@@ -229,6 +230,54 @@ export const getBookings = async (req , res)=>{
             isCancelledNotice: false,
             currentPage: "bookings"
         });
+    }
+};
+
+export const getBookingVoucher = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.redirect(`/auth/login?returnUrl=/bookings/${req.params.id}/voucher`);
+        }
+        const booking = await Booking.findById(req.params.id).populate("guest").lean();
+        if (!booking) {
+            return res.status(404).redirect("/bookings");
+        }
+
+        // Strict authorization: only guest who booked or admin can view voucher
+        const guestIdStr = booking.guest ? String(booking.guest._id || booking.guest) : "";
+        if (guestIdStr !== String(req.user._id) && req.user.role !== "admin") {
+            return res.status(403).send("Unauthorized to view this booking voucher");
+        }
+
+        const refCode = `STAY-${booking._id.toString().slice(-8).toUpperCase()}`;
+        const qrContent = JSON.stringify({
+            voucher: refCode,
+            guest: req.user.name,
+            property: booking.propertyTitle,
+            checkIn: booking.checkIn,
+            checkOut: booking.checkOut,
+            status: booking.status
+        });
+
+        const qrCodeDataUrl = await QRCode.toDataURL(qrContent, {
+            color: {
+                dark: "#143528",
+                light: "#FFFFFF"
+            },
+            width: 180,
+            margin: 1
+        });
+
+        res.render("store/bookingVoucher.ejs", {
+            booking: booking,
+            referenceCode: refCode,
+            qrCodeDataUrl: qrCodeDataUrl,
+            user: req.user,
+            currentPage: "bookings"
+        });
+    } catch (e) {
+        console.error("Error generating booking voucher:", e);
+        res.redirect("/bookings");
     }
 };
 

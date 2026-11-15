@@ -301,6 +301,19 @@
             border-color: #222222;
         }
 
+        .btn-trip-voucher {
+            background: #FFFFFF;
+            border: 1px solid var(--gold-accent);
+            color: #143528;
+            font-weight: 600;
+        }
+
+        .btn-trip-voucher:hover {
+            background: #FDFBF7;
+            border-color: #143528;
+            box-shadow: 0 2px 8px rgba(212, 175, 106, 0.25);
+        }
+
         /* Empty State */
         .empty-bookings-box {
             text-align: center;
@@ -453,6 +466,11 @@
                                 </a>
 
                                 <% if (!isCancelled) { %>
+                                    <a href="/bookings/<%= booking._id %>/voucher" target="_blank" class="btn-trip-action btn-trip-voucher" title="View & Download PDF Voucher">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                        Voucher
+                                    </a>
+
                                     <form action="/bookings/cancel/<%= booking._id %>" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking? Eligible refunds will be processed within 3-5 days.');" style="flex: 1; display: flex;">
                                         <button type="submit" class="btn-trip-action btn-trip-secondary" style="width: 100%; border: none;">
                                             Cancel
