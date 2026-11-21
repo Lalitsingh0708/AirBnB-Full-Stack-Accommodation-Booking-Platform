@@ -12,6 +12,8 @@ import {
     postVerifyPhoneOtp,
     postVerifyPhone,
     getAddHome,
+    getAddExperience,
+    getAddService,
     postAddHome,
     getEditHome,
     postEditHome,
@@ -74,6 +76,8 @@ hostRouter.post("/host/upload-photo", protect, restrictTo("host"), requireEmailV
 
 // Core Listing Creation & Modification Routes (Strict Email OTP Verification required)
 hostRouter.get("/host/add-home", protect, restrictTo("host"), requireApproved, requireEmailVerified, getAddHome);
+hostRouter.get("/host/add-experience", protect, restrictTo("host"), requireApproved, requireEmailVerified, getAddExperience);
+hostRouter.get("/host/add-service", protect, restrictTo("host"), requireApproved, requireEmailVerified, getAddService);
 hostRouter.post("/host/add-home", protect, restrictTo("host"), requireApproved, requireEmailVerified, postAddHome);
 
 // Edit routes

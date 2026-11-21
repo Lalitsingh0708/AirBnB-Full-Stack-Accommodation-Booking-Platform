@@ -346,6 +346,22 @@ export const getAddHome = (req, res) => {
     });
 };
 
+// GET /host/add-experience - Host an Experience Wizard
+export const getAddExperience = (req, res) => {
+    res.render("host/addExperience.ejs", {
+        currentPage: "host",
+        user: req.user,
+    });
+};
+
+// GET /host/add-service - Host a Service Wizard
+export const getAddService = (req, res) => {
+    res.render("host/addService.ejs", {
+        currentPage: "host",
+        user: req.user,
+    });
+};
+
 // POST /host/add-home - Process Multi-Step Listing Submission
 export const postAddHome = (req, res) => {
     const {

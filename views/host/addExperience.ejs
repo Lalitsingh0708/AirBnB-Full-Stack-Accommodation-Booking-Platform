@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host an Experience | StayNest</title>
+    <meta name="description" content="Host immersive local activities, culinary masterclasses, and guided adventures on StayNest." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-beige: #FAF7F0;
+            --surface-card: #FFFFFF;
+            --emerald-dark: #0B1C14;
+            --emerald-mid: #143528;
+            --gold-accent: #D4AF6A;
+            --text-dark: #121A16;
+            --text-muted: #6B7770;
+            --border-light: #E8E2D5;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-beige);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wizard-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(250, 247, 240, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--emerald-dark);
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .brand-logo-link span {
+            color: var(--gold-accent);
+        }
+
+        .btn-exit {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            border: 1px solid var(--border-light);
+            background: #FFFFFF;
+            transition: all 0.2s ease;
+        }
+
+        .btn-exit:hover {
+            color: var(--emerald-dark);
+            border-color: var(--gold-accent);
+        }
+
+        .experience-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px 120px 24px;
+            max-width: 1080px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .experience-card-hero {
+            background: #FFFFFF;
+            border-radius: 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 20px 50px rgba(20, 53, 40, 0.06);
+            padding: 56px 48px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .tag-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(212, 175, 106, 0.15);
+            color: #8C6627;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-radius: 9999px;
+            margin-bottom: 18px;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 38px;
+            line-height: 1.18;
+            font-weight: 600;
+            color: var(--emerald-dark);
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 15.5px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+        }
+
+        .perks-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .perks-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14.5px;
+            color: #2D3732;
+        }
+
+        .perk-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #E8F0EA;
+            color: var(--emerald-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .interactive-preview-box {
+            background: #FAF7F0;
+            border: 1.5px dashed var(--border-light);
+            border-radius: 20px;
+            padding: 36px 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-light);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 40;
+        }
+
+        .btn-back-link {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-decoration: underline;
+        }
+
+        .btn-primary-emerald {
+            background: var(--emerald-mid);
+            color: #FAF7F0;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 14px 34px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary-emerald:hover {
+            background: var(--emerald-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(20, 53, 40, 0.25);
+        }
+
+        @media (max-width: 860px) {
+            .experience-card-hero {
+                grid-template-columns: 1fr;
+                padding: 32px 24px;
+                gap: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="wizard-header">
+        <a href="/" class="brand-logo-link">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Stay<span>Nest</span>
+        </a>
+        <a href="/host" class="btn-exit">Exit to Dashboard</a>
+    </header>
+
+    <main class="experience-stage">
+        <div class="experience-card-hero">
+            <div>
+                <span class="tag-badge">StayNest Experiences</span>
+                <h1 class="hero-title">Lead activities guests can only find locally</h1>
+                <p class="hero-subtitle">
+                    Share your expertise, culinary craft, artistic passion, or local secret spots with global travelers seeking authentic, curated memories.
+                </p>
+
+                <ul class="perks-list">
+                    <li>
+                        <span class="perk-icon">✓</span>
+                        <span><strong>Total Schedule Freedom:</strong> Host once a week, on weekends, or whenever suits your lifestyle.</span>
+                    </li>
+                    <li>
+                        <span class="perk-icon">✓</span>
+                        <span><strong>Curated Community:</strong> Connect with verified travelers who appreciate bespoke local culture.</span>
+                    </li>
+                    <li>
+                        <span class="perk-icon">✓</span>
+                        <span><strong>Direct Earnings:</strong> Instant payouts with transparent 0% surprise fees and automated guest check-in.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="interactive-preview-box">
+                <!-- 3D Balloon Graphic -->
+                <svg width="90" height="110" viewBox="0 0 84 100" fill="none" style="margin-bottom: 20px;">
+                    <ellipse cx="42" cy="97" rx="16" ry="3" fill="rgba(0,0,0,0.1)"/>
+                    <g filter="drop-shadow(0 4px 8px rgba(0,0,0,0.12))">
+                        <path d="M42 4 C24 4 14 20 14 36 C14 50 25 61 36 67 L42 68 L42 4 Z" fill="#E03238" />
+                        <path d="M42 4 C60 4 70 20 70 36 C70 50 59 61 48 67 L42 68 L42 4 Z" fill="#E03238" />
+                        <path d="M42 4 C28 4 21 20 21 36 C21 51 30 62 38 67.5 L42 68 L42 4 Z" fill="#F26E22" />
+                        <path d="M42 4 C56 4 63 20 63 36 C63 51 54 62 46 67.5 L42 68 L42 4 Z" fill="#F26E22" />
+                        <path d="M42 4 C33 4 28 20 28 36 C28 52 35 63 40 67.8 L42 68 L42 4 Z" fill="#FFBF1F" />
+                        <path d="M42 4 C51 4 56 20 56 36 C56 52 49 63 44 67.8 L42 68 L42 4 Z" fill="#FFBF1F" />
+                        <path d="M42 4 C37 4 35 20 35 36 C35 52 39 63 42 68 C45 63 49 52 49 36 C49 20 47 4 42 4 Z" fill="#FFF2DC" />
+                        <line x1="38" y1="71" x2="36" y2="78" stroke="#4A3423" stroke-width="1.2"/>
+                        <line x1="46" y1="71" x2="48" y2="78" stroke="#4A3423" stroke-width="1.2"/>
+                        <rect x="35" y="78" width="14" height="11" rx="2.5" fill="#C28E58"/>
+                    </g>
+                </svg>
+                <h3 style="font-size: 18px; font-weight: 700; color: #143528; margin-bottom: 6px;">Experience Setup Studio</h3>
+                <p style="font-size: 13.5px; color: #6B7770; max-width: 260px; margin-bottom: 20px;">
+                    Ready to build your experience itinerary, pricing, and guest capacity.
+                </p>
+                <div style="background: #FFFFFF; border-radius: 12px; padding: 12px 18px; border: 1px solid var(--border-light); font-size: 13px; color: var(--emerald-mid); font-weight: 600;">
+                    ✦ Draft Mode Active
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-action-bar">
+        <a href="/host/add-home" class="btn-back-link">← Back to Home Listing</a>
+        <button type="button" class="btn-primary-emerald" onclick="alert('Experience listing wizard will be customized as per your requirement!')">
+            Continue Setting Up ➔
+        </button>
+    </footer>
+</body>
+</html>
